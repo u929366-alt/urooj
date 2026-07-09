@@ -1,0 +1,124 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #333333;
+
+  --color-primary-50: #eaf2fa;
+  --color-primary-100: #cde0f2;
+  --color-primary-200: #a0c5e6;
+  --color-primary-300: #6ba5d6;
+  --color-primary-400: #3d84c2;
+  --color-primary-500: #1a66aa;
+  --color-primary-600: #0a4d8c;
+  --color-primary-700: #093f72;
+  --color-primary-800: #0a3459;
+  --color-primary-900: #0b2c49;
+
+  --color-secondary-50: #fef3e8;
+  --color-secondary-100: #fde0bd;
+  --color-secondary-200: #fbc98c;
+  --color-secondary-300: #f8b15a;
+  --color-secondary-400: #f59d3d;
+  --color-secondary-500: #f28c28;
+  --color-secondary-600: #d9721a;
+  --color-secondary-700: #b25a15;
+  --color-secondary-800: #8c4712;
+  --color-secondary-900: #6e390f;
+
+  --color-accent-50: #e9f5ee;
+  --color-accent-100: #c8e6d5;
+  --color-accent-200: #a1d5b8;
+  --color-accent-300: #73c096;
+  --color-accent-400: #4aa878;
+  --color-accent-500: #2e8b57;
+  --color-accent-600: #257146;
+  --color-accent-700: #1d5a38;
+  --color-accent-800: #17472c;
+  --color-accent-900: #123a23;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-primary-50: var(--color-primary-50);
+  --color-primary-100: var(--color-primary-100);
+  --color-primary-200: var(--color-primary-200);
+  --color-primary-300: var(--color-primary-300);
+  --color-primary-400: var(--color-primary-400);
+  --color-primary-500: var(--color-primary-500);
+  --color-primary-600: var(--color-primary-600);
+  --color-primary-700: var(--color-primary-700);
+  --color-primary-800: var(--color-primary-800);
+  --color-primary-900: var(--color-primary-900);
+
+  --color-secondary-50: var(--color-secondary-50);
+  --color-secondary-100: var(--color-secondary-100);
+  --color-secondary-200: var(--color-secondary-200);
+  --color-secondary-300: var(--color-secondary-300);
+  --color-secondary-400: var(--color-secondary-400);
+  --color-secondary-500: var(--color-secondary-500);
+  --color-secondary-600: var(--color-secondary-600);
+  --color-secondary-700: var(--color-secondary-700);
+  --color-secondary-800: var(--color-secondary-800);
+  --color-secondary-900: var(--color-secondary-900);
+
+  --color-accent-50: var(--color-accent-50);
+  --color-accent-100: var(--color-accent-100);
+  --color-accent-200: var(--color-accent-200);
+  --color-accent-300: var(--color-accent-300);
+  --color-accent-400: var(--color-accent-400);
+  --color-accent-500: var(--color-accent-500);
+  --color-accent-600: var(--color-accent-600);
+  --color-accent-700: var(--color-accent-700);
+  --color-accent-800: var(--color-accent-800);
+  --color-accent-900: var(--color-accent-900);
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+}
+
+::selection {
+  background: var(--color-secondary-200);
+  color: var(--color-primary-900);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-secondary-500);
+  outline-offset: 2px;
+}
+
+.skip-link:focus {
+  transform: translateY(0%);
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee {
+    animation: none;
+  }
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
