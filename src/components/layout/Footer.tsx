@@ -1,5 +1,6 @@
+import Image from "next/image";
 import Link from "next/link";
-import { Mail, Phone, MapPin, GraduationCap } from "lucide-react";
+import { Mail, Phone, MapPin } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import {
   FacebookIcon,
@@ -47,9 +48,13 @@ export function Footer() {
       <Container className="grid grid-cols-1 gap-10 py-16 sm:grid-cols-2 lg:grid-cols-4">
         <div>
           <Link href="/" className="flex items-center gap-2">
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary-500 text-white">
-              <GraduationCap className="h-6 w-6" />
-            </span>
+            <Image
+              src="/logo-mark.png"
+              alt=""
+              width={40}
+              height={40}
+              className="h-10 w-10 rounded-xl object-cover"
+            />
             <span className="font-display text-xl font-bold text-white">
               {siteConfig.name}
             </span>
