@@ -46,19 +46,16 @@ export function Header() {
         Skip to main content
       </a>
       <Container>
-        <div className="flex h-18 items-center justify-between py-3">
-          <Link href="/" className="flex items-center gap-2">
+        <div className="flex h-20 items-center justify-between py-2">
+          <Link href="/" className="flex items-center">
             <Image
-              src="/logo-mark.svg"
-              alt=""
-              width={40}
-              height={40}
+              src="/logo-lockup.svg"
+              alt={siteConfig.name}
+              width={52}
+              height={64}
               loading="eager"
-              className="h-10 w-10 rounded-xl object-cover"
+              className="h-16 w-auto"
             />
-            <span className="font-display text-xl font-bold text-primary-900">
-              {siteConfig.name}
-            </span>
           </Link>
 
           <nav aria-label="Main navigation" className="hidden lg:flex lg:items-center lg:gap-1">

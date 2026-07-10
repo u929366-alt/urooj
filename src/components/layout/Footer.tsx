@@ -47,17 +47,14 @@ export function Footer() {
       </div>
       <Container className="grid grid-cols-1 gap-10 py-16 sm:grid-cols-2 lg:grid-cols-4">
         <div>
-          <Link href="/" className="flex items-center gap-2">
+          <Link href="/" className="inline-flex">
             <Image
-              src="/logo-mark.svg"
-              alt=""
-              width={40}
-              height={40}
-              className="h-10 w-10 rounded-xl object-cover"
+              src="/logo-lockup.svg"
+              alt={siteConfig.name}
+              width={78}
+              height={96}
+              className="h-24 w-auto rounded-xl"
             />
-            <span className="font-display text-xl font-bold text-white">
-              {siteConfig.name}
-            </span>
           </Link>
           <p className="mt-4 text-sm leading-6 text-primary-200">
             Empowering youth, women, and marginalized communities in Taxila through
