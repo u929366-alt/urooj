@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { CheckCircle2, FileText, Milestone } from "lucide-react";
+import { CheckCircle2, FileText } from "lucide-react";
 import { PageHero } from "@/components/PageHero";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -14,15 +14,6 @@ export const metadata: Metadata = {
   description:
     "Learn about Hunarsaaz's mission, vision, history, leadership, and the values that guide our vocational training programs in Taxila, Punjab.",
 };
-
-const history = [
-  { year: "2016", event: "Hunarsaaz founded in Taxila with a single Computer Skills classroom." },
-  { year: "2018", event: "Launched Tailoring & Beautician programs, reaching 500+ women." },
-  { year: "2020", event: "Opened dedicated trade skills workshops for electrical, plumbing & welding." },
-  { year: "2022", event: "Crossed 2,500 certified graduates and launched job placement partnerships." },
-  { year: "2024", event: "Expanded digital skills programs: Web Development, Digital Marketing & Freelancing." },
-  { year: "2026", event: "Serving 16 vocational programs with over 4,200 students trained to date." },
-];
 
 const objectives = [
   "Provide accessible, affordable vocational and technical education.",
@@ -47,8 +38,8 @@ export default function AboutPage() {
       <PageHero
         breadcrumb="About"
         eyebrow="About Hunarsaaz"
-        title="Bridging Education and Employment Since 2016"
-        description="We believe every person deserves the dignity of a skill and a sustainable livelihood — regardless of their background."
+        title="Bridging Education and Employment"
+        description="We believe every person deserves the dignity of a skill and a sustainable livelihood."
       />
 
       <section className="py-20">
@@ -68,9 +59,9 @@ export default function AboutPage() {
               <Eye className="h-8 w-8 text-accent-600" />
               <h2 className="mt-4 text-xl font-bold text-primary-900">Our Vision</h2>
               <p className="mt-2 text-gray-600">
-                A Pakistan where every individual, regardless of background, has
-                access to the skills and opportunities needed to earn a dignified,
-                sustainable livelihood.
+                A Pakistan where every individual has access to the skills and
+                opportunities needed to earn a dignified, sustainable
+                livelihood.
               </p>
             </Card>
           </div>
@@ -110,23 +101,6 @@ export default function AboutPage() {
       </section>
 
       <section className="bg-gray-50 py-20">
-        <Container>
-          <SectionHeading eyebrow="Our Journey" title="History & Milestones" />
-          <div className="mx-auto mt-12 max-w-2xl space-y-6 border-l-2 border-primary-200 pl-8">
-            {history.map((item) => (
-              <div key={item.year} className="relative">
-                <span className="absolute -left-[41px] flex h-6 w-6 items-center justify-center rounded-full bg-primary-600 text-white">
-                  <Milestone className="h-3.5 w-3.5" />
-                </span>
-                <p className="font-display text-lg font-bold text-primary-900">{item.year}</p>
-                <p className="mt-1 text-gray-600">{item.event}</p>
-              </div>
-            ))}
-          </div>
-        </Container>
-      </section>
-
-      <section className="py-20">
         <Container>
           <SectionHeading eyebrow="Governance" title="Leadership & Board Members" />
           <div className="mt-12">
