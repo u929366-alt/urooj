@@ -49,7 +49,7 @@ export function Footer() {
         <div>
           <Link href="/" className="flex items-center gap-2">
             <Image
-              src="/logo-mark.png"
+              src="/logo-mark.svg"
               alt=""
               width={40}
               height={40}
