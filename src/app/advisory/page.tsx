@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import {
   Landmark,
   FlaskConical,
@@ -30,7 +31,7 @@ import { PlaceholderImage } from "@/components/ui/PlaceholderImage";
 export const metadata: Metadata = {
   title: "Policy, Research, and Institutional Advisory",
   description:
-    "The Policy, Research, and Institutional Advisory Platform at Hunar Saaz bridges the gap between evidence, public decision-making, and implementation — supporting governments, development partners, and public institutions across Pakistan's social sector.",
+    "The Policy, Research, and Institutional Advisory Platform at Hunar Saaz bridges the gap between evidence, public decision-making, and implementation — supporting governments, development partners, and public and private institutions across Pakistan's social sector.",
 };
 
 const challenges = [
@@ -146,15 +147,22 @@ const engagementPrinciples = [
   },
 ];
 
-const associates = [
+const associates: {
+  name: string;
+  role: string;
+  bio: string;
+  photo?: string;
+}[] = [
   {
     name: "Waqar Shirazi",
     role: "Senior Associate | Policy, Research, and Evaluation",
+    photo: "/team/waqar-shirazi.jpg",
     bio: "A policy, research, and evaluation specialist with nearly two decades of experience at the intersection of social protection, gender equality, WASH, climate resilience, and institutional reform. He has led complex national and international assignments for governments, multilateral agencies, and development partners across Pakistan, South Asia, the Middle East, and Africa — spanning large-scale programme design, digital censuses and registries, quasi-experimental and mixed-methods evaluations, and national policy reporting including Pakistan's reporting under CEDAW and BPfA+30. At Hunar Saaz, he provides strategic leadership on evidence-informed policy design, evaluation quality, and learning systems.",
   },
   {
     name: "Ahsan Ali Mangi",
     role: "Senior Associate | Public Policy, Governance, and Institutional Systems",
+    photo: "/team/ahsan-ali-mangi.jpg",
     bio: "Over three decades of senior public sector leadership across federal and provincial governments, including positions as Federal Secretary, Additional Secretary, Commissioner, and head of major public institutions — with responsibilities spanning economic governance, trade diplomacy, education, social protection, disaster response, investment promotion, and regulatory reform. He has represented Pakistan in multilateral settings and led complex negotiations and administrative systems. At Hunar Saaz, he anchors work on governance reform, public sector systems, and institutional effectiveness.",
   },
   {
@@ -165,6 +173,7 @@ const associates = [
   {
     name: "Urooj Shafi",
     role: "Associate | Public Sector Finance | Research & Trade",
+    photo: "/team/urooj-shafi.jpg",
     bio: "A public sector finance and policy professional with 13+ years of experience spanning trade, market regulation, fair trade enforcement, monitoring & evaluation, and sovereign financial analysis. She has produced sectoral research across engineering, minerals, agriculture, and textiles — analyzing tariff structures, comparative country policy, and macroeconomic indicators — translating that work into briefs that reached senior policymakers directly. Trained in both law (LLB) and finance (MBA), and a U.S. State Department Professional Fellow, she contributes applied research on markets, trade, and public finance at Hunar Saaz.",
   },
 ];
@@ -284,10 +293,10 @@ export default function AdvisoryPage() {
         breadcrumb="Policy & Advisory"
         eyebrow="Hunar Saaz Platform"
         title="Policy, Research, and Institutional Advisory"
-        description="Bridging the persistent gap between evidence, public decision-making, and implementation — supporting governments, development partners, and public institutions in designing solutions that are analytically rigorous, context-responsive, and operationally feasible."
+        description="Bridging the persistent gap between evidence, public decision-making, and implementation — supporting governments, development partners, and public and private institutions in designing solutions that are analytically rigorous, context-responsive, and operationally feasible."
       />
 
-      <section className="py-20">
+      <section className="py-14">
         <Container>
           <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-2">
             <div>
@@ -337,14 +346,14 @@ export default function AdvisoryPage() {
         </Container>
       </section>
 
-      <section className="bg-gray-50 py-20">
+      <section className="bg-gray-50 py-14">
         <Container>
           <SectionHeading
             eyebrow="Why We Exist"
             title="From Policy Intent to Real-World Outcomes"
             description="Across Pakistan's social sector, well-articulated policies are routinely developed, yet their translation into coherent programmes and measurable results is often uneven. The gap reflects deeper structural weaknesses in how institutions plan, decide, and act."
           />
-          <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-3">
+          <div className="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-3">
             {challenges.map((item) => (
               <Card key={item.title} className="p-6">
                 <h3 className="font-semibold text-primary-900">{item.title}</h3>
@@ -352,7 +361,7 @@ export default function AdvisoryPage() {
               </Card>
             ))}
           </div>
-          <p className="mx-auto mt-10 max-w-3xl text-center text-gray-600">
+          <p className="mx-auto mt-8 max-w-3xl text-center text-gray-600">
             Hunar Saaz was established in response to these realities. It
             exists to strengthen the link between policy intent, evidence
             generation, and practical implementation — supporting institutions
@@ -362,10 +371,10 @@ export default function AdvisoryPage() {
         </Container>
       </section>
 
-      <section className="py-20">
+      <section className="py-14">
         <Container>
           <SectionHeading eyebrow="How We Think" title="Principles That Guide Our Work" />
-          <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {principles.map(({ icon: Icon, title, description }) => (
               <div key={title} className="rounded-2xl bg-primary-50 p-6">
                 <Icon className="h-7 w-7 text-primary-600" />
@@ -377,14 +386,14 @@ export default function AdvisoryPage() {
         </Container>
       </section>
 
-      <section className="bg-primary-900 py-20 text-white">
+      <section className="bg-primary-900 py-14 text-white">
         <Container>
           <SectionHeading
             eyebrow="What We Do"
             title="Integrated Advisory, Research, and Institutional Support"
             className="[&_h2]:text-white [&_p]:text-primary-200"
           />
-          <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {services.map(({ icon: Icon, title, description }) => (
               <div key={title} className="rounded-2xl bg-primary-800 p-6">
                 <Icon className="h-7 w-7 text-secondary-400" />
@@ -396,13 +405,13 @@ export default function AdvisoryPage() {
         </Container>
       </section>
 
-      <section className="py-20">
+      <section className="py-14">
         <Container>
           <SectionHeading
             eyebrow="How We Work"
             title="Working With Institutions, Not Around Them"
           />
-          <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2">
+          <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2">
             {engagementPrinciples.map((item) => (
               <Card key={item.title} className="p-6">
                 <h3 className="font-semibold text-primary-900">{item.title}</h3>
@@ -413,23 +422,33 @@ export default function AdvisoryPage() {
         </Container>
       </section>
 
-      <section className="bg-gray-50 py-20">
+      <section className="bg-gray-50 py-14">
         <Container>
           <SectionHeading
             eyebrow="Leadership & Collective Experience"
             title="Experience Applied With Judgement"
             description="Hunar Saaz is led by senior practitioners with over two decades of collective experience across policy, research, programme design, and institutional strengthening — working with governments, multilateral and bilateral development partners, international NGOs, and research institutions across Pakistan, South Asia, the Middle East, and Africa."
           />
-          <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-2">
+          <div className="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-2">
             {associates.map((person) => (
               <Card key={person.name} className="p-6">
                 <div className="flex items-start gap-4">
-                  <PlaceholderImage
-                    label={person.name}
-                    icon={Users}
-                    seed={person.name}
-                    className="h-20 w-20 shrink-0 rounded-xl"
-                  />
+                  {person.photo ? (
+                    <Image
+                      src={person.photo}
+                      alt={person.name}
+                      width={80}
+                      height={80}
+                      className="h-20 w-20 shrink-0 rounded-xl object-cover"
+                    />
+                  ) : (
+                    <PlaceholderImage
+                      label={person.name}
+                      icon={Users}
+                      seed={person.name}
+                      className="h-20 w-20 shrink-0 rounded-xl"
+                    />
+                  )}
                   <div>
                     <h3 className="font-semibold text-primary-900">{person.name}</h3>
                     <p className="mt-0.5 text-sm text-secondary-600">{person.role}</p>
@@ -439,7 +458,7 @@ export default function AdvisoryPage() {
               </Card>
             ))}
           </div>
-          <p className="mx-auto mt-10 max-w-3xl text-center text-sm text-gray-500">
+          <p className="mx-auto mt-8 max-w-3xl text-center text-sm text-gray-500">
             Hunar Saaz operates through a core leadership team supported by a
             wider network of senior associates and subject-matter experts —
             lean, while mobilizing specialized expertise as needed.
@@ -447,14 +466,14 @@ export default function AdvisoryPage() {
         </Container>
       </section>
 
-      <section className="py-20">
+      <section className="py-14">
         <Container>
           <SectionHeading
             eyebrow="Domains & Thematic Expertise"
             title="Expertise Organized Around Systems and Outcomes"
             description="Rather than operating through isolated sectoral silos, our work is organized around thematic areas where policy intent, evidence generation, implementation systems, and institutional incentives converge."
           />
-          <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2">
+          <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2">
             {domains.map(({ icon: Icon, title, description }) => (
               <Card key={title} className="flex items-start gap-4 p-6">
                 <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary-50">
@@ -470,7 +489,7 @@ export default function AdvisoryPage() {
         </Container>
       </section>
 
-      <section className="bg-gray-50 py-20">
+      <section className="bg-gray-50 py-14">
         <Container>
           <SectionHeading
             eyebrow="Geographic Experience & Exposure"
@@ -496,14 +515,14 @@ export default function AdvisoryPage() {
         </Container>
       </section>
 
-      <section className="py-20">
+      <section className="py-14">
         <Container>
           <SectionHeading
             eyebrow="Selected Experience"
             title="Engagement Snapshots"
             description="Selected leadership roles and engagements of Hunar Saaz's founding partners prior to the establishment of the firm."
           />
-          <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-2">
+          <div className="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-2">
             {engagements.map((item) => (
               <Card key={item.title} className="p-6">
                 <div className="flex flex-wrap gap-2">
@@ -519,7 +538,7 @@ export default function AdvisoryPage() {
         </Container>
       </section>
 
-      <section className="bg-primary-900 py-20 text-white">
+      <section className="bg-primary-900 py-14 text-white">
         <Container>
           <SectionHeading
             eyebrow="Legal Status & Institutional Standing"
