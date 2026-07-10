@@ -51,9 +51,9 @@ export function Footer() {
             <Image
               src="/logo-lockup.svg"
               alt={siteConfig.name}
-              width={78}
+              width={200}
               height={96}
-              className="h-24 w-auto rounded-xl"
+              className="h-24 w-auto rounded-xl bg-white p-2"
             />
           </Link>
           <p className="mt-4 text-sm leading-6 text-primary-200">
