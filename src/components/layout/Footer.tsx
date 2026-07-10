@@ -15,6 +15,7 @@ import { NewsletterForm } from "@/components/forms/NewsletterForm";
 const quickLinks = [
   { label: "About Us", href: "/about" },
   { label: "Programs", href: "/programs" },
+  { label: "Policy & Advisory", href: "/advisory" },
   { label: "Admissions", href: "/admissions" },
   { label: "Volunteer", href: "/volunteer" },
   { label: "Donate", href: "/donate" },

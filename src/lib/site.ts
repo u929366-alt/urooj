@@ -37,6 +37,11 @@ export const mainNav: NavLink[] = [
     description: "Browse all vocational training programs",
   },
   {
+    label: "Policy & Advisory",
+    href: "/advisory",
+    description: "Policy, Research, and Institutional Advisory Platform",
+  },
+  {
     label: "Get Involved",
     href: "/admissions",
     children: [
