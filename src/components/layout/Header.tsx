@@ -51,7 +51,7 @@ export function Header() {
             <Image
               src="/logo-lockup.svg"
               alt={siteConfig.name}
-              width={133}
+              width={149}
               height={64}
               loading="eager"
               className="h-16 w-auto"
