@@ -15,10 +15,10 @@ export const metadata: Metadata = {
 };
 
 const socialLinks = [
-  { icon: FacebookIcon, href: siteConfig.social.facebook, label: "Facebook" },
-  { icon: InstagramIcon, href: siteConfig.social.instagram, label: "Instagram" },
-  { icon: LinkedinIcon, href: siteConfig.social.linkedin, label: "LinkedIn" },
-  { icon: YoutubeIcon, href: siteConfig.social.youtube, label: "YouTube" },
+  { icon: FacebookIcon, label: "Facebook" },
+  { icon: InstagramIcon, label: "Instagram" },
+  { icon: LinkedinIcon, label: "LinkedIn" },
+  { icon: YoutubeIcon, label: "YouTube" },
 ];
 
 export default function ContactPage() {
@@ -83,17 +83,14 @@ export default function ContactPage() {
                   </div>
                 </Card>
                 <div className="flex gap-3 pt-2">
-                  {socialLinks.map(({ icon: Icon, href, label }) => (
-                    <a
+                  {socialLinks.map(({ icon: Icon, label }) => (
+                    <span
                       key={label}
-                      href={href}
-                      target="_blank"
-                      rel="noopener noreferrer"
                       aria-label={label}
-                      className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-50 text-primary-700 hover:bg-primary-100"
+                      className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-50 text-primary-700"
                     >
                       <Icon className="h-5 w-5" />
-                    </a>
+                    </span>
                   ))}
                 </div>
               </div>

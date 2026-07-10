@@ -74,7 +74,6 @@ const organizationJsonLd = {
     addressRegion: "Punjab",
     addressCountry: "PK",
   },
-  sameAs: Object.values(siteConfig.social),
 };
 
 export default function RootLayout({

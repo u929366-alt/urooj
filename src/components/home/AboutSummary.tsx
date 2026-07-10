@@ -25,10 +25,10 @@ export function AboutSummary() {
               Bridging the Gap Between Education and Employment
             </h2>
             <p className="mt-4 text-lg text-gray-600">
-              Since 2016, Hunarsaaz has equipped thousands of young people and
-              women in Taxila with practical, industry-relevant skills —
-              improving livelihoods and promoting economic development across
-              our community.
+              Hunarsaaz opens skills training to those most often left out of
+              it — equipping women and men with practical, industry-relevant
+              capability that improves livelihoods and strengthens our
+              community.
             </p>
             <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="flex gap-3 rounded-xl bg-primary-50 p-4">

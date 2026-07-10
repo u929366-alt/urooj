@@ -24,11 +24,11 @@ const quickLinks = [
 ];
 
 const socialLinks = [
-  { icon: FacebookIcon, href: siteConfig.social.facebook, label: "Facebook" },
-  { icon: InstagramIcon, href: siteConfig.social.instagram, label: "Instagram" },
-  { icon: LinkedinIcon, href: siteConfig.social.linkedin, label: "LinkedIn" },
-  { icon: YoutubeIcon, href: siteConfig.social.youtube, label: "YouTube" },
-  { icon: XIcon, href: siteConfig.social.twitter, label: "X / Twitter" },
+  { icon: FacebookIcon, label: "Facebook" },
+  { icon: InstagramIcon, label: "Instagram" },
+  { icon: LinkedinIcon, label: "LinkedIn" },
+  { icon: YoutubeIcon, label: "YouTube" },
+  { icon: XIcon, label: "X / Twitter" },
 ];
 
 export function Footer() {
@@ -61,17 +61,14 @@ export function Footer() {
             vocational education, entrepreneurship, and digital skills.
           </p>
           <div className="mt-6 flex gap-3">
-            {socialLinks.map(({ icon: Icon, href, label }) => (
-              <a
+            {socialLinks.map(({ icon: Icon, label }) => (
+              <span
                 key={label}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
                 aria-label={label}
-                className="flex h-9 w-9 items-center justify-center rounded-full bg-primary-800 text-white transition-colors hover:bg-secondary-500"
+                className="flex h-9 w-9 items-center justify-center rounded-full bg-primary-800 text-white"
               >
                 <Icon className="h-4 w-4" />
-              </a>
+              </span>
             ))}
           </div>
         </div>

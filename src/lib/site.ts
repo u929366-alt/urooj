@@ -10,13 +10,6 @@ export const siteConfig = {
   whatsapp: "+923001234567",
   address: "Main GT Road, Taxila, Punjab, Pakistan",
   hours: "Monday – Saturday, 9:00 AM – 5:00 PM",
-  social: {
-    facebook: "https://facebook.com/hunarsaaz",
-    instagram: "https://instagram.com/hunarsaaz",
-    linkedin: "https://linkedin.com/company/hunarsaaz",
-    youtube: "https://youtube.com/@hunarsaaz",
-    twitter: "https://x.com/hunarsaaz",
-  },
   bankDetails: {
     bankName: "Habib Bank Limited (HBL)",
     accountTitle: "Hunarsaaz Welfare Foundation",
