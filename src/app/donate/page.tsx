@@ -28,27 +28,12 @@ export default function DonatePage() {
         <Container>
           <SectionHeading eyebrow="Where It Goes" title="Donation Causes" />
           <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2">
-            {causes.map((cause) => {
-              const percent = Math.min(100, Math.round((cause.raised / cause.goal) * 100));
-              return (
-                <Card key={cause.slug} className="p-6">
-                  <h3 className="font-semibold text-primary-900">{cause.title}</h3>
-                  <p className="mt-1.5 text-sm text-gray-600">{cause.description}</p>
-                  <div className="mt-4">
-                    <div className="h-2.5 w-full overflow-hidden rounded-full bg-gray-100">
-                      <div
-                        className="h-full rounded-full bg-secondary-500"
-                        style={{ width: `${percent}%` }}
-                      />
-                    </div>
-                    <div className="mt-2 flex justify-between text-xs text-gray-500">
-                      <span>PKR {cause.raised.toLocaleString()} raised</span>
-                      <span>{percent}% of PKR {cause.goal.toLocaleString()} goal</span>
-                    </div>
-                  </div>
-                </Card>
-              );
-            })}
+            {causes.map((cause) => (
+              <Card key={cause.slug} className="p-6">
+                <h3 className="font-semibold text-primary-900">{cause.title}</h3>
+                <p className="mt-1.5 text-sm text-gray-600">{cause.description}</p>
+              </Card>
+            ))}
           </div>
 
           <Card className="mt-10 flex flex-col items-center gap-4 p-8 text-center sm:flex-row sm:text-left">
