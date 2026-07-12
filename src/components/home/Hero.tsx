@@ -1,7 +1,9 @@
-import { ArrowRight, Heart, Compass } from "lucide-react";
+import Link from "next/link";
+import { ArrowRight, Heart, Compass, BookOpen } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { PlaceholderImage } from "@/components/ui/PlaceholderImage";
+import { StatCounter } from "@/components/ui/StatCounter";
 import { GraduationCap } from "lucide-react";
 
 export function Hero() {
@@ -38,12 +40,23 @@ export function Hero() {
               Explore Programs
             </Button>
           </div>
-          <dl className="mt-10 flex flex-wrap gap-x-10 gap-y-4">
-            <div>
-              <dt className="text-2xl font-bold text-primary-900">16</dt>
-              <dd className="text-sm text-gray-500">Programs Offered</dd>
-            </div>
-          </dl>
+          <Link
+            href="/programs"
+            className="group mt-10 inline-flex items-center gap-4 rounded-2xl border border-primary-100 bg-white/80 px-6 py-4 shadow-sm backdrop-blur transition-all hover:-translate-y-0.5 hover:border-primary-200 hover:shadow-md"
+          >
+            <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary-600 text-white">
+              <BookOpen className="h-6 w-6" />
+            </span>
+            <span>
+              <span className="block font-display text-3xl font-bold leading-none text-primary-900">
+                <StatCounter value={16} duration={2000} />
+              </span>
+              <span className="mt-1 block text-sm font-medium text-gray-500">
+                Programs Offered
+              </span>
+            </span>
+            <ArrowRight className="h-5 w-5 text-primary-300 transition-all group-hover:translate-x-1 group-hover:text-primary-600" />
+          </Link>
         </div>
         <div className="relative">
           <PlaceholderImage
