@@ -6,7 +6,8 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Card } from "@/components/ui/Card";
 import { PlaceholderImage } from "@/components/ui/PlaceholderImage";
 import { coreValues } from "@/data/stats";
-import { boardMembers, leadership } from "@/data/team";
+import Image from "next/image";
+import { officeBearers, team } from "@/data/team";
 import { Users, Target, Eye } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -104,37 +105,65 @@ export default function AboutPage() {
         <Container>
           <SectionHeading eyebrow="Governance" title="Leadership & Board Members" />
           <div className="mt-12">
-            <h3 className="font-display text-lg font-semibold text-primary-900">Leadership Team</h3>
-            <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              {leadership.map((person) => (
-                <Card key={person.name} className="p-5">
-                  <PlaceholderImage
-                    label={person.name}
-                    icon={Users}
-                    seed={person.name}
-                    className="aspect-square w-full rounded-xl"
-                  />
-                  <h4 className="mt-4 font-semibold text-primary-900">{person.name}</h4>
-                  <p className="text-sm text-secondary-600">{person.role}</p>
-                  <p className="mt-2 text-sm text-gray-600">{person.bio}</p>
+            <h3 className="font-display text-lg font-semibold text-primary-900">Office Bearers</h3>
+            <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
+              {officeBearers.map((person) => (
+                <Card key={person.name} className="p-6">
+                  <div className="flex items-start gap-4">
+                    {person.photo ? (
+                      <Image
+                        src={person.photo}
+                        alt={person.name}
+                        width={80}
+                        height={80}
+                        className="h-20 w-20 shrink-0 rounded-xl object-cover"
+                      />
+                    ) : (
+                      <PlaceholderImage
+                        label={person.name}
+                        icon={Users}
+                        seed={person.name}
+                        className="h-20 w-20 shrink-0 rounded-xl"
+                      />
+                    )}
+                    <div>
+                      <h4 className="font-semibold text-primary-900">{person.name}</h4>
+                      <p className="mt-0.5 text-sm text-secondary-600">{person.role}</p>
+                    </div>
+                  </div>
+                  <p className="mt-4 text-sm leading-6 text-gray-600">{person.bio}</p>
                 </Card>
               ))}
             </div>
           </div>
           <div className="mt-14">
-            <h3 className="font-display text-lg font-semibold text-primary-900">Board of Trustees</h3>
-            <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              {boardMembers.map((person) => (
-                <Card key={person.name} className="p-5">
-                  <PlaceholderImage
-                    label={person.name}
-                    icon={Users}
-                    seed={person.name}
-                    className="aspect-square w-full rounded-xl"
-                  />
-                  <h4 className="mt-4 font-semibold text-primary-900">{person.name}</h4>
-                  <p className="text-sm text-secondary-600">{person.role}</p>
-                  <p className="mt-2 text-sm text-gray-600">{person.bio}</p>
+            <h3 className="font-display text-lg font-semibold text-primary-900">Our Team</h3>
+            <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
+              {team.map((person) => (
+                <Card key={person.name} className="p-6">
+                  <div className="flex items-start gap-4">
+                    {person.photo ? (
+                      <Image
+                        src={person.photo}
+                        alt={person.name}
+                        width={80}
+                        height={80}
+                        className="h-20 w-20 shrink-0 rounded-xl object-cover"
+                      />
+                    ) : (
+                      <PlaceholderImage
+                        label={person.name}
+                        icon={Users}
+                        seed={person.name}
+                        className="h-20 w-20 shrink-0 rounded-xl"
+                      />
+                    )}
+                    <div>
+                      <h4 className="font-semibold text-primary-900">{person.name}</h4>
+                      <p className="mt-0.5 text-sm text-secondary-600">{person.role}</p>
+                    </div>
+                  </div>
+                  <p className="mt-4 text-sm leading-6 text-gray-600">{person.bio}</p>
                 </Card>
               ))}
             </div>
