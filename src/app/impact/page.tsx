@@ -66,8 +66,8 @@ export default function ImpactPage() {
           </Card>
           <p className="mx-auto mt-6 max-w-3xl text-center text-sm text-gray-500">
             Questions about our finances or governance? Reach us at{" "}
-            <a href="mailto:info@hunarsaaz.org" className="font-medium text-primary-600 hover:underline">
-              info@hunarsaaz.org
+            <a href="mailto:ceo@hunarsaaz.pk" className="font-medium text-primary-600 hover:underline">
+              ceo@hunarsaaz.pk
             </a>
             .
           </p>

@@ -4,10 +4,10 @@ export const siteConfig = {
   description:
     "Hunarsaaz is a Pakistani NGO based in Taxila, Punjab, empowering youth, women, and marginalized communities through vocational and technical education, entrepreneurship training, digital skills, and employment opportunities.",
   url: "https://www.hunarsaaz.org",
-  email: "info@hunarsaaz.org",
-  admissionsEmail: "admissions@hunarsaaz.org",
-  phone: "+92 51 1234567",
-  whatsapp: "+923001234567",
+  email: "ceo@hunarsaaz.pk",
+  admissionsEmail: "ceo@hunarsaaz.pk",
+  phone: "+92 300 8154597",
+  whatsapp: "+923008154597",
   address: "Main GT Road, Taxila, Punjab, Pakistan",
   hours: "Monday – Saturday, 9:00 AM – 5:00 PM",
   bankDetails: {

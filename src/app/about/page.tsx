@@ -191,8 +191,8 @@ export default function AboutPage() {
           </div>
           <p className="mt-6 text-sm text-primary-300">
             Full policy documents are available on request at {" "}
-            <a href="mailto:info@hunarsaaz.org" className="underline hover:text-white">
-              info@hunarsaaz.org
+            <a href="mailto:ceo@hunarsaaz.pk" className="underline hover:text-white">
+              ceo@hunarsaaz.pk
             </a>
             . See our <a href="/impact#reports" className="underline hover:text-white">Annual Reports</a> for financial transparency.
           </p>
