@@ -103,7 +103,7 @@ export default function AboutPage() {
 
       <section className="bg-gray-50 py-20">
         <Container>
-          <SectionHeading eyebrow="Governance" title="Leadership & Board Members" />
+          <SectionHeading eyebrow="Governance" title="Leadership" />
           <div className="mt-12">
             <h3 className="font-display text-lg font-semibold text-primary-900">Office Bearers</h3>
             <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">

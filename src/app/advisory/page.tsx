@@ -168,6 +168,7 @@ const associates: {
   {
     name: "Rana Iftikhar Raza",
     role: "Senior Associate | Data Systems, EMIS, and Digital Governance",
+    photo: "/team/rana-iftikhar-raza.jpg",
     bio: "A senior data systems and digital governance specialist with over thirty years of experience in Education Management Information Systems (EMIS), GIS-based planning, large-scale surveys, and public sector information systems. He has played a foundational role in the design, digitization, and institutionalization of EMIS and decision-support systems across multiple provinces, with expertise spanning system architecture, spatial data integration, survey operations, third-party validations, and capacity building. At Hunar Saaz, he leads work on data systems, digital transformation, and evidence infrastructure.",
   },
   {
