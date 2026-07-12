@@ -162,7 +162,6 @@ const associates: {
   {
     name: "Ahsan Ali Mangi",
     role: "Senior Associate | Public Policy, Governance, and Institutional Systems",
-    photo: "/team/ahsan-ali-mangi.jpg",
     bio: "Over three decades of senior public sector leadership across federal and provincial governments, including positions as Federal Secretary, Additional Secretary, Commissioner, and head of major public institutions — with responsibilities spanning economic governance, trade diplomacy, education, social protection, disaster response, investment promotion, and regulatory reform. He has represented Pakistan in multilateral settings and led complex negotiations and administrative systems. At Hunar Saaz, he anchors work on governance reform, public sector systems, and institutional effectiveness.",
   },
   {

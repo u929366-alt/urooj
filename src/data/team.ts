@@ -9,7 +9,6 @@ export const officeBearers: Person[] = [
   {
     name: "Ahsan Ali Mangi",
     role: "President",
-    photo: "/team/ahsan-ali-mangi.jpg",
     bio: "A senior Pakistani civil servant with over three decades of distinguished experience in public administration, governance, economic management, public policy, and institutional leadership. He currently serves as Director General of the National Institute of Public Administration (NIPA), Islamabad. His career includes serving as Secretary, Ministry of Aviation; Additional Secretary, Ministry of Commerce; Secretary, Trade Development Authority of Pakistan; Secretary of the School Education & Literacy, Investment, and Empowerment of Persons with Disabilities Departments, Government of Sindh; Commissioner Hyderabad Division; and Deputy Secretary General (Economic Growth & Transport) at the Economic Cooperation Organization, Tehran. He holds an M.Sc. in International Development from the University of Manchester.",
   },
   {

@@ -25,20 +25,6 @@ export const posts: Post[] = [
     readTime: "3 min read",
   },
   {
-    slug: "womens-empowerment-batch-graduation",
-    title: "120 Women Graduate from Tailoring & Beautician Programs",
-    excerpt: "Our largest women's empowerment graduation ceremony yet celebrated 120 graduates ready to launch their own businesses.",
-    content: [
-      "In a ceremony filled with pride and celebration, 120 women graduated from our Tailoring & Fashion Design and Beautician Training programs this spring.",
-      "Many of the graduates plan to start home-based businesses, while others have already secured positions at local boutiques and salons.",
-      "Chief guest and local philanthropist Mrs. Nasreen Butt praised the program's impact on household incomes across Taxila.",
-    ],
-    category: "Success Story",
-    author: "Hunarsaaz Communications Team",
-    date: "2026-05-20",
-    readTime: "4 min read",
-  },
-  {
     slug: "partnership-with-local-industry",
     title: "Hunarsaaz Signs Job Placement Partnership with Local Manufacturers",
     excerpt: "A new partnership guarantees interviews for Electrical Technician and Welding graduates with three Taxila-based manufacturers.",

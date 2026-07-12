@@ -1,9 +1,7 @@
 import { Target, Eye, ArrowRight } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
-import { StatCounter } from "@/components/ui/StatCounter";
 import { PlaceholderImage } from "@/components/ui/PlaceholderImage";
-import { stats } from "@/data/stats";
 import { Users } from "lucide-react";
 
 export function AboutSummary() {
@@ -56,18 +54,6 @@ export function AboutSummary() {
             </Button>
           </div>
         </div>
-
-        <dl className="mt-20 grid grid-cols-2 gap-8 rounded-3xl bg-primary-900 px-6 py-12 sm:grid-cols-3 lg:grid-cols-5">
-          {stats.map((stat) => (
-            <div key={stat.label} className="text-center">
-              <dt className="sr-only">{stat.label}</dt>
-              <dd className="font-display text-3xl font-bold text-white sm:text-4xl">
-                <StatCounter value={stat.value} suffix={stat.suffix} />
-              </dd>
-              <p className="mt-2 text-sm text-primary-200">{stat.label}</p>
-            </div>
-          ))}
-        </dl>
       </Container>
     </section>
   );

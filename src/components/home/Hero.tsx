@@ -40,16 +40,8 @@ export function Hero() {
           </div>
           <dl className="mt-10 flex flex-wrap gap-x-10 gap-y-4">
             <div>
-              <dt className="text-2xl font-bold text-primary-900">4,200+</dt>
-              <dd className="text-sm text-gray-500">Students Trained</dd>
-            </div>
-            <div>
               <dt className="text-2xl font-bold text-primary-900">16</dt>
               <dd className="text-sm text-gray-500">Programs Offered</dd>
-            </div>
-            <div>
-              <dt className="text-2xl font-bold text-primary-900">78%</dt>
-              <dd className="text-sm text-gray-500">Employment Rate</dd>
             </div>
           </dl>
         </div>
@@ -60,12 +52,6 @@ export function Hero() {
             seed="hero"
             className="aspect-[4/3] w-full rounded-3xl shadow-2xl shadow-primary-900/20"
           />
-          <div className="absolute -bottom-6 -left-6 hidden rounded-2xl bg-white p-4 shadow-xl sm:block">
-            <p className="text-sm font-semibold text-primary-900">
-              &ldquo;A stable trade changed my family&apos;s life.&rdquo;
-            </p>
-            <p className="mt-1 text-xs text-gray-500">— Asif, Electrical Technician Graduate</p>
-          </div>
         </div>
       </Container>
     </section>
