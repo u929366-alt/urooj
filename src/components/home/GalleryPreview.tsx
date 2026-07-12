@@ -9,10 +9,10 @@ export function GalleryPreview() {
   const items = galleryItems.slice(0, 8);
 
   return (
-    <section className="py-20">
+    <section className="py-14">
       <Container>
         <SectionHeading eyebrow="Gallery" title="Life at Hunarsaaz" />
-        <div className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-4">
+        <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-4">
           {items.map((item, i) => (
             <PlaceholderImage
               key={item.id}

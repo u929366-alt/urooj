@@ -43,7 +43,7 @@ export default function VolunteerPage() {
         description="Share your skills and time to help train the next generation of skilled professionals in Taxila."
       />
 
-      <section className="py-16">
+      <section className="py-12">
         <Container>
           <SectionHeading eyebrow="Ways to Help" title="Volunteer Opportunities" />
           <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -58,7 +58,7 @@ export default function VolunteerPage() {
             ))}
           </div>
 
-          <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2">
+          <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2">
             <Card className="p-6">
               <Heart className="h-7 w-7 text-secondary-600" />
               <h3 className="mt-3 font-semibold text-primary-900">Benefits</h3>
@@ -85,7 +85,7 @@ export default function VolunteerPage() {
         </Container>
       </section>
 
-      <section className="bg-gray-50 py-16">
+      <section className="bg-gray-50 py-12">
         <Container>
           <SectionHeading eyebrow="Apply Now" title="Volunteer Registration Form" />
           <Card className="mx-auto mt-10 max-w-3xl p-6 sm:p-10">

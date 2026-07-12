@@ -7,7 +7,7 @@ import { GraduationCap } from "lucide-react";
 export function Hero() {
   return (
     <section className="relative overflow-hidden bg-gradient-to-b from-primary-50 via-white to-white">
-      <Container className="grid grid-cols-1 items-center gap-12 py-16 lg:grid-cols-2 lg:py-24">
+      <Container className="grid grid-cols-1 items-center gap-10 py-12 lg:grid-cols-2 lg:py-12">
         <div>
           <span className="inline-flex items-center gap-2 rounded-full bg-secondary-50 px-4 py-1.5 text-sm font-semibold text-secondary-700">
             <Heart className="h-4 w-4" />

@@ -22,7 +22,7 @@ export default function ImpactPage() {
         description="Hunarsaaz is at the start of its journey. From day one, we are committed to measuring our results honestly and reporting them transparently."
       />
 
-      <section className="bg-gray-50 py-16">
+      <section className="bg-gray-50 py-12">
         <Container>
           <SectionHeading
             eyebrow="Financial Transparency"
@@ -47,7 +47,7 @@ export default function ImpactPage() {
         </Container>
       </section>
 
-      <section id="reports" className="scroll-mt-24 py-16">
+      <section id="reports" className="scroll-mt-24 py-12">
         <Container>
           <SectionHeading eyebrow="Accountability" title="Annual Reports" />
           <Card className="mx-auto mt-10 flex max-w-3xl items-start gap-4 p-6">

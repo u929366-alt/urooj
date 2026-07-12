@@ -18,7 +18,7 @@ export default function ProgramsPage() {
         title="16 Programs. One Goal: Your Future."
         description="Every program is designed with employer input, taught by experienced trainers, and backed by job placement support."
       />
-      <section className="py-16">
+      <section className="py-12">
         <Container>
           <ProgramsGrid />
         </Container>

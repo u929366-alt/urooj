@@ -31,7 +31,7 @@ export default function ContactPage() {
         description="Whether you have a question about admissions, donations, or volunteering — reach out anytime."
       />
 
-      <section className="py-16">
+      <section className="py-12">
         <Container>
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-5">
             <div className="lg:col-span-2">

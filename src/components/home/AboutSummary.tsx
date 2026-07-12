@@ -6,9 +6,9 @@ import { Users } from "lucide-react";
 
 export function AboutSummary() {
   return (
-    <section className="py-20">
+    <section className="py-14">
       <Container>
-        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
+        <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-2">
           <PlaceholderImage
             label="Hunarsaaz campus and students"
             icon={Users}

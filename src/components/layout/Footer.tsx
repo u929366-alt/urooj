@@ -46,7 +46,7 @@ export function Footer() {
           <NewsletterForm className="w-full max-w-md" />
         </Container>
       </div>
-      <Container className="grid grid-cols-1 gap-10 py-16 sm:grid-cols-2 lg:grid-cols-4">
+      <Container className="grid grid-cols-1 gap-10 py-12 sm:grid-cols-2 lg:grid-cols-4">
         <div>
           <Link href="/" className="inline-flex">
             <Image

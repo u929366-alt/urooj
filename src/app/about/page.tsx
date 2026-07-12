@@ -43,7 +43,7 @@ export default function AboutPage() {
         description="We believe every person deserves the dignity of a skill and a sustainable livelihood."
       />
 
-      <section className="py-20">
+      <section className="py-14">
         <Container>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
             <Card className="p-8">
@@ -67,7 +67,7 @@ export default function AboutPage() {
             </Card>
           </div>
 
-          <div className="mt-16">
+          <div className="mt-12">
             <SectionHeading eyebrow="What Drives Us" title="Our Core Values" align="left" />
             <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-5">
               {coreValues.map((value) => (
@@ -79,7 +79,7 @@ export default function AboutPage() {
             </div>
           </div>
 
-          <div className="mt-16 grid grid-cols-1 gap-12 lg:grid-cols-2">
+          <div className="mt-12 grid grid-cols-1 gap-10 lg:grid-cols-2">
             <div>
               <SectionHeading eyebrow="Our Purpose" title="Objectives" align="left" />
               <ul className="mt-6 space-y-3">
@@ -101,10 +101,10 @@ export default function AboutPage() {
         </Container>
       </section>
 
-      <section className="bg-gray-50 py-20">
+      <section className="bg-gray-50 py-14">
         <Container>
           <SectionHeading eyebrow="Governance" title="Leadership" />
-          <div className="mt-12">
+          <div className="mt-10">
             <h3 className="font-display text-lg font-semibold text-primary-900">Office Bearers</h3>
             <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
               {officeBearers.map((person) => (
@@ -171,14 +171,14 @@ export default function AboutPage() {
         </Container>
       </section>
 
-      <section id="policies" className="scroll-mt-24 bg-primary-900 py-20 text-white">
+      <section id="policies" className="scroll-mt-24 bg-primary-900 py-14 text-white">
         <Container>
           <SectionHeading
             eyebrow="Transparency"
             title="Policies & Governance Documents"
             className="[&_h2]:text-white [&_p]:text-primary-200"
           />
-          <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2">
             {policies.map((policy) => (
               <div key={policy.title} className="flex items-start gap-4 rounded-2xl bg-primary-800 p-5">
                 <FileText className="mt-0.5 h-6 w-6 shrink-0 text-secondary-400" />

@@ -50,7 +50,7 @@ export default async function BlogPostPage({
   return (
     <>
       <PageHero breadcrumb={post.title} eyebrow={post.category} title={post.title} />
-      <section className="py-16">
+      <section className="py-12">
         <Container>
           <div className="mx-auto max-w-3xl">
             <p className="text-sm text-gray-500">

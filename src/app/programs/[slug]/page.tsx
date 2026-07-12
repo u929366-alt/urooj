@@ -70,9 +70,9 @@ export default async function ProgramDetailPage({
       />
       <PageHero breadcrumb={program.title} eyebrow={program.category} title={program.title} description={program.summary} />
 
-      <section className="py-16">
+      <section className="py-12">
         <Container>
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-10 lg:grid-cols-3">
             <div className="lg:col-span-2">
               <PlaceholderImage
                 label={program.title}

@@ -24,7 +24,7 @@ export default function DonatePage() {
         description="Every rupee directly funds scholarships, training materials, and equipment for students who could not otherwise afford vocational education."
       />
 
-      <section className="py-16">
+      <section className="py-12">
         <Container>
           <SectionHeading eyebrow="Where It Goes" title="Donation Causes" />
           <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2">
@@ -64,9 +64,9 @@ export default function DonatePage() {
         </Container>
       </section>
 
-      <section className="bg-gray-50 py-16">
+      <section className="bg-gray-50 py-12">
         <Container>
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-5">
+          <div className="grid grid-cols-1 gap-10 lg:grid-cols-5">
             <div className="lg:col-span-3">
               <SectionHeading eyebrow="Give Now" title="Make a Donation" align="left" />
               <Card className="mt-8 p-6 sm:p-8">

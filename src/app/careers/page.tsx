@@ -24,7 +24,7 @@ export default function CareersPage() {
         description="We're always looking for passionate people to help us empower more students across Taxila."
       />
 
-      <section className="py-16">
+      <section className="py-12">
         <Container>
           <SectionHeading eyebrow="Open Positions" title="Current Openings" />
           <div className="mx-auto mt-10 max-w-3xl space-y-5">

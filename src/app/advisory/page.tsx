@@ -298,7 +298,7 @@ export default function AdvisoryPage() {
 
       <section className="py-14">
         <Container>
-          <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-2">
+          <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-2">
             <div>
               <SectionHeading eyebrow="Who We Are" title="A Thinking Institution for the Social Sector" align="left" />
               <p className="mt-6 text-gray-600">

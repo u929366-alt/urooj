@@ -51,7 +51,7 @@ export default async function AdmissionsPage({
         description="Applying is free, straightforward, and the first step toward a new skill and career."
       />
 
-      <section className="py-16">
+      <section className="py-12">
         <Container>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
             <Card className="p-6">
@@ -97,7 +97,7 @@ export default async function AdmissionsPage({
         </Container>
       </section>
 
-      <section className="bg-gray-50 py-16">
+      <section className="bg-gray-50 py-12">
         <Container>
           <SectionHeading eyebrow="Apply Now" title="Online Application Form" />
           <Card className="mx-auto mt-10 max-w-3xl p-6 sm:p-10">
@@ -106,7 +106,7 @@ export default async function AdmissionsPage({
         </Container>
       </section>
 
-      <section className="py-16">
+      <section className="py-12">
         <Container>
           <SectionHeading eyebrow="Questions" title="Admissions FAQs" />
           <div className="mx-auto mt-10 max-w-2xl space-y-4">
