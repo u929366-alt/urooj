@@ -48,7 +48,7 @@ export const officeBearers: Person[] = [
 export const team: Person[] = [
   {
     name: "Rana Iftikhar Raza",
-    role: "EMIS, Data Systems & IT",
+    role: "Executive Director",
     photo: "/team/rana-iftikhar-raza.jpg",
     bio: "An experienced Education Management Information System (EMIS) specialist, IT consultant, and project management professional with more than 30 years of experience in education data systems, school surveys, third-party validations, GIS, and technology-driven public sector solutions. He served as EMIS System Analyst with the GTZ/GIZ-supported Education Sector Reform Program and played a key role in establishing the Balochistan EMIS, with engagements across Balochistan, Khyber Pakhtunkhwa, Punjab, and Azad Jammu & Kashmir, including USAID-supported education initiatives. He holds a B.Sc. (Hons), a B.S. in Computer Science, and an M.Sc. in Mathematics.",
   },
