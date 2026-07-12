@@ -40,7 +40,7 @@ export const officeBearers: Person[] = [
   {
     name: "Waqar Sherazi",
     role: "Member",
-    photo: "/team/waqar-shirazi.jpg",
+    photo: "/team/waqar-sherazi.jpg",
     bio: "A development sector specialist and public policy consultant with more than 17 years of experience in social protection, poverty alleviation, disaster risk reduction, monitoring and evaluation, research, and programme management. He is widely recognized for his long association with the Benazir Income Support Programme, where he served as Evaluation Design & Technical Lead for impact evaluations of BISP's unconditional and conditional cash transfer programmes in collaboration with Oxford Policy Management.",
   },
 ];

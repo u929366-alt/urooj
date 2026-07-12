@@ -154,9 +154,9 @@ const associates: {
   photo?: string;
 }[] = [
   {
-    name: "Waqar Shirazi",
+    name: "Waqar Sherazi",
     role: "Senior Associate | Policy, Research, and Evaluation",
-    photo: "/team/waqar-shirazi.jpg",
+    photo: "/team/waqar-sherazi.jpg",
     bio: "A policy, research, and evaluation specialist with nearly two decades of experience at the intersection of social protection, gender equality, WASH, climate resilience, and institutional reform. He has led complex national and international assignments for governments, multilateral agencies, and development partners across Pakistan, South Asia, the Middle East, and Africa — spanning large-scale programme design, digital censuses and registries, quasi-experimental and mixed-methods evaluations, and national policy reporting including Pakistan's reporting under CEDAW and BPfA+30. At Hunar Saaz, he provides strategic leadership on evidence-informed policy design, evaluation quality, and learning systems.",
   },
   {
