@@ -1,7 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // Self-contained production build for Node.js hosting (cPanel Passenger).
+  // Vercel and plain `next start` are unaffected by this setting.
+  output: "standalone",
 };
 
 export default nextConfig;
