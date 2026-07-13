@@ -11,14 +11,10 @@ export const siteConfig = {
   address: "Main GT Road, Taxila, Punjab, Pakistan",
   hours: "Monday – Saturday, 9:00 AM – 5:00 PM",
   bankDetails: {
-    bankName: "Habib Bank Limited (HBL)",
-    accountTitle: "Hunarsaaz Welfare Foundation",
-    accountNumber: "1234-5678901-234",
-    iban: "PK00HABB0001234567890123",
-    branch: "Taxila Branch, Punjab",
+    bankName: "Allied Bank Limited",
+    accountTitle: "Hunar Saaz",
+    iban: "PK46ABPA0010154495590018",
   },
-  easypaisa: "0300-1234567",
-  jazzcash: "0300-1234567",
 };
 
 export type NavLink = {

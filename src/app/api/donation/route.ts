@@ -8,7 +8,7 @@ const schema = z.object({
   phone: z.string().optional(),
   amount: z.coerce.number().positive("Please enter a donation amount greater than 0"),
   cause: z.string().min(2),
-  method: z.enum(["bank", "easypaisa", "jazzcash", "card"]),
+  method: z.enum(["bank", "card"]),
 });
 
 export async function POST(request: NextRequest) {
