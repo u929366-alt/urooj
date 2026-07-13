@@ -3,7 +3,7 @@ export const siteConfig = {
   tagline: "Empowering Skills. Transforming Lives.",
   description:
     "Hunarsaaz is a Pakistani NGO based in Taxila, Punjab, empowering youth, women, and marginalized communities through vocational and technical education, entrepreneurship training, digital skills, and employment opportunities.",
-  url: "https://www.hunarsaaz.org",
+  url: "https://hunarsaaz.pk",
   email: "ceo@hunarsaaz.pk",
   admissionsEmail: "ceo@hunarsaaz.pk",
   phone: "+92 300 8154597",
