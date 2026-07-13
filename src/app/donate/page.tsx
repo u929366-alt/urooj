@@ -73,10 +73,10 @@ export default function DonatePage() {
                 <Card className="flex gap-4 p-5">
                   <CreditCard className="h-6 w-6 shrink-0 text-accent-600" />
                   <div className="text-sm">
-                    <h3 className="font-semibold text-primary-900">Credit / Debit Card & PayPal</h3>
+                    <h3 className="font-semibold text-primary-900">Credit / Debit Card</h3>
                     <p className="mt-1 text-gray-600">
-                      Card and PayPal donations are processed securely after you submit
-                      the form — our team will send a payment link.
+                      Card donations are processed securely after you submit the
+                      form — our team will send a payment link.
                     </p>
                   </div>
                 </Card>
