@@ -9,7 +9,7 @@ import { AdmissionForm } from "@/components/forms/AdmissionForm";
 export const metadata: Metadata = {
   title: "Admissions",
   description:
-    "Apply to Hunarsaaz's vocational training programs in Taxila. Learn about required documents, the admission process, fee structure, and scholarships.",
+    "Apply to Hunarsaaz's free vocational training programs in Taxila. Learn about required documents and the admission process.",
 };
 
 const requiredDocuments = [
@@ -32,7 +32,7 @@ const faqs = [
   { question: "Is there an application fee?", answer: "No, applying to Hunarsaaz is completely free." },
   { question: "How long does the admission process take?", answer: "Typically 3-5 business days from application to batch confirmation." },
   { question: "Can I apply for more than one program?", answer: "Yes, but we recommend focusing on one program at a time for the best learning outcomes." },
-  { question: "What if I can't afford the program fee?", answer: "Most programs are heavily subsidized, and scholarships are available — mention this in your application." },
+  { question: "Is there any program fee?", answer: "No — all Hunarsaaz programs are completely free of cost." },
 ];
 
 export default async function AdmissionsPage({
@@ -85,12 +85,11 @@ export default async function AdmissionsPage({
             </Card>
             <Card className="p-6">
               <Wallet className="h-7 w-7 text-accent-600" />
-              <h2 className="mt-3 font-semibold text-primary-900">Fees & Scholarships</h2>
+              <h2 className="mt-3 font-semibold text-primary-900">Fees</h2>
               <p className="mt-3 text-sm text-gray-600">
-                All programs are heavily subsidized (PKR 0 – 6,000). Full scholarships
-                are available for women, orphans, and students from
-                low-income households — need is assessed during the
-                eligibility interview, no separate application required.
+                All Hunarsaaz programs are completely free of cost — there is no
+                tuition, application, or certification fee. Training is open to
+                everyone who meets a program&apos;s eligibility criteria.
               </p>
             </Card>
           </div>

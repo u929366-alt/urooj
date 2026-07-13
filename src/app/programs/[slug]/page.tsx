@@ -103,20 +103,6 @@ export default async function ProgramDetailPage({
                 ))}
               </div>
 
-              <h2 className="mt-10 font-display text-2xl font-bold text-primary-900">Instructor</h2>
-              <Card className="mt-4 flex items-center gap-4 p-5">
-                <PlaceholderImage
-                  label={program.instructor.name}
-                  icon={Users}
-                  seed={program.instructor.name}
-                  className="h-16 w-16 shrink-0 rounded-full"
-                />
-                <div>
-                  <p className="font-semibold text-primary-900">{program.instructor.name}</p>
-                  <p className="text-sm text-gray-600">{program.instructor.bio}</p>
-                </div>
-              </Card>
-
               <h2 className="mt-10 font-display text-2xl font-bold text-primary-900">
                 Frequently Asked Questions
               </h2>
