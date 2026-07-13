@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Landmark, Smartphone, CreditCard, GraduationCap } from "lucide-react";
+import { Landmark, CreditCard, GraduationCap } from "lucide-react";
 import { PageHero } from "@/components/PageHero";
 import { Container } from "@/components/ui/Container";
 import { Card } from "@/components/ui/Card";
@@ -11,7 +11,7 @@ import { siteConfig } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Donate",
   description:
-    "Support Hunarsaaz's vocational training programs in Taxila. Sponsor a student, fund a cause, or donate via bank transfer, EasyPaisa, JazzCash, or card.",
+    "Support Hunarsaaz's vocational training programs in Taxila. Sponsor a student, fund a cause, or donate via bank transfer or card.",
 };
 
 export default function DonatePage() {
@@ -24,31 +24,16 @@ export default function DonatePage() {
         description="Every rupee directly funds scholarships, training materials, and equipment for students who could not otherwise afford vocational education."
       />
 
-      <section className="py-16">
+      <section className="py-12">
         <Container>
           <SectionHeading eyebrow="Where It Goes" title="Donation Causes" />
           <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2">
-            {causes.map((cause) => {
-              const percent = Math.min(100, Math.round((cause.raised / cause.goal) * 100));
-              return (
-                <Card key={cause.slug} className="p-6">
-                  <h3 className="font-semibold text-primary-900">{cause.title}</h3>
-                  <p className="mt-1.5 text-sm text-gray-600">{cause.description}</p>
-                  <div className="mt-4">
-                    <div className="h-2.5 w-full overflow-hidden rounded-full bg-gray-100">
-                      <div
-                        className="h-full rounded-full bg-secondary-500"
-                        style={{ width: `${percent}%` }}
-                      />
-                    </div>
-                    <div className="mt-2 flex justify-between text-xs text-gray-500">
-                      <span>PKR {cause.raised.toLocaleString()} raised</span>
-                      <span>{percent}% of PKR {cause.goal.toLocaleString()} goal</span>
-                    </div>
-                  </div>
-                </Card>
-              );
-            })}
+            {causes.map((cause) => (
+              <Card key={cause.slug} className="p-6">
+                <h3 className="font-semibold text-primary-900">{cause.title}</h3>
+                <p className="mt-1.5 text-sm text-gray-600">{cause.description}</p>
+              </Card>
+            ))}
           </div>
 
           <Card className="mt-10 flex flex-col items-center gap-4 p-8 text-center sm:flex-row sm:text-left">
@@ -64,9 +49,9 @@ export default function DonatePage() {
         </Container>
       </section>
 
-      <section className="bg-gray-50 py-16">
+      <section className="bg-gray-50 py-12">
         <Container>
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-5">
+          <div className="grid grid-cols-1 gap-10 lg:grid-cols-5">
             <div className="lg:col-span-3">
               <SectionHeading eyebrow="Give Now" title="Make a Donation" align="left" />
               <Card className="mt-8 p-6 sm:p-8">
@@ -82,26 +67,16 @@ export default function DonatePage() {
                     <h3 className="font-semibold text-primary-900">Bank Transfer</h3>
                     <p className="mt-1 text-gray-600">{siteConfig.bankDetails.bankName}</p>
                     <p className="text-gray-600">Account Title: {siteConfig.bankDetails.accountTitle}</p>
-                    <p className="text-gray-600">Account #: {siteConfig.bankDetails.accountNumber}</p>
                     <p className="text-gray-600">IBAN: {siteConfig.bankDetails.iban}</p>
-                    <p className="text-gray-600">{siteConfig.bankDetails.branch}</p>
-                  </div>
-                </Card>
-                <Card className="flex gap-4 p-5">
-                  <Smartphone className="h-6 w-6 shrink-0 text-secondary-600" />
-                  <div className="text-sm">
-                    <h3 className="font-semibold text-primary-900">EasyPaisa / JazzCash</h3>
-                    <p className="mt-1 text-gray-600">EasyPaisa: {siteConfig.easypaisa}</p>
-                    <p className="text-gray-600">JazzCash: {siteConfig.jazzcash}</p>
                   </div>
                 </Card>
                 <Card className="flex gap-4 p-5">
                   <CreditCard className="h-6 w-6 shrink-0 text-accent-600" />
                   <div className="text-sm">
-                    <h3 className="font-semibold text-primary-900">Credit / Debit Card & PayPal</h3>
+                    <h3 className="font-semibold text-primary-900">Credit / Debit Card</h3>
                     <p className="mt-1 text-gray-600">
-                      Card and PayPal donations are processed securely after you submit
-                      the form — our team will send a payment link.
+                      Card donations are processed securely after you submit the
+                      form — our team will send a payment link.
                     </p>
                   </div>
                 </Card>

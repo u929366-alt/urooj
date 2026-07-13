@@ -1,12 +1,5 @@
 export const partners = [
-  "Akhuwat Foundation",
-  "Punjab TEVTA",
-  "Taxila Chamber of Commerce",
-  "British Council Pakistan",
-  "National Vocational Council",
-  "Community Health Trust",
-  "Local Industry Alliance",
-  "Digital Skills Pakistan",
+  "National Vocational and Technical Training Commission (NAVTTC)",
 ];
 
 export const galleryCategories = ["All", "Classrooms", "Workshops", "Students", "Graduation", "Events", "Community Outreach"] as const;

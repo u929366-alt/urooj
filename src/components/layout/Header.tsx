@@ -1,9 +1,10 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { ChevronDown, Menu, X, GraduationCap, Heart } from "lucide-react";
+import { ChevronDown, Menu, X, Heart } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { mainNav, siteConfig } from "@/lib/site";
@@ -45,14 +46,16 @@ export function Header() {
         Skip to main content
       </a>
       <Container>
-        <div className="flex h-18 items-center justify-between py-3">
-          <Link href="/" className="flex items-center gap-2">
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-600 text-white">
-              <GraduationCap className="h-6 w-6" />
-            </span>
-            <span className="font-display text-xl font-bold text-primary-900">
-              {siteConfig.name}
-            </span>
+        <div className="flex h-20 items-center justify-between py-2">
+          <Link href="/" className="flex items-center">
+            <Image
+              src="/logo-lockup.svg"
+              alt={siteConfig.name}
+              width={149}
+              height={64}
+              loading="eager"
+              className="h-16 w-auto"
+            />
           </Link>
 
           <nav aria-label="Main navigation" className="hidden lg:flex lg:items-center lg:gap-1">

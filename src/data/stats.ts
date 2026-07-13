@@ -1,10 +1,3 @@
-export const stats = [
-  { label: "Students Trained", value: 4200, suffix: "+" },
-  { label: "Women Empowered", value: 2100, suffix: "+" },
-  { label: "Courses Offered", value: 16, suffix: "" },
-  { label: "Employment Rate", value: 78, suffix: "%" },
-  { label: "Certified Graduates", value: 3600, suffix: "+" },
-];
 
 export const whyChooseUs = [
   { title: "Experienced Trainers", description: "Industry professionals with years of hands-on teaching experience.", icon: "GraduationCap" },

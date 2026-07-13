@@ -1,16 +1,14 @@
 import { Target, Eye, ArrowRight } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
-import { StatCounter } from "@/components/ui/StatCounter";
 import { PlaceholderImage } from "@/components/ui/PlaceholderImage";
-import { stats } from "@/data/stats";
 import { Users } from "lucide-react";
 
 export function AboutSummary() {
   return (
-    <section className="py-20">
+    <section className="py-14">
       <Container>
-        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
+        <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-2">
           <PlaceholderImage
             label="Hunarsaaz campus and students"
             icon={Users}
@@ -25,10 +23,10 @@ export function AboutSummary() {
               Bridging the Gap Between Education and Employment
             </h2>
             <p className="mt-4 text-lg text-gray-600">
-              Since 2016, Hunarsaaz has equipped thousands of young people and
-              women in Taxila with practical, industry-relevant skills —
-              improving livelihoods and promoting economic development across
-              our community.
+              Hunarsaaz opens skills training to those most often left out of
+              it — equipping women and men with practical, industry-relevant
+              capability that improves livelihoods and strengthens our
+              community.
             </p>
             <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="flex gap-3 rounded-xl bg-primary-50 p-4">
@@ -56,18 +54,6 @@ export function AboutSummary() {
             </Button>
           </div>
         </div>
-
-        <dl className="mt-20 grid grid-cols-2 gap-8 rounded-3xl bg-primary-900 px-6 py-12 sm:grid-cols-3 lg:grid-cols-5">
-          {stats.map((stat) => (
-            <div key={stat.label} className="text-center">
-              <dt className="sr-only">{stat.label}</dt>
-              <dd className="font-display text-3xl font-bold text-white sm:text-4xl">
-                <StatCounter value={stat.value} suffix={stat.suffix} />
-              </dd>
-              <p className="mt-2 text-sm text-primary-200">{stat.label}</p>
-            </div>
-          ))}
-        </dl>
       </Container>
     </section>
   );

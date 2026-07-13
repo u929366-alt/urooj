@@ -22,9 +22,9 @@ export function NewsEvents() {
   const upcomingEvents = events.slice(0, 3);
 
   return (
-    <section className="bg-gray-50 py-20">
+    <section className="bg-gray-50 py-14">
       <Container>
-        <div className="grid grid-cols-1 gap-16 lg:grid-cols-2">
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
           <div>
             <SectionHeading eyebrow="Latest News" title="News & Updates" align="left" />
             <div className="mt-8 space-y-6">

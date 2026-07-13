@@ -7,10 +7,10 @@ import { siteConfig } from "@/lib/site";
 
 export function ContactSection() {
   return (
-    <section className="bg-gray-50 py-20">
+    <section className="bg-gray-50 py-14">
       <Container>
         <SectionHeading eyebrow="Get In Touch" title="Contact Hunarsaaz" />
-        <div className="mt-12 grid grid-cols-1 gap-10 lg:grid-cols-5">
+        <div className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-5">
           <div className="lg:col-span-2">
             <MapEmbed className="aspect-[4/3] w-full rounded-2xl" />
             <ul className="mt-6 space-y-4 text-sm text-gray-600">

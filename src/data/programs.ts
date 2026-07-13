@@ -11,7 +11,6 @@ export type Program = {
   scheduleNote: string;
   curriculum: string[];
   careerOpportunities: string[];
-  instructor: { name: string; bio: string };
   faqs: { question: string; answer: string }[];
 };
 
@@ -26,7 +25,7 @@ export const programs: Program[] = [
       "This program builds core digital literacy from the ground up — operating systems, MS Office (Word, Excel, PowerPoint), email, and safe internet use — preparing graduates for office, retail, and administrative roles.",
     duration: "3 months",
     eligibility: "Matric pass, ages 16+",
-    fee: "Subsidized — PKR 3,000 (scholarships available)",
+    fee: "Free of cost",
     scheduleNote: "Morning & evening batches, 3 days/week",
     curriculum: [
       "Computer fundamentals & operating systems",
@@ -36,7 +35,6 @@ export const programs: Program[] = [
       "Basic troubleshooting",
     ],
     careerOpportunities: ["Office Assistant", "Data Entry Operator", "Admin Support", "Customer Service"],
-    instructor: { name: "Ayesha Malik", bio: "8 years teaching digital literacy across Punjab." },
     faqs: [
       { question: "Do I need my own laptop?", answer: "No, our computer lab is fully equipped for all enrolled students." },
       { question: "Is a certificate provided?", answer: "Yes, a Hunarsaaz-certified completion certificate is issued after passing the final assessment." },
@@ -52,7 +50,7 @@ export const programs: Program[] = [
       "Learn visual design principles, branding, and industry-standard tools to create logos, social media content, and print materials — with a portfolio-building final project.",
     duration: "4 months",
     eligibility: "Matric/Intermediate, basic computer literacy",
-    fee: "Subsidized — PKR 5,000 (scholarships available)",
+    fee: "Free of cost",
     scheduleNote: "Evening batches, 4 days/week",
     curriculum: [
       "Design principles & color theory",
@@ -62,7 +60,6 @@ export const programs: Program[] = [
       "Portfolio development",
     ],
     careerOpportunities: ["Graphic Designer", "Social Media Designer", "Freelance Designer", "Print Design Assistant"],
-    instructor: { name: "Hamza Farooq", bio: "Freelance designer and Adobe Certified Associate." },
     faqs: [
       { question: "Can I freelance during the course?", answer: "Yes, we introduce freelancing platforms in the final month." },
     ],
@@ -77,7 +74,7 @@ export const programs: Program[] = [
       "A hands-on program covering front-end fundamentals through to deploying real projects, preparing students for junior developer and freelance web work.",
     duration: "5 months",
     eligibility: "Intermediate/FSc, basic English & computer skills",
-    fee: "Subsidized — PKR 6,000 (scholarships available)",
+    fee: "Free of cost",
     scheduleNote: "Evening batches, 5 days/week",
     curriculum: [
       "HTML5, CSS3 & responsive design",
@@ -87,7 +84,6 @@ export const programs: Program[] = [
       "Deploying live projects",
     ],
     careerOpportunities: ["Junior Web Developer", "Freelance Developer", "WordPress Developer"],
-    instructor: { name: "Bilal Ahmed", bio: "Full-stack developer with 6 years of industry experience." },
     faqs: [
       { question: "Do I need prior coding experience?", answer: "No prior experience required — we start from the basics." },
     ],
@@ -102,7 +98,7 @@ export const programs: Program[] = [
       "Covers organic and paid social media marketing, basic SEO, content creation, and analytics — enabling graduates to manage marketing for local businesses or freelance clients.",
     duration: "3 months",
     eligibility: "Matric pass, basic computer literacy",
-    fee: "Subsidized — PKR 4,000 (scholarships available)",
+    fee: "Free of cost",
     scheduleNote: "Morning & evening batches, 3 days/week",
     curriculum: [
       "Social media marketing (Facebook, Instagram, TikTok)",
@@ -112,7 +108,6 @@ export const programs: Program[] = [
       "Analytics & reporting",
     ],
     careerOpportunities: ["Social Media Manager", "Digital Marketing Assistant", "Freelance Marketer"],
-    instructor: { name: "Sana Iqbal", bio: "Digital marketing consultant for SMEs across Pakistan." },
     faqs: [
       { question: "Will I manage real accounts during training?", answer: "Yes, students run a live campaign for a partner small business as their capstone project." },
     ],
@@ -127,7 +122,7 @@ export const programs: Program[] = [
       "From basic stitching to advanced pattern cutting and boutique-level finishing, this program equips women with skills to start a tailoring business or join the garment industry.",
     duration: "6 months",
     eligibility: "No formal education required, ages 15+",
-    fee: "Fully sponsored for eligible women",
+    fee: "Free of cost",
     scheduleNote: "Morning batches, 5 days/week",
     curriculum: [
       "Hand & machine stitching basics",
@@ -137,7 +132,6 @@ export const programs: Program[] = [
       "Costing & small business basics",
     ],
     careerOpportunities: ["Tailor", "Boutique Owner", "Garment Factory Worker", "Home-Based Entrepreneur"],
-    instructor: { name: "Farhana Yousaf", bio: "Master tailor with 15 years running a boutique in Taxila." },
     faqs: [
       { question: "Will I get a sewing machine after graduating?", answer: "Top-performing graduates receive a subsidized sewing machine through our alumni support program." },
     ],
@@ -152,7 +146,7 @@ export const programs: Program[] = [
       "A comprehensive beauty and salon program covering skincare, hairstyling, makeup application, and bridal packages — a popular pathway to self-employment for women.",
     duration: "4 months",
     eligibility: "No formal education required, ages 16+",
-    fee: "Subsidized — PKR 4,000 (scholarships available)",
+    fee: "Free of cost",
     scheduleNote: "Morning batches, 4 days/week",
     curriculum: [
       "Skincare & facials",
@@ -162,7 +156,6 @@ export const programs: Program[] = [
       "Salon hygiene & customer service",
     ],
     careerOpportunities: ["Salon Professional", "Freelance Makeup Artist", "Salon Owner"],
-    instructor: { name: "Rabia Sheikh", bio: "Certified beautician and salon owner with 10 years of experience." },
     faqs: [
       { question: "Are practice kits provided?", answer: "Yes, a starter kit is provided for hands-on practice throughout the course." },
     ],
@@ -177,7 +170,7 @@ export const programs: Program[] = [
       "Practical training in electrical wiring, circuit installation, and safety standards, preparing students for jobs as domestic or industrial electricians.",
     duration: "4 months",
     eligibility: "Middle pass, ages 16+",
-    fee: "Subsidized — PKR 4,500 (scholarships available)",
+    fee: "Free of cost",
     scheduleNote: "Morning batches, 5 days/week",
     curriculum: [
       "Electrical safety & tools",
@@ -187,7 +180,6 @@ export const programs: Program[] = [
       "Troubleshooting & maintenance",
     ],
     careerOpportunities: ["Electrician", "Maintenance Technician", "Self-Employed Contractor"],
-    instructor: { name: "Naveed Anjum", bio: "Licensed electrician with industrial maintenance background." },
     faqs: [
       { question: "Is this course hands-on?", answer: "Yes, over 70% of class time is spent in our practical electrical lab." },
     ],
@@ -202,7 +194,7 @@ export const programs: Program[] = [
       "Covers pipe fitting, water supply and drainage systems, fixture installation, and repair — a steady-demand trade skill for local and overseas employment.",
     duration: "3 months",
     eligibility: "No formal education required, ages 16+",
-    fee: "Subsidized — PKR 3,500 (scholarships available)",
+    fee: "Free of cost",
     scheduleNote: "Morning batches, 5 days/week",
     curriculum: [
       "Pipefitting & tools",
@@ -212,7 +204,6 @@ export const programs: Program[] = [
       "Job-site safety",
     ],
     careerOpportunities: ["Plumber", "Maintenance Worker", "Self-Employed Contractor"],
-    instructor: { name: "Tariq Mehmood", bio: "20 years of residential and commercial plumbing experience." },
     faqs: [
       { question: "Can this lead to overseas work?", answer: "Many graduates pursue certification for overseas plumbing jobs after gaining local experience." },
     ],
@@ -227,7 +218,7 @@ export const programs: Program[] = [
       "Hands-on training in arc welding, gas welding, and metal fabrication with a strong focus on workplace safety — a high-demand skill in construction and manufacturing.",
     duration: "3 months",
     eligibility: "No formal education required, ages 18+",
-    fee: "Subsidized — PKR 4,000 (scholarships available)",
+    fee: "Free of cost",
     scheduleNote: "Morning batches, 5 days/week",
     curriculum: [
       "Welding safety & equipment",
@@ -237,7 +228,6 @@ export const programs: Program[] = [
       "Blueprint reading",
     ],
     careerOpportunities: ["Welder", "Fabricator", "Construction Site Worker"],
-    instructor: { name: "Imran Ghauri", bio: "Certified welder formerly with a heavy-industry manufacturer." },
     faqs: [
       { question: "Is protective gear provided?", answer: "Yes, all safety equipment is provided for lab sessions." },
     ],
@@ -252,7 +242,7 @@ export const programs: Program[] = [
       "Learn to diagnose and fix common smartphone issues, from screen and battery replacement to software troubleshooting and basic micro-soldering.",
     duration: "3 months",
     eligibility: "Matric pass, ages 16+",
-    fee: "Subsidized — PKR 4,000 (scholarships available)",
+    fee: "Free of cost",
     scheduleNote: "Evening batches, 4 days/week",
     curriculum: [
       "Mobile hardware fundamentals",
@@ -262,7 +252,6 @@ export const programs: Program[] = [
       "Customer service & shop management",
     ],
     careerOpportunities: ["Mobile Repair Technician", "Shop Owner", "After-Sales Service Technician"],
-    instructor: { name: "Usman Raza", bio: "Runs a mobile repair training lab with 9 years of experience." },
     faqs: [
       { question: "Do I need my own tools?", answer: "A basic toolkit is issued to every enrolled student to keep after graduation." },
     ],
@@ -277,7 +266,7 @@ export const programs: Program[] = [
       "Covers engine mechanics, electrical systems, and routine maintenance for cars and motorbikes, preparing students for garage employment or self-employment.",
     duration: "4 months",
     eligibility: "No formal education required, ages 16+",
-    fee: "Subsidized — PKR 4,500 (scholarships available)",
+    fee: "Free of cost",
     scheduleNote: "Morning batches, 5 days/week",
     curriculum: [
       "Engine fundamentals",
@@ -287,7 +276,6 @@ export const programs: Program[] = [
       "Routine maintenance & servicing",
     ],
     careerOpportunities: ["Auto Mechanic", "Garage Technician", "Self-Employed Mechanic"],
-    instructor: { name: "Shahid Latif", bio: "Master mechanic with two decades in the auto trade." },
     faqs: [
       { question: "Do we work on real vehicles?", answer: "Yes, students train on donated vehicles in our workshop." },
     ],
@@ -302,7 +290,7 @@ export const programs: Program[] = [
       "Practical instruction in woodworking tools, furniture construction, and finishing techniques for careers in carpentry workshops or independent furniture-making.",
     duration: "4 months",
     eligibility: "No formal education required, ages 16+",
-    fee: "Subsidized — PKR 4,000 (scholarships available)",
+    fee: "Free of cost",
     scheduleNote: "Morning batches, 5 days/week",
     curriculum: [
       "Hand & power tools",
@@ -312,7 +300,6 @@ export const programs: Program[] = [
       "Workshop safety",
     ],
     careerOpportunities: ["Carpenter", "Furniture Maker", "Construction Carpentry"],
-    instructor: { name: "Zafar Iqbal", bio: "Master carpenter running a family furniture workshop." },
     faqs: [
       { question: "Can graduates sell their own furniture?", answer: "Yes, we support top graduates with starter tool kits to begin independent work." },
     ],
@@ -327,7 +314,7 @@ export const programs: Program[] = [
       "Builds confidence in spoken and written English through conversational practice, grammar, and workplace communication skills — a foundation for all other programs.",
     duration: "2 months",
     eligibility: "Open to all, ages 14+",
-    fee: "Free",
+    fee: "Free of cost",
     scheduleNote: "Flexible batches, 3 days/week",
     curriculum: [
       "Basic grammar & vocabulary",
@@ -337,7 +324,6 @@ export const programs: Program[] = [
       "Presentation skills",
     ],
     careerOpportunities: ["Improved employability across all sectors"],
-    instructor: { name: "Mahnoor Aslam", bio: "TEFL-certified English language trainer." },
     faqs: [
       { question: "Can I take this alongside another program?", answer: "Yes, most students pair this with a technical program." },
     ],
@@ -352,7 +338,7 @@ export const programs: Program[] = [
       "Guides graduates of our technical programs through business registration, budgeting, marketing, and customer service to launch and sustain a small business.",
     duration: "6 weeks",
     eligibility: "Open to Hunarsaaz graduates & alumni",
-    fee: "Free",
+    fee: "Free of cost",
     scheduleNote: "Weekend workshops",
     curriculum: [
       "Business idea validation",
@@ -362,7 +348,6 @@ export const programs: Program[] = [
       "Micro-financing & loan access",
     ],
     careerOpportunities: ["Small Business Owner", "Home-Based Entrepreneur"],
-    instructor: { name: "Kashif Nawaz", bio: "Business development advisor supporting local micro-enterprises." },
     faqs: [
       { question: "Do you help with funding?", answer: "We connect graduates with microfinance partners such as Akhuwat." },
     ],
@@ -377,7 +362,7 @@ export const programs: Program[] = [
       "Teaches graduates of our design, development, and marketing programs how to build freelance profiles, write proposals, and manage international clients and payments.",
     duration: "4 weeks",
     eligibility: "Open to Hunarsaaz graduates with a marketable skill",
-    fee: "Free",
+    fee: "Free of cost",
     scheduleNote: "Weekend workshops",
     curriculum: [
       "Building a winning profile",
@@ -387,7 +372,6 @@ export const programs: Program[] = [
       "Reputation & reviews management",
     ],
     careerOpportunities: ["Freelancer", "Remote Contractor"],
-    instructor: { name: "Waleed Chaudhry", bio: "Top-rated freelancer mentoring new freelancers since 2019." },
     faqs: [
       { question: "Do I need a laptop to freelance?", answer: "Access to our computer lab continues to be available to alumni for freelance work." },
     ],
@@ -402,7 +386,7 @@ export const programs: Program[] = [
       "Practical money-management training covering budgeting, saving, banking basics, and responsible use of microfinance — essential for household and business stability.",
     duration: "3 weeks",
     eligibility: "Open to all",
-    fee: "Free",
+    fee: "Free of cost",
     scheduleNote: "Weekend workshops",
     curriculum: [
       "Personal budgeting",
@@ -412,7 +396,6 @@ export const programs: Program[] = [
       "Avoiding financial fraud",
     ],
     careerOpportunities: ["Improved household & business financial management"],
-    instructor: { name: "Nida Rehman", bio: "Financial inclusion trainer working with community programs." },
     faqs: [
       { question: "Is this only for entrepreneurs?", answer: "No, it's designed for anyone managing a household or personal budget." },
     ],

@@ -18,7 +18,7 @@ export default function BlogPage() {
         title="Stories, Updates & Announcements"
         description="Stay up to date with what's happening at Hunarsaaz."
       />
-      <section className="py-16">
+      <section className="py-12">
         <Container>
           <BlogList />
         </Container>

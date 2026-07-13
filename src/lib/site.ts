@@ -3,29 +3,18 @@ export const siteConfig = {
   tagline: "Empowering Skills. Transforming Lives.",
   description:
     "Hunarsaaz is a Pakistani NGO based in Taxila, Punjab, empowering youth, women, and marginalized communities through vocational and technical education, entrepreneurship training, digital skills, and employment opportunities.",
-  url: "https://www.hunarsaaz.org",
-  email: "info@hunarsaaz.org",
-  admissionsEmail: "admissions@hunarsaaz.org",
-  phone: "+92 51 1234567",
-  whatsapp: "+923001234567",
+  url: "https://hunarsaaz.pk",
+  email: "ceo@hunarsaaz.pk",
+  admissionsEmail: "ceo@hunarsaaz.pk",
+  phone: "+92 300 8154597",
+  whatsapp: "+923008154597",
   address: "Main GT Road, Taxila, Punjab, Pakistan",
   hours: "Monday – Saturday, 9:00 AM – 5:00 PM",
-  social: {
-    facebook: "https://facebook.com/hunarsaaz",
-    instagram: "https://instagram.com/hunarsaaz",
-    linkedin: "https://linkedin.com/company/hunarsaaz",
-    youtube: "https://youtube.com/@hunarsaaz",
-    twitter: "https://x.com/hunarsaaz",
-  },
   bankDetails: {
-    bankName: "Habib Bank Limited (HBL)",
-    accountTitle: "Hunarsaaz Welfare Foundation",
-    accountNumber: "1234-5678901-234",
-    iban: "PK00HABB0001234567890123",
-    branch: "Taxila Branch, Punjab",
+    bankName: "Allied Bank Limited",
+    accountTitle: "Hunar Saaz",
+    iban: "PK46ABPA0010154495590018",
   },
-  easypaisa: "0300-1234567",
-  jazzcash: "0300-1234567",
 };
 
 export type NavLink = {
@@ -37,19 +26,16 @@ export type NavLink = {
 
 export const mainNav: NavLink[] = [
   { label: "Home", href: "/" },
-  {
-    label: "About",
-    href: "/about",
-    children: [
-      { label: "Our Story", href: "/about", description: "Mission, vision & history" },
-      { label: "Impact", href: "/impact", description: "Statistics & transparency" },
-      { label: "Careers", href: "/careers", description: "Jobs & internships" },
-    ],
-  },
+  { label: "About", href: "/about" },
   {
     label: "Programs",
     href: "/programs",
     description: "Browse all vocational training programs",
+  },
+  {
+    label: "Policy & Advisory",
+    href: "/advisory",
+    description: "Policy, Research, and Institutional Advisory Platform",
   },
   {
     label: "Get Involved",

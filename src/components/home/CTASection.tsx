@@ -28,7 +28,7 @@ const ctas = [
 
 export function CTASection() {
   return (
-    <section className="bg-secondary-500 py-20">
+    <section className="bg-secondary-500 py-14">
       <Container>
         <div className="text-center">
           <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
@@ -38,7 +38,7 @@ export function CTASection() {
             There are many ways to be part of transforming lives through skills.
           </p>
         </div>
-        <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-3">
+        <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-3">
           {ctas.map(({ icon: Icon, title, description, cta, href }) => (
             <div key={title} className="rounded-2xl bg-white p-6 text-center shadow-xl">
               <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-secondary-50 text-secondary-600">

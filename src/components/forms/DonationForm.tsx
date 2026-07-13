@@ -16,7 +16,7 @@ const schema = z.object({
   phone: z.string().optional(),
   amount: z.coerce.number().positive("Please enter an amount greater than 0"),
   cause: z.string().min(1, "Please select a cause"),
-  method: z.enum(["bank", "easypaisa", "jazzcash", "card"]),
+  method: z.enum(["bank", "card"]),
 });
 
 type FormErrors = Partial<Record<keyof z.infer<typeof schema>, string>>;
@@ -112,8 +112,6 @@ export function DonationForm() {
         <Label htmlFor="d-method" required>Preferred Payment Method</Label>
         <Select id="d-method" name="method" defaultValue="bank">
           <option value="bank">Bank Transfer</option>
-          <option value="easypaisa">EasyPaisa</option>
-          <option value="jazzcash">JazzCash</option>
           <option value="card">Credit / Debit Card</option>
         </Select>
         <ErrorText>{errors.method}</ErrorText>

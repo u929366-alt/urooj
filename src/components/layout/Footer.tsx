@@ -1,5 +1,6 @@
+import Image from "next/image";
 import Link from "next/link";
-import { Mail, Phone, MapPin, GraduationCap } from "lucide-react";
+import { Mail, Phone, MapPin } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import {
   FacebookIcon,
@@ -14,6 +15,7 @@ import { NewsletterForm } from "@/components/forms/NewsletterForm";
 const quickLinks = [
   { label: "About Us", href: "/about" },
   { label: "Programs", href: "/programs" },
+  { label: "Policy & Advisory", href: "/advisory" },
   { label: "Admissions", href: "/admissions" },
   { label: "Volunteer", href: "/volunteer" },
   { label: "Donate", href: "/donate" },
@@ -23,11 +25,11 @@ const quickLinks = [
 ];
 
 const socialLinks = [
-  { icon: FacebookIcon, href: siteConfig.social.facebook, label: "Facebook" },
-  { icon: InstagramIcon, href: siteConfig.social.instagram, label: "Instagram" },
-  { icon: LinkedinIcon, href: siteConfig.social.linkedin, label: "LinkedIn" },
-  { icon: YoutubeIcon, href: siteConfig.social.youtube, label: "YouTube" },
-  { icon: XIcon, href: siteConfig.social.twitter, label: "X / Twitter" },
+  { icon: FacebookIcon, label: "Facebook" },
+  { icon: InstagramIcon, label: "Instagram" },
+  { icon: LinkedinIcon, label: "LinkedIn" },
+  { icon: YoutubeIcon, label: "YouTube" },
+  { icon: XIcon, label: "X / Twitter" },
 ];
 
 export function Footer() {
@@ -44,32 +46,30 @@ export function Footer() {
           <NewsletterForm className="w-full max-w-md" />
         </Container>
       </div>
-      <Container className="grid grid-cols-1 gap-10 py-16 sm:grid-cols-2 lg:grid-cols-4">
+      <Container className="grid grid-cols-1 gap-10 py-12 sm:grid-cols-2 lg:grid-cols-4">
         <div>
-          <Link href="/" className="flex items-center gap-2">
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary-500 text-white">
-              <GraduationCap className="h-6 w-6" />
-            </span>
-            <span className="font-display text-xl font-bold text-white">
-              {siteConfig.name}
-            </span>
+          <Link href="/" className="inline-flex">
+            <Image
+              src="/logo-lockup.svg"
+              alt={siteConfig.name}
+              width={224}
+              height={96}
+              className="h-24 w-auto rounded-xl bg-white p-2"
+            />
           </Link>
           <p className="mt-4 text-sm leading-6 text-primary-200">
             Empowering youth, women, and marginalized communities in Taxila through
             vocational education, entrepreneurship, and digital skills.
           </p>
           <div className="mt-6 flex gap-3">
-            {socialLinks.map(({ icon: Icon, href, label }) => (
-              <a
+            {socialLinks.map(({ icon: Icon, label }) => (
+              <span
                 key={label}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
                 aria-label={label}
-                className="flex h-9 w-9 items-center justify-center rounded-full bg-primary-800 text-white transition-colors hover:bg-secondary-500"
+                className="flex h-9 w-9 items-center justify-center rounded-full bg-primary-800 text-white"
               >
                 <Icon className="h-4 w-4" />
-              </a>
+              </span>
             ))}
           </div>
         </div>

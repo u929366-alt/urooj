@@ -28,7 +28,7 @@ export default function GalleryPage() {
         description="A glimpse into classrooms, workshops, graduations, and the community we serve."
       />
 
-      <section className="py-16">
+      <section className="py-12">
         <Container>
           <SectionHeading eyebrow="Photos" title="Photo Gallery" />
           <div className="mt-10">
@@ -37,7 +37,7 @@ export default function GalleryPage() {
         </Container>
       </section>
 
-      <section className="bg-gray-50 py-16">
+      <section className="bg-gray-50 py-12">
         <Container>
           <SectionHeading eyebrow="Watch" title="Video Gallery" />
           <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-3">

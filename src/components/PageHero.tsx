@@ -14,7 +14,7 @@ export function PageHero({
   breadcrumb: string;
 }) {
   return (
-    <section className="bg-gradient-to-b from-primary-50 to-white py-16">
+    <section className="bg-gradient-to-b from-primary-50 to-white py-12">
       <Container>
         <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-sm text-gray-500">
           <Link href="/" className="hover:text-primary-700">Home</Link>
