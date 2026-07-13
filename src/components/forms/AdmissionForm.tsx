@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { z } from "zod";
 import { Send } from "lucide-react";
 import { Label, Input, Textarea, Select, ErrorText, FieldGroup } from "@/components/forms/Field";
@@ -26,7 +27,8 @@ const schema = z.object({
 
 type FormErrors = Partial<Record<keyof z.infer<typeof schema>, string>>;
 
-export function AdmissionForm({ defaultProgram }: { defaultProgram?: string }) {
+export function AdmissionForm() {
+  const defaultProgram = useSearchParams().get("program") ?? undefined;
   const [errors, setErrors] = useState<FormErrors>({});
   const { status, message, submit } = useFormSubmit("/api/admission");
 

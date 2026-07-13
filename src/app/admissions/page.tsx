@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { FileCheck2, ListChecks, Wallet, HelpCircle } from "lucide-react";
 import { PageHero } from "@/components/PageHero";
 import { Container } from "@/components/ui/Container";
@@ -35,13 +36,7 @@ const faqs = [
   { question: "Is there any program fee?", answer: "No — all Hunarsaaz programs are completely free of cost." },
 ];
 
-export default async function AdmissionsPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ program?: string }>;
-}) {
-  const { program } = await searchParams;
-
+export default function AdmissionsPage() {
   return (
     <>
       <PageHero
@@ -100,7 +95,9 @@ export default async function AdmissionsPage({
         <Container>
           <SectionHeading eyebrow="Apply Now" title="Online Application Form" />
           <Card className="mx-auto mt-10 max-w-3xl p-6 sm:p-10">
-            <AdmissionForm defaultProgram={program} />
+            <Suspense>
+              <AdmissionForm />
+            </Suspense>
           </Card>
         </Container>
       </section>

@@ -1,9 +1,15 @@
 import type { NextConfig } from "next";
 
+// STATIC_EXPORT=1 produces plain HTML for PHP-era shared hosting (no Node.js
+// on the server): no image optimizer, folder-per-page URLs, and the API
+// routes are excluded by the build script. The default remains a
+// self-contained Node build (cPanel Passenger, VPS); Vercel ignores both.
+const isStaticExport = process.env.STATIC_EXPORT === "1";
+
 const nextConfig: NextConfig = {
-  // Self-contained production build for Node.js hosting (cPanel Passenger).
-  // Vercel and plain `next start` are unaffected by this setting.
-  output: "standalone",
+  output: isStaticExport ? "export" : "standalone",
+  trailingSlash: isStaticExport,
+  images: isStaticExport ? { unoptimized: true } : undefined,
 };
 
 export default nextConfig;
