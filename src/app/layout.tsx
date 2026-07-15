@@ -61,9 +61,13 @@ export const metadata: Metadata = {
 
 const organizationJsonLd = {
   "@context": "https://schema.org",
-  "@type": "NGO",
+  "@type": ["NGO", "EducationalOrganization"],
+  "@id": `${siteConfig.url}/#organization`,
   name: siteConfig.name,
+  alternateName: "Hunar Saaz",
   url: siteConfig.url,
+  logo: `${siteConfig.url}/logo.svg`,
+  image: `${siteConfig.url}/logo-lockup.svg`,
   description: siteConfig.description,
   email: siteConfig.email,
   telephone: siteConfig.phone,
@@ -72,7 +76,24 @@ const organizationJsonLd = {
     streetAddress: siteConfig.address,
     addressLocality: "Taxila",
     addressRegion: "Punjab",
+    postalCode: "47080",
     addressCountry: "PK",
+  },
+  geo: {
+    "@type": "GeoCoordinates",
+    latitude: 33.7463,
+    longitude: 72.7871,
+  },
+  areaServed: [
+    { "@type": "City", name: "Taxila" },
+    { "@type": "AdministrativeArea", name: "Punjab" },
+    { "@type": "Country", name: "Pakistan" },
+  ],
+  openingHoursSpecification: {
+    "@type": "OpeningHoursSpecification",
+    dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+    opens: "09:00",
+    closes: "17:00",
   },
 };
 
