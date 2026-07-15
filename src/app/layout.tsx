@@ -73,7 +73,7 @@ const organizationJsonLd = {
   telephone: siteConfig.phone,
   address: {
     "@type": "PostalAddress",
-    streetAddress: siteConfig.address,
+    streetAddress: "House No. KH-1, Kohsar Extension (Pind Gondhal)",
     addressLocality: "Taxila",
     addressRegion: "Punjab",
     postalCode: "47080",
@@ -81,8 +81,8 @@ const organizationJsonLd = {
   },
   geo: {
     "@type": "GeoCoordinates",
-    latitude: 33.7463,
-    longitude: 72.7871,
+    latitude: 33.7284,
+    longitude: 72.7998,
   },
   areaServed: [
     { "@type": "City", name: "Taxila" },

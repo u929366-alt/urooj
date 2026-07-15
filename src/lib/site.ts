@@ -8,7 +8,7 @@ export const siteConfig = {
   admissionsEmail: "ceo@hunarsaaz.pk",
   phone: "+92 300 8154597",
   whatsapp: "+923008154597",
-  address: "Main GT Road, Taxila, Punjab, Pakistan",
+  address: "House No. KH-1, Kohsar Extension, Taxila (Pind Gondhal), Punjab, Pakistan",
   hours: "Monday – Saturday, 9:00 AM – 5:00 PM",
   bankDetails: {
     bankName: "Allied Bank Limited",
