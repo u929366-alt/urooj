@@ -6,10 +6,12 @@ import { NewsEvents } from "@/components/home/NewsEvents";
 import { PartnersMarquee } from "@/components/home/PartnersMarquee";
 import { CTASection } from "@/components/home/CTASection";
 import { ContactSection } from "@/components/home/ContactSection";
+import { PromoModal } from "@/components/home/PromoModal";
 
 export default function Home() {
   return (
     <>
+      <PromoModal />
       <Hero />
       <AboutSummary />
       <ProgramsPreview />
