@@ -14,7 +14,7 @@ export function PromoModal() {
 
   useEffect(() => {
     if (sessionStorage.getItem(SEEN_KEY)) return;
-    const t = setTimeout(() => setOpen(true), 700);
+    const t = setTimeout(() => setOpen(true), 3000);
     return () => clearTimeout(t);
   }, []);
 
