@@ -132,6 +132,32 @@ heavy simultaneous use, move to PostgreSQL — only the env var changes.
 **Back up `data/hunarsaaz.db`.** It holds every account, enrolment, grade and
 certificate. It is gitignored, so nothing else is keeping a copy.
 
+### Email and password resets
+
+Password reset is built in, but it needs somewhere to send from. Set `SMTP_HOST`,
+`SMTP_USER` and `SMTP_PASS` and it sends through that mailbox. Leave them unset and
+Payload writes the message to the server log instead — fine locally, but it means a live
+site cannot deliver a reset to anyone.
+
+The simplest source is a mailbox on the hosting account itself, so no third-party
+service or API key is involved:
+
+1. cPanel → Email Accounts → create one, e.g. `noreply@hunarsaaz.pk`.
+2. That account's **Connect Devices** page lists the outgoing server and port —
+   normally `mail.hunarsaaz.pk` on port 465, with the full address as the username.
+3. Put those in the environment variables (see `.env.example`), along with
+   `SITE_URL`, which is what makes the link in the email point at the live site
+   rather than localhost.
+
+`SITE_URL` is deliberately **not** called `NEXT_PUBLIC_SERVER_URL`. Next inlines
+`NEXT_PUBLIC_*` values at build time, so a value set on the server would be ignored and
+every reset link would point at wherever the build was made.
+
+The flow: `/learn/forgot-password` → emailed link → `/learn/reset-password?token=…` →
+new password, and the student is signed in straight away. Tokens are single use and
+expire after an hour. The form always reports success even for an address that is not
+registered, so it cannot be used to find out who has an account.
+
 ### Deploying to cPanel shared hosting
 
 Requires **Setup Node.js App** in cPanel (Software section). If it is not there, ask
@@ -160,9 +186,11 @@ pages still can.
 3. **Create the app in cPanel** → Setup Node.js App → Node 20 or newer, application
    root set to the folder you uploaded, application startup file `server.js`.
 4. **Add the environment variables** in the same screen: `PAYLOAD_SECRET` (a long random
-   string — *not* the development one) and `NODE_ENV=production`. Leave `DATABASE_URI`
-   unset for SQLite. Do **not** press "Run NPM Install": the dependencies are already in
-   the upload, and reinstalling can replace the Linux binaries with wrong ones.
+   string — *not* the development one), `NODE_ENV=production`, `SITE_URL`
+   (the live address), and the four `SMTP_*` values from the section above so password
+   resets work. Leave `DATABASE_URI` unset for SQLite. Do **not** press "Run NPM
+   Install": the dependencies are already in the upload, and reinstalling can replace
+   the Linux binaries with wrong ones.
 5. **Make three paths writable** (755 is enough): `data/`, `public/uploads/` and
    `private-uploads/`. Uploads and the database are written at runtime.
 6. Restart the app. Visit `/admin` and create the first user — that account becomes the

@@ -120,6 +120,72 @@ export async function loginAction(_prev: FormState, formData: FormData): Promise
   redirect(next.startsWith("/") ? next : "/learn");
 }
 
+const forgotSchema = z.object({ email: z.email("Please enter a valid email address.") });
+
+const resetSchema = z
+  .object({
+    token: z.string().min(1, "This reset link is not valid."),
+    password: z.string().min(8, "Use at least 8 characters."),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "The two passwords do not match.",
+    path: ["confirmPassword"],
+  });
+
+/**
+ * Send a reset link.
+ *
+ * Always reports success, even when no account exists, so the form cannot be
+ * used to discover which addresses are registered.
+ */
+export async function forgotPasswordAction(_prev: FormState, formData: FormData): Promise<FormState> {
+  const parsed = forgotSchema.safeParse({ email: formData.get("email") });
+  if (!parsed.success) return { fieldErrors: flatten(parsed.error) };
+
+  const payload = await getPayload({ config });
+  try {
+    await payload.forgotPassword({
+      collection: "users",
+      data: { email: parsed.data.email.toLowerCase() },
+      disableEmail: false,
+    });
+  } catch {
+    // Swallowed deliberately — see the note above.
+  }
+
+  redirect("/learn/forgot-password?sent=1");
+}
+
+export async function resetPasswordAction(_prev: FormState, formData: FormData): Promise<FormState> {
+  const parsed = resetSchema.safeParse({
+    token: formData.get("token"),
+    password: formData.get("password"),
+    confirmPassword: formData.get("confirmPassword"),
+  });
+  if (!parsed.success) return { fieldErrors: flatten(parsed.error) };
+
+  const payload = await getPayload({ config });
+  let token: string | undefined;
+  try {
+    const result = await payload.resetPassword({
+      collection: "users",
+      data: { token: parsed.data.token, password: parsed.data.password },
+      overrideAccess: true,
+    });
+    token = result.token;
+  } catch {
+    return {
+      error:
+        "This reset link has expired or has already been used. Please request a new one.",
+    };
+  }
+
+  // Signed in straight away, so they are not asked to log in again.
+  if (token) await setAuthCookie(token, 60 * 60 * 24 * 7);
+  redirect("/learn");
+}
+
 export async function logoutAction() {
   const jar = await cookies();
   jar.delete(AUTH_COOKIE);

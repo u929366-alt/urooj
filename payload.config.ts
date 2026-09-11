@@ -3,6 +3,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { postgresAdapter } from "@payloadcms/db-postgres";
 import { sqliteAdapter } from "@payloadcms/db-sqlite";
+import { nodemailerAdapter } from "@payloadcms/email-nodemailer";
 import { lexicalEditor } from "@payloadcms/richtext-lexical";
 import { buildConfig } from "payload";
 import sharp from "sharp";
@@ -64,7 +65,42 @@ const db = usePostgres
 // README); an empty database file is not enough, and produces "no such table"
 // on every page that reads content.
 
+/**
+ * Outgoing email, used for password resets.
+ *
+ * Configured over SMTP so it can send through the organisation's own mailbox
+ * on the hosting account — no third-party service or API key needed. Set
+ * SMTP_HOST, SMTP_USER and SMTP_PASS to switch it on.
+ *
+ * With those unset, Payload falls back to its built-in adapter, which writes
+ * the message to the server log instead of sending it. That keeps local
+ * development working, but it means a live site with no SMTP configured
+ * cannot deliver a password reset to anyone.
+ */
+const smtpHost = process.env.SMTP_HOST?.trim();
+const smtpUser = process.env.SMTP_USER?.trim();
+const smtpPass = process.env.SMTP_PASS;
+const smtpConfigured = Boolean(smtpHost && smtpUser && smtpPass);
+
+const email = smtpConfigured
+  ? nodemailerAdapter({
+      defaultFromAddress: process.env.EMAIL_FROM_ADDRESS?.trim() || smtpUser!,
+      defaultFromName: process.env.EMAIL_FROM_NAME?.trim() || "Hunarsaaz",
+      transportOptions: {
+        host: smtpHost,
+        port: Number(process.env.SMTP_PORT ?? 587),
+        // Port 465 is implicit TLS; 587 upgrades with STARTTLS.
+        secure: Number(process.env.SMTP_PORT ?? 587) === 465,
+        auth: { user: smtpUser, pass: smtpPass },
+      },
+    })
+  : undefined;
+
 export default buildConfig({
+  // Used to build absolute links in emails, so a reset link points at the
+  // live site rather than localhost.
+  serverURL: process.env.SITE_URL?.trim() || "https://hunarsaaz.pk",
+  email,
   admin: {
     user: Users.slug,
     meta: { titleSuffix: " — Hunarsaaz" },

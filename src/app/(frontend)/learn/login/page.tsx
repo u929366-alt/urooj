@@ -47,7 +47,16 @@ export default async function LoginPage({
           />
         </div>
 
-        <p className="mt-6 text-sm text-gray-600">
+        <p className="mt-4 text-sm">
+          <Link
+            href="/learn/forgot-password"
+            className="font-semibold text-primary-600 hover:underline"
+          >
+            Forgotten your password?
+          </Link>
+        </p>
+
+        <p className="mt-4 border-t border-gray-100 pt-4 text-sm text-gray-600">
           Don&apos;t have an account?{" "}
           <Link href="/learn/register" className="font-semibold text-primary-600 hover:underline">
             Create one
