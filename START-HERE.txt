@@ -6,53 +6,94 @@ compiled on the server. It was built on Linux, which is what your hosting
 runs, so the compiled parts are the correct ones.
 
 
-WHAT TO DO
-----------
+STEP 1 — MAKE AN EMAIL ADDRESS FOR THE SITE
+-------------------------------------------
+Do this first, because you need its details in step 4.
 
-1. UPLOAD
-   Upload everything in this folder to your application folder on the
-   server (cPanel > File Manager). Keep the folder structure exactly as
-   it is.
+  cPanel > Email Accounts > Create
+  Suggested address:  noreply@hunarsaaz.pk
 
-2. CREATE THE NODE.JS APP
-   cPanel > Setup Node.js App > Create Application
-     Node.js version      20 or higher
-     Application mode     Production
-     Application root     the folder you just uploaded to
-     Application URL      learn.hunarsaaz.pk   (a subdomain first, so the
-                          live site cannot break; switch to hunarsaaz.pk
-                          once you are happy)
-     Application startup file    server.js
+Then open that account's "Connect Devices" page and note the outgoing
+(SMTP) server and port. It is usually mail.hunarsaaz.pk on port 465, and
+the username is the full email address.
 
-3. ADD TWO ENVIRONMENT VARIABLES
-   On the same screen, add:
+This is what sends password-reset emails. Without it, anyone who forgets
+their password cannot get back in.
 
-     PAYLOAD_SECRET   a long random string of your own
-     NODE_ENV         production
 
-   PAYLOAD_SECRET signs the login cookies. Make it long and random, keep
-   it private, and do not change it later or everyone will be signed out.
-   Leave DATABASE_URI unset.
+STEP 2 — UPLOAD
+---------------
+Upload everything in this folder to your application folder on the server
+(cPanel > File Manager). Keep the folder structure exactly as it is.
 
-   DO NOT click "Run NPM Install". Everything is already installed, and
-   running it can replace the Linux files with broken ones.
 
-4. CHECK FOLDER PERMISSIONS (755 is fine)
-   These three are written to while the site runs:
-     data/                  the database
-     public/uploads/        course images and lesson files
-     private-uploads/       student assignment submissions
+STEP 3 — CREATE THE NODE.JS APP
+-------------------------------
+  cPanel > Setup Node.js App > Create Application
 
-5. START IT
-   Click Restart, then open your site.
+    Node.js version           20 or higher
+    Application mode          Production
+    Application root          the folder you just uploaded to
+    Application URL           learn.hunarsaaz.pk   (use a subdomain first,
+                              so the live site cannot break; switch to
+                              hunarsaaz.pk once you are happy)
+    Application startup file  server.js
 
-6. CREATE YOUR ACCOUNT
-   Go to /admin and fill in the form. THE FIRST ACCOUNT AUTOMATICALLY
-   BECOMES THE ADMIN. Use a real address such as ceo@hunarsaaz.pk and a
-   strong password.
 
-   Then add your courses: Courses first, then Modules inside a course,
-   then Lessons inside a module.
+STEP 4 — ADD THE ENVIRONMENT VARIABLES
+--------------------------------------
+On the same screen, add these:
+
+  PAYLOAD_SECRET          a long random string of your own
+  NODE_ENV                production
+  SITE_URL                https://learn.hunarsaaz.pk
+                          (change it when you move to the main domain)
+
+  SMTP_HOST               mail.hunarsaaz.pk        from step 1
+  SMTP_PORT               465
+  SMTP_USER               noreply@hunarsaaz.pk     from step 1
+  SMTP_PASS               that mailbox's password
+  EMAIL_FROM_ADDRESS      noreply@hunarsaaz.pk
+  EMAIL_FROM_NAME         Hunarsaaz
+
+PAYLOAD_SECRET signs the login cookies. Make it long and random, keep it
+private, and do not change it later or everyone will be signed out.
+Leave DATABASE_URI unset.
+
+DO NOT click "Run NPM Install". Everything is already installed, and
+running it can replace the Linux files with broken ones.
+
+
+STEP 5 — CHECK FOLDER PERMISSIONS (755 is fine)
+-----------------------------------------------
+These three are written to while the site runs:
+
+  data/                  the database
+  public/uploads/        course images and lesson files
+  private-uploads/       student assignment submissions
+
+
+STEP 6 — START IT
+-----------------
+Click Restart, then open your site.
+
+
+STEP 7 — CREATE YOUR ACCOUNT
+----------------------------
+Go to /admin and fill in the form. THE FIRST ACCOUNT AUTOMATICALLY
+BECOMES THE ADMIN. Use a real address such as ceo@hunarsaaz.pk and a
+strong password.
+
+Then add your courses: Courses first, then Modules inside a course, then
+Lessons inside a module.
+
+
+STEP 8 — TEST THE PASSWORD RESET
+--------------------------------
+Go to /learn/login, click "Forgotten your password?", and enter your own
+address. The email should arrive within a minute. If it does not, the
+SMTP details in step 4 are wrong — check them against the mailbox's
+"Connect Devices" page.
 
 
 WHERE THINGS ARE
@@ -67,18 +108,11 @@ WHERE THINGS ARE
 BACKUPS — PLEASE READ
 ---------------------
 
-data/hunarsaaz.db holds EVERY student account, grade and certificate,
-and it is the only copy. Download it regularly.
+data/hunarsaaz.db holds EVERY student account, grade and certificate, and
+it is the only copy. Download it regularly.
 
 When you upload a newer version of the site, never overwrite these three:
+
   data/            public/uploads/            private-uploads/
+
 Doing so erases student records and their submitted work.
-
-
-WHAT IS NOT SET UP YET
-----------------------
-
-Email. Password resets and notifications are not delivered yet — they are
-only written to the server log. Students can register and sign in
-normally, but nobody can reset a forgotten password until an email
-service is connected.
