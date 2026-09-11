@@ -100,7 +100,7 @@ before launch.
 
 The site has two halves. The marketing pages are static and can be exported to plain
 HTML. The **learning portal** (`/learn`), the **CMS admin** (`/admin`) and the CMS API
-(`/cms-api`) are dynamic: they need a Node.js server and a PostgreSQL database, and
+(`/cms-api`) are dynamic: they need a Node.js server and a database, and
 cannot be part of a `STATIC_EXPORT=1` build.
 
 ### Local setup
@@ -138,19 +138,31 @@ Requires **Setup Node.js App** in cPanel (Software section). If it is not there,
 your host to enable it — without Node.js the portal cannot run, though the marketing
 pages still can.
 
-1. **Build locally** (shared hosting rarely has the memory to run `next build`):
-   `npm run build` — this produces `.next/standalone`.
-2. **Assemble the folder to upload.** Standalone does not include these two:
+1. **Build on Linux** — `npm run build`, which produces `.next/standalone`. It must be
+   Linux: `sharp` and the SQLite driver are compiled per operating system, so a build
+   made on Windows or macOS crashes on the server.
+2. **Assemble the folder to upload.** Four things standalone leaves out:
    ```bash
    cp -r .next/static .next/standalone/.next/static
    cp -r public .next/standalone/public
+   mkdir -p .next/standalone/private-uploads/submissions
+   cp data/hunarsaaz.db .next/standalone/data/hunarsaaz.db   # schema, no data
    ```
+   The database file matters: `npm run dev` creates and updates the tables, but a
+   production build cannot — the tooling that does it is a dev dependency and is not in
+   the standalone output. Ship a `.db` that already has the tables, or every page that
+   reads content returns "no such table".
+
+   **Then delete `.next/standalone/.env` if it exists.** The standalone trace pulls it
+   in, which would publish your `PAYLOAD_SECRET`.
+
    Upload the contents of `.next/standalone` to your application root.
 3. **Create the app in cPanel** → Setup Node.js App → Node 20 or newer, application
    root set to the folder you uploaded, application startup file `server.js`.
 4. **Add the environment variables** in the same screen: `PAYLOAD_SECRET` (a long random
    string — *not* the development one) and `NODE_ENV=production`. Leave `DATABASE_URI`
-   unset for SQLite.
+   unset for SQLite. Do **not** press "Run NPM Install": the dependencies are already in
+   the upload, and reinstalling can replace the Linux binaries with wrong ones.
 5. **Make three paths writable** (755 is enough): `data/`, `public/uploads/` and
    `private-uploads/`. Uploads and the database are written at runtime.
 6. Restart the app. Visit `/admin` and create the first user — that account becomes the

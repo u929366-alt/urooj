@@ -1,3 +1,4 @@
+import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { postgresAdapter } from "@payloadcms/db-postgres";
@@ -38,18 +39,30 @@ const dirname = path.dirname(filename);
 const databaseUri = process.env.DATABASE_URI?.trim() ?? "";
 const usePostgres = databaseUri.startsWith("postgres://") || databaseUri.startsWith("postgresql://");
 
+// A bare path is accepted too, so DATABASE_URI=./data/hunarsaaz.db works.
+const sqlitePath = databaseUri
+  ? databaseUri.startsWith("file:")
+    ? databaseUri.slice("file:".length)
+    : path.resolve(dirname, databaseUri)
+  : path.resolve(dirname, "data/hunarsaaz.db");
+
+if (!usePostgres) {
+  // SQLite will not create the containing folder itself — it just fails to
+  // open with "error 14", which on a fresh deploy looks like a server fault
+  // rather than a missing directory. Create it up front.
+  fs.mkdirSync(path.dirname(sqlitePath), { recursive: true });
+}
+
 const db = usePostgres
   ? postgresAdapter({ pool: { connectionString: databaseUri } })
-  : sqliteAdapter({
-      client: {
-        // A bare path is accepted too, so DATABASE_URI=./data/hunarsaaz.db works.
-        url: databaseUri
-          ? databaseUri.startsWith("file:")
-            ? databaseUri
-            : `file:${path.resolve(dirname, databaseUri)}`
-          : `file:${path.resolve(dirname, "data/hunarsaaz.db")}`,
-      },
-    });
+  : sqliteAdapter({ client: { url: `file:${sqlitePath}` } });
+
+// Note on schema: `npm run dev` creates and updates the tables automatically,
+// but a production build cannot — the tooling that does it is a development
+// dependency and is not part of the standalone output. A deployment therefore
+// ships with data/hunarsaaz.db already created (see "Deploying" in the
+// README); an empty database file is not enough, and produces "no such table"
+// on every page that reads content.
 
 export default buildConfig({
   admin: {
