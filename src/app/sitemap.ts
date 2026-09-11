@@ -1,11 +1,26 @@
-export const dynamic = "force-static";
-
 import type { MetadataRoute } from "next";
 import { siteConfig } from "@/lib/site";
 import { programs } from "@/data/programs";
 import { posts } from "@/data/blog";
 
+// Read per request so the URLs match whichever host is serving it.
+export const dynamic = "force-dynamic";
+
 export default function sitemap(): MetadataRoute.Sitemap {
+  const base = process.env.SITE_URL?.trim() || siteConfig.url;
+  const marketing = process.env.MARKETING_SITE_URL?.trim() || siteConfig.url;
+
+  // On the portal subdomain, list only the portal. The marketing pages belong
+  // to the main site and are listed in its own sitemap.
+  if (base !== marketing) {
+    return ["/learn/courses", "/donate"].map((path) => ({
+      url: `${base}${path}`,
+      lastModified: new Date(),
+      changeFrequency: "weekly" as const,
+      priority: 0.8,
+    }));
+  }
+
   const staticRoutes = [
     "",
     "/about",
@@ -20,21 +35,21 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/careers",
     "/contact",
   ].map((path) => ({
-    url: `${siteConfig.url}${path}`,
+    url: `${base}${path}`,
     lastModified: new Date(),
     changeFrequency: "weekly" as const,
     priority: path === "" ? 1 : 0.8,
   }));
 
   const programRoutes = programs.map((program) => ({
-    url: `${siteConfig.url}/programs/${program.slug}`,
+    url: `${base}/programs/${program.slug}`,
     lastModified: new Date(),
     changeFrequency: "monthly" as const,
     priority: 0.7,
   }));
 
   const blogRoutes = posts.map((post) => ({
-    url: `${siteConfig.url}/blog/${post.slug}`,
+    url: `${base}/blog/${post.slug}`,
     lastModified: new Date(post.date),
     changeFrequency: "monthly" as const,
     priority: 0.6,
