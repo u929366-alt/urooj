@@ -30,6 +30,32 @@ export const Users: CollectionConfig = {
     },
     delete: ({ req: { user } }) => user?.role === "admin",
   },
+  hooks: {
+    beforeValidate: [
+      async ({ data, req, operation }) => {
+        if (!data || operation !== "create") return data;
+
+        // The very first account to exist has to be an admin, otherwise the
+        // admin-only `role` field below would lock everyone out permanently.
+        const { totalDocs } = await req.payload.count({
+          collection: "users",
+          overrideAccess: true,
+        });
+        if (totalDocs === 0) {
+          data.role = "admin";
+          return data;
+        }
+
+        // After that, anyone who is not an admin — including self-service
+        // registration, where there is no req.user at all — gets "student"
+        // regardless of what was posted.
+        if (req.user?.role !== "admin") {
+          data.role = "student";
+        }
+        return data;
+      },
+    ],
+  },
   fields: [
     {
       name: "name",

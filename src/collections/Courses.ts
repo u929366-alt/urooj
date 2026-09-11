@@ -1,4 +1,4 @@
-import type { CollectionConfig } from "payload";
+import type { CollectionConfig, Where } from "payload";
 import { slugField } from "./fields/slug.ts";
 
 /**
@@ -19,12 +19,14 @@ export const Courses: CollectionConfig = {
     // Published courses are browsable by anyone — that is the catalogue.
     read: ({ req: { user } }) => {
       if (user?.role === "admin") return true;
+      const published: Where = { status: { equals: "published" } };
       if (user?.role === "instructor") {
-        return {
-          or: [{ status: { equals: "published" } }, { instructor: { equals: user.id } }],
+        const ownOrPublished: Where = {
+          or: [published, { instructor: { equals: user.id } }],
         };
+        return ownOrPublished;
       }
-      return { status: { equals: "published" } };
+      return published;
     },
     create: ({ req: { user } }) =>
       user?.role === "admin" || user?.role === "instructor",

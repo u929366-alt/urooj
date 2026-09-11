@@ -10,7 +10,8 @@
     "payload": "node ./node_modules/payload/bin.js --disable-transpile",
     "payload:types": "npm run payload -- generate:types",
     "payload:importmap": "npm run payload -- generate:importmap",
-    "payload:migrate": "npm run payload -- migrate"
+    "payload:migrate": "npm run payload -- migrate",
+    "seed": "node --experimental-strip-types --no-warnings scripts/seed.ts"
   },
   "dependencies": {
     "@payloadcms/db-postgres": "^3.89.0",
@@ -33,9 +34,11 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "dotenv": "^17.4.2",
     "eslint": "^9",
     "eslint-config-next": "16.2.10",
     "tailwindcss": "^4",
+    "tsx": "^4.23.13",
     "typescript": "^5"
   }
 }

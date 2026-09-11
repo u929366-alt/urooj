@@ -96,6 +96,53 @@ icon-only controls, alt-text-equivalent labels on placeholder imagery, and
 and JSON-LD are wired per-page — run Lighthouse against a deployed build to verify scores
 before launch.
 
+## Learning portal
+
+The site has two halves. The marketing pages are static and can be exported to plain
+HTML. The **learning portal** (`/learn`), the **CMS admin** (`/admin`) and the CMS API
+(`/cms-api`) are dynamic: they need a Node.js server and a PostgreSQL database, and
+cannot be part of a `STATIC_EXPORT=1` build.
+
+### Local setup
+
+1. Run PostgreSQL and create a database.
+2. `cp .env.example .env` and fill in both values:
+   - `DATABASE_URI` — the connection string
+   - `PAYLOAD_SECRET` — generate with `openssl rand -base64 32`
+3. `npm run dev`, then open `/admin` and create the first user. **The first account is
+   automatically an admin**; every later account is a student unless an admin changes
+   its role.
+4. Optionally `npm run seed` for a demo course plus admin, instructor and student
+   logins (printed at the end). Safe to re-run.
+
+### How it fits together
+
+| Path | Who | What |
+| --- | --- | --- |
+| `/admin` | staff | Payload CMS — author courses, modules and lessons; manage users and enrolments |
+| `/learn` | student | Dashboard of enrolled courses and progress |
+| `/learn/courses` | public | Course catalogue |
+| `/learn/courses/[slug]` | public | Course outline and enrolment |
+| `/learn/courses/[slug]/[lesson]` | enrolled | Lesson player |
+
+Content model: a **course** has ordered **modules**, each with ordered **lessons**. An
+**enrolment** puts a student on a course; a **lesson-progress** row records each lesson
+they tick off.
+
+### Authorisation
+
+Two independent layers, deliberately:
+
+- **Payload access rules** (`src/collections/*.ts`) govern the CMS and its API. Students
+  can only read their own enrolment and progress rows, and the `role` field is writable
+  by admins only, so self-registration cannot escalate.
+- **The Data Access Layer** (`src/lib/lms/auth.ts`, `queries.ts`) governs the portal.
+  `getLessonForStudent()` is the only path to lesson content and checks enrolment
+  first; a lesson marked *preview* is the sole exception.
+
+`src/proxy.ts` (Next.js 16 renamed Middleware to Proxy) only does an optimistic
+cookie-presence redirect. Per the Next.js docs it is never trusted for authorisation.
+
 ## Deployment
 
 Deploys cleanly to Vercel (zero config) or any Node host that runs `next build && next start`.
