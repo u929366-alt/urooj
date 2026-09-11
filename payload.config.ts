@@ -1,6 +1,7 @@
 import path from "path";
 import { fileURLToPath } from "url";
 import { postgresAdapter } from "@payloadcms/db-postgres";
+import { sqliteAdapter } from "@payloadcms/db-sqlite";
 import { lexicalEditor } from "@payloadcms/richtext-lexical";
 import { buildConfig } from "payload";
 import sharp from "sharp";
@@ -22,6 +23,33 @@ import { Certificates } from "./src/collections/Certificates.ts";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
+
+/**
+ * Database adapter, chosen from DATABASE_URI.
+ *
+ * SQLite is the default because the site runs on shared cPanel hosting, which
+ * generally offers MySQL and no PostgreSQL. SQLite needs no database server at
+ * all — it is one file on disk — so the portal runs anywhere Node.js does.
+ *
+ * Set DATABASE_URI to a postgres:// URL to use PostgreSQL instead; nothing
+ * else has to change. Worth doing if the portal ever outgrows shared hosting,
+ * since SQLite serialises writes and will strain under heavy concurrent use.
+ */
+const databaseUri = process.env.DATABASE_URI?.trim() ?? "";
+const usePostgres = databaseUri.startsWith("postgres://") || databaseUri.startsWith("postgresql://");
+
+const db = usePostgres
+  ? postgresAdapter({ pool: { connectionString: databaseUri } })
+  : sqliteAdapter({
+      client: {
+        // A bare path is accepted too, so DATABASE_URI=./data/hunarsaaz.db works.
+        url: databaseUri
+          ? databaseUri.startsWith("file:")
+            ? databaseUri
+            : `file:${path.resolve(dirname, databaseUri)}`
+          : `file:${path.resolve(dirname, "data/hunarsaaz.db")}`,
+      },
+    });
 
 export default buildConfig({
   admin: {
@@ -55,8 +83,6 @@ export default buildConfig({
   typescript: {
     outputFile: path.resolve(dirname, "src/payload-types.ts"),
   },
-  db: postgresAdapter({
-    pool: { connectionString: process.env.DATABASE_URI },
-  }),
+  db,
   sharp,
 });

@@ -105,15 +105,59 @@ cannot be part of a `STATIC_EXPORT=1` build.
 
 ### Local setup
 
-1. Run PostgreSQL and create a database.
-2. `cp .env.example .env` and fill in both values:
-   - `DATABASE_URI` — the connection string
-   - `PAYLOAD_SECRET` — generate with `openssl rand -base64 32`
-3. `npm run dev`, then open `/admin` and create the first user. **The first account is
+1. `cp .env.example .env` and set `PAYLOAD_SECRET` (`openssl rand -base64 32`).
+   Leave `DATABASE_URI` blank to use SQLite — no database server needed.
+2. `npm run dev`, then open `/admin` and create the first user. **The first account is
    automatically an admin**; every later account is a student unless an admin changes
    its role.
-4. Optionally `npm run seed` for a demo course plus admin, instructor and student
-   logins (printed at the end). Safe to re-run.
+3. Optionally `npm run seed` and `npm run seed:assessment` for a demo course, quiz and
+   assignment plus admin, instructor and student logins (printed at the end). Safe to
+   re-run.
+
+### Database
+
+`DATABASE_URI` picks the adapter:
+
+| Value | Adapter | When |
+| --- | --- | --- |
+| *(blank)* | SQLite at `data/hunarsaaz.db` | Default. Shared hosting, local dev |
+| `./data/x.db` or `file:/abs/path.db` | SQLite at that path | Custom location |
+| `postgres://…` | PostgreSQL | Larger deployments |
+
+SQLite is the default because the site is on shared cPanel hosting, which usually
+offers MySQL and no PostgreSQL. Being a single file it needs no database server, so the
+portal runs anywhere Node.js does. It serialises writes, so if the portal ever gets
+heavy simultaneous use, move to PostgreSQL — only the env var changes.
+
+**Back up `data/hunarsaaz.db`.** It holds every account, enrolment, grade and
+certificate. It is gitignored, so nothing else is keeping a copy.
+
+### Deploying to cPanel shared hosting
+
+Requires **Setup Node.js App** in cPanel (Software section). If it is not there, ask
+your host to enable it — without Node.js the portal cannot run, though the marketing
+pages still can.
+
+1. **Build locally** (shared hosting rarely has the memory to run `next build`):
+   `npm run build` — this produces `.next/standalone`.
+2. **Assemble the folder to upload.** Standalone does not include these two:
+   ```bash
+   cp -r .next/static .next/standalone/.next/static
+   cp -r public .next/standalone/public
+   ```
+   Upload the contents of `.next/standalone` to your application root.
+3. **Create the app in cPanel** → Setup Node.js App → Node 20 or newer, application
+   root set to the folder you uploaded, application startup file `server.js`.
+4. **Add the environment variables** in the same screen: `PAYLOAD_SECRET` (a long random
+   string — *not* the development one) and `NODE_ENV=production`. Leave `DATABASE_URI`
+   unset for SQLite.
+5. **Make three paths writable** (755 is enough): `data/`, `public/uploads/` and
+   `private-uploads/`. Uploads and the database are written at runtime.
+6. Restart the app. Visit `/admin` and create the first user — that account becomes the
+   admin.
+
+Redeploying: repeat steps 1–2, upload over the top, restart. Never overwrite `data/`,
+`public/uploads/` or `private-uploads/`, or you will erase live student records.
 
 ### How it fits together
 
