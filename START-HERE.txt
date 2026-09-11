@@ -22,28 +22,54 @@ it, people who forget their password cannot get back in, and donors get
 no reference to quote on their transfer.
 
 
-STEP 2 — UPLOAD
----------------
-Upload everything in this folder to your application folder on the server
-(cPanel > File Manager). Keep the folder structure exactly as it is.
-
-
-STEP 3 — CREATE THE NODE.JS APP
--------------------------------
+STEP 2 — CREATE THE NODE.JS APP (this makes the folder for you)
+---------------------------------------------------------------
   cPanel > Setup Node.js App > Create Application
 
     Node.js version           20 or higher
     Application mode          Production
-    Application root          the folder you just uploaded to
+    Application root          hunarsaaz-portal
     Application URL           learn.hunarsaaz.pk   (use a subdomain first,
                               so the live site cannot break; switch to
                               hunarsaaz.pk once you are happy)
     Application startup file  server.js
 
+"Application root" is a folder name. cPanel creates it inside your home
+directory, so you end up with:
+
+    /home/YOUR-CPANEL-USERNAME/hunarsaaz-portal
+
+Your cPanel username is shown in the sidebar of cPanel.
+
+DO NOT put it in public_html, or anywhere inside public_html.
+
+Everything under public_html can be downloaded by anyone who knows the
+address. The database in data/hunarsaaz.db holds every student account,
+grade and payment record — inside public_html, a stranger could simply
+download the whole thing. The application folder must sit NEXT TO
+public_html, not inside it. cPanel joins the two together for you; that
+is what the Application URL field does.
+
+
+STEP 3 — UPLOAD
+---------------
+In cPanel > File Manager, open the folder from step 2:
+
+    /home/YOUR-CPANEL-USERNAME/hunarsaaz-portal
+
+Upload everything from this zip into it, and keep the folder structure
+exactly as it is. You should end up with server.js, package.json,
+START-HERE.txt and the folders .next, node_modules, public, data and
+private-uploads all sitting directly inside hunarsaaz-portal.
+
+Tip: uploading the zip itself and using File Manager's Extract is far
+quicker than uploading thousands of individual files.
+
 
 STEP 4 — ADD THE ENVIRONMENT VARIABLES
 --------------------------------------
-On the same screen, add these:
+Go back to cPanel > Setup Node.js App, open the application you made in
+step 2, and add these in its Environment Variables section:
 
   PAYLOAD_SECRET          a long random string of your own
   NODE_ENV                production
