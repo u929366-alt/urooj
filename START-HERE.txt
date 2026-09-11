@@ -1,0 +1,84 @@
+HUNARSAAZ WEBSITE + LEARNING PORTAL — READY TO UPLOAD
+=====================================================
+
+This folder is the finished website, already built. Nothing needs to be
+compiled on the server. It was built on Linux, which is what your hosting
+runs, so the compiled parts are the correct ones.
+
+
+WHAT TO DO
+----------
+
+1. UPLOAD
+   Upload everything in this folder to your application folder on the
+   server (cPanel > File Manager). Keep the folder structure exactly as
+   it is.
+
+2. CREATE THE NODE.JS APP
+   cPanel > Setup Node.js App > Create Application
+     Node.js version      20 or higher
+     Application mode     Production
+     Application root     the folder you just uploaded to
+     Application URL      learn.hunarsaaz.pk   (a subdomain first, so the
+                          live site cannot break; switch to hunarsaaz.pk
+                          once you are happy)
+     Application startup file    server.js
+
+3. ADD TWO ENVIRONMENT VARIABLES
+   On the same screen, add:
+
+     PAYLOAD_SECRET   a long random string of your own
+     NODE_ENV         production
+
+   PAYLOAD_SECRET signs the login cookies. Make it long and random, keep
+   it private, and do not change it later or everyone will be signed out.
+   Leave DATABASE_URI unset.
+
+   DO NOT click "Run NPM Install". Everything is already installed, and
+   running it can replace the Linux files with broken ones.
+
+4. CHECK FOLDER PERMISSIONS (755 is fine)
+   These three are written to while the site runs:
+     data/                  the database
+     public/uploads/        course images and lesson files
+     private-uploads/       student assignment submissions
+
+5. START IT
+   Click Restart, then open your site.
+
+6. CREATE YOUR ACCOUNT
+   Go to /admin and fill in the form. THE FIRST ACCOUNT AUTOMATICALLY
+   BECOMES THE ADMIN. Use a real address such as ceo@hunarsaaz.pk and a
+   strong password.
+
+   Then add your courses: Courses first, then Modules inside a course,
+   then Lessons inside a module.
+
+
+WHERE THINGS ARE
+----------------
+
+  /                     the public website
+  /learn/courses        course catalogue, open to everyone
+  /learn                a student's own courses and progress
+  /admin                staff area: courses, lessons, users, grading
+
+
+BACKUPS — PLEASE READ
+---------------------
+
+data/hunarsaaz.db holds EVERY student account, grade and certificate,
+and it is the only copy. Download it regularly.
+
+When you upload a newer version of the site, never overwrite these three:
+  data/            public/uploads/            private-uploads/
+Doing so erases student records and their submitted work.
+
+
+WHAT IS NOT SET UP YET
+----------------------
+
+Email. Password resets and notifications are not delivered yet — they are
+only written to the server log. Students can register and sign in
+normally, but nobody can reset a forgotten password until an email
+service is connected.
