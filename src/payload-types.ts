@@ -82,6 +82,7 @@ export interface Config {
     discussions: Discussion;
     'discussion-replies': DiscussionReply;
     certificates: Certificate;
+    payments: Payment;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -104,6 +105,7 @@ export interface Config {
     discussions: DiscussionsSelect<false> | DiscussionsSelect<true>;
     'discussion-replies': DiscussionRepliesSelect<false> | DiscussionRepliesSelect<true>;
     certificates: CertificatesSelect<false> | CertificatesSelect<true>;
+    payments: PaymentsSelect<false> | PaymentsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -246,6 +248,10 @@ export interface Course {
    */
   programSlug?: string | null;
   /**
+   * Fee in rupees. 0 makes the course free, which enrols a student immediately.
+   */
+  price: number;
+  /**
    * Uncheck to keep the course visible but closed to new students.
    */
   enrollmentOpen?: boolean | null;
@@ -330,7 +336,7 @@ export interface Enrollment {
   id: number;
   student: number | User;
   course: number | Course;
-  status: 'active' | 'completed' | 'withdrawn';
+  status: 'pending_payment' | 'active' | 'completed' | 'withdrawn';
   enrolledAt?: string | null;
   completedAt?: string | null;
   updatedAt: string;
@@ -561,6 +567,56 @@ export interface Certificate {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payments".
+ */
+export interface Payment {
+  id: number;
+  /**
+   * Quoted by the payer on their bank transfer.
+   */
+  reference: string;
+  purpose: 'donation' | 'course';
+  /**
+   * Set to Confirmed only once the money is on the statement.
+   */
+  status: 'pending' | 'confirmed' | 'cancelled';
+  method: 'bank_transfer' | 'cash';
+  /**
+   * In Pakistani rupees.
+   */
+  amount: number;
+  currency?: string | null;
+  payerName: string;
+  payerEmail: string;
+  payerPhone?: string | null;
+  /**
+   * Set when the payer was signed in — course fees always are.
+   */
+  payer?: (number | null) | User;
+  course?: (number | null) | Course;
+  /**
+   * What the donor chose to support.
+   */
+  cause?: string | null;
+  /**
+   * Note from the payer.
+   */
+  message?: string | null;
+  /**
+   * Transaction ID from the bank statement, once matched.
+   */
+  bankReference?: string | null;
+  /**
+   * Issued on confirmation.
+   */
+  receiptNumber?: string | null;
+  confirmedAt?: string | null;
+  confirmedBy?: (number | null) | User;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -642,6 +698,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'certificates';
         value: number | Certificate;
+      } | null)
+    | ({
+        relationTo: 'payments';
+        value: number | Payment;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -747,6 +807,7 @@ export interface CoursesSelect<T extends boolean = true> {
   language?: T;
   durationWeeks?: T;
   programSlug?: T;
+  price?: T;
   enrollmentOpen?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -958,6 +1019,31 @@ export interface CertificatesSelect<T extends boolean = true> {
   studentName?: T;
   courseTitle?: T;
   issuedAt?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payments_select".
+ */
+export interface PaymentsSelect<T extends boolean = true> {
+  reference?: T;
+  purpose?: T;
+  status?: T;
+  method?: T;
+  amount?: T;
+  currency?: T;
+  payerName?: T;
+  payerEmail?: T;
+  payerPhone?: T;
+  payer?: T;
+  course?: T;
+  cause?: T;
+  message?: T;
+  bankReference?: T;
+  receiptNumber?: T;
+  confirmedAt?: T;
+  confirmedBy?: T;
   updatedAt?: T;
   createdAt?: T;
 }

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Landmark, CreditCard, GraduationCap } from "lucide-react";
+import { Landmark, Receipt, GraduationCap } from "lucide-react";
 import { PageHero } from "@/components/PageHero";
 import { Container } from "@/components/ui/Container";
 import { Card } from "@/components/ui/Card";
@@ -11,7 +11,7 @@ import { siteConfig } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Donate",
   description:
-    "Support Hunarsaaz's vocational training programs in Taxila. Sponsor a student, fund a cause, or donate via bank transfer or card.",
+    "Support Hunarsaaz's vocational training programs in Taxila. Sponsor a student or fund a cause by bank transfer.",
 };
 
 export default function DonatePage() {
@@ -71,12 +71,12 @@ export default function DonatePage() {
                   </div>
                 </Card>
                 <Card className="flex gap-4 p-5">
-                  <CreditCard className="h-6 w-6 shrink-0 text-accent-600" />
+                  <Receipt className="h-6 w-6 shrink-0 text-accent-600" />
                   <div className="text-sm">
-                    <h3 className="font-semibold text-primary-900">Credit / Debit Card</h3>
+                    <h3 className="font-semibold text-primary-900">Your reference</h3>
                     <p className="mt-1 text-gray-600">
-                      Card donations are processed securely after you submit the
-                      form — our team will send a payment link.
+                      The form gives you a reference to quote on your transfer, so we
+                      can match it to you. We email a receipt once it arrives.
                     </p>
                   </div>
                 </Card>

@@ -2,6 +2,7 @@ import "server-only";
 
 import { cache } from "react";
 import { getPayloadClient } from "./auth";
+import { grantsAccess } from "./queries";
 import type { Discussion, DiscussionReply, User } from "@/payload-types";
 
 /** Can this person read and post in a course's discussion? */
@@ -20,8 +21,7 @@ export async function canDiscuss(
     depth: 0,
     overrideAccess: true,
   });
-  const enrolment = result.docs[0];
-  return Boolean(enrolment && enrolment.status !== "withdrawn");
+  return grantsAccess(result.docs[0]);
 }
 
 export const listThreads = cache(async (courseId: number | string): Promise<Discussion[]> => {

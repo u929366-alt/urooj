@@ -86,6 +86,7 @@ export const Enrollments: CollectionConfig = {
       required: true,
       defaultValue: "active",
       options: [
+        { label: "Awaiting payment", value: "pending_payment" },
         { label: "Active", value: "active" },
         { label: "Completed", value: "completed" },
         { label: "Withdrawn", value: "withdrawn" },

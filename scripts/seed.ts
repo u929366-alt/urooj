@@ -77,6 +77,7 @@ async function seed() {
         language: "both",
         durationWeeks: 8,
         programSlug: "web-development",
+        price: 0,
         enrollmentOpen: true,
       },
     }));

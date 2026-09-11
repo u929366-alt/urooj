@@ -6,6 +6,15 @@ import { HONEYPOT_FIELD } from "@/components/forms/Honeypot";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
+/**
+ * The parsed response body on success, or false on failure.
+ *
+ * Callers that only care whether it worked can keep treating this as a
+ * boolean — an object is truthy. The donation form reads `redirectTo` from it
+ * to send the donor on to their payment reference.
+ */
+type SubmitResult = false | Record<string, unknown>;
+
 // When built for static hosting (no server to receive submissions),
 // forms hand the visitor over to WhatsApp with a pre-filled message.
 const STATIC_FORMS = process.env.NEXT_PUBLIC_STATIC_FORMS === "1";
@@ -13,7 +22,7 @@ const STATIC_FORMS = process.env.NEXT_PUBLIC_STATIC_FORMS === "1";
 const FORM_LABELS: Record<string, string> = {
   "/api/contact": "Contact message",
   "/api/admission": "Admission application",
-  "/api/donation": "Donation pledge",
+  "/api/donation": "Donation",
   "/api/volunteer": "Volunteer application",
   "/api/newsletter": "Newsletter signup",
 };
@@ -56,7 +65,7 @@ export function useFormSubmit(endpoint: string) {
   const [status, setStatus] = useState<Status>("idle");
   const [message, setMessage] = useState<string>("");
 
-  async function submit(data: Record<string, unknown>) {
+  async function submit(data: Record<string, unknown>): Promise<SubmitResult> {
     setStatus("submitting");
     setMessage("");
 
@@ -64,7 +73,7 @@ export function useFormSubmit(endpoint: string) {
       if (String(data[HONEYPOT_FIELD] ?? "").trim()) {
         setStatus("success");
         setMessage("Thank you!");
-        return true;
+        return {};
       }
       window.open(buildWhatsAppUrl(endpoint, data), "_blank", "noopener");
       setStatus("success");
@@ -73,7 +82,7 @@ export function useFormSubmit(endpoint: string) {
           siteConfig.phone +
           "."
       );
-      return true;
+      return {};
     }
 
     try {
@@ -90,7 +99,7 @@ export function useFormSubmit(endpoint: string) {
       }
       setStatus("success");
       setMessage(body.message ?? "Thank you! We received your submission.");
-      return true;
+      return body as Record<string, unknown>;
     } catch {
       setStatus("error");
       setMessage("Network error. Please check your connection and try again.");

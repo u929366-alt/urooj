@@ -13,7 +13,9 @@ import {
   getCourseBySlug,
   getCourseOutline,
   getEnrollment,
+  grantsAccess,
 } from "@/lib/lms/queries";
+import { formatRupees } from "@/lib/lms/payments";
 import { siteConfig } from "@/lib/site";
 import type { User } from "@/payload-types";
 
@@ -40,7 +42,9 @@ export default async function CoursePage({ params }: Params) {
 
   const user = await getCurrentUser();
   const enrollment = user ? await getEnrollment(user.id, course.id) : null;
-  const enrolled = Boolean(enrollment && enrollment.status !== "withdrawn");
+  const enrolled = grantsAccess(enrollment);
+  const awaitingPayment = enrollment?.status === "pending_payment";
+  const price = course.price ?? 0;
   const completed = user ? await getCompletedLessonIds(user.id, course.id) : new Set<string>();
 
   const lessons = outline.modules.flatMap((entry) => entry.lessons);
@@ -152,10 +156,14 @@ export default async function CoursePage({ params }: Params) {
             ) : (
               <>
                 <p className="font-display text-lg font-semibold text-primary-900">
-                  Enrol for free
+                  {price > 0 ? formatRupees(price) : "Enrol for free"}
                 </p>
                 <p className="mt-2 text-sm text-gray-600">
-                  Create an account or sign in to enrol. Your progress is saved as you go.
+                  {awaitingPayment
+                    ? "Your place is held. It opens as soon as we confirm your bank transfer."
+                    : price > 0
+                      ? "Pay by bank transfer. We confirm within a working day, then the course opens."
+                      : "Create an account or sign in to enrol. Your progress is saved as you go."}
                 </p>
                 {course.enrollmentOpen ? (
                   user ? (
@@ -165,7 +173,11 @@ export default async function CoursePage({ params }: Params) {
                         type="submit"
                         className="w-full rounded-full bg-secondary-500 px-6 py-3 font-semibold text-white hover:bg-secondary-600"
                       >
-                        Enrol now
+                        {awaitingPayment
+                          ? "View payment details"
+                          : price > 0
+                            ? "Enrol and pay"
+                            : "Enrol now"}
                       </button>
                     </form>
                   ) : (
@@ -195,6 +207,12 @@ export default async function CoursePage({ params }: Params) {
             )}
 
             <dl className="mt-6 space-y-2 border-t border-gray-100 pt-5 text-sm">
+              <div className="flex justify-between">
+                <dt className="text-gray-500">Fee</dt>
+                <dd className="font-semibold text-gray-800">
+                  {price > 0 ? formatRupees(price) : "Free"}
+                </dd>
+              </div>
               <div className="flex justify-between">
                 <dt className="text-gray-500">Lessons</dt>
                 <dd className="font-semibold text-gray-800">{lessons.length}</dd>

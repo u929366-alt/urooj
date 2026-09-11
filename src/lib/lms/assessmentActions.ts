@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache";
 import { getPayload } from "payload";
 import config from "@payload-config";
 import { canGrade, markQuiz } from "./assessment";
+import { grantsAccess } from "./queries";
 import type { Submission, User } from "@/payload-types";
 
 async function currentUser() {
@@ -27,8 +28,7 @@ async function isEnrolled(
     depth: 0,
     overrideAccess: true,
   });
-  const enrollment = result.docs[0];
-  return Boolean(enrollment && enrollment.status !== "withdrawn");
+  return grantsAccess(result.docs[0]);
 }
 
 /**

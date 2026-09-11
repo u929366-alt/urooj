@@ -106,6 +106,18 @@ export const Courses: CollectionConfig = {
       },
     },
     {
+      name: "price",
+      type: "number",
+      required: true,
+      defaultValue: 0,
+      min: 0,
+      admin: {
+        position: "sidebar",
+        description:
+          "Fee in rupees. 0 makes the course free, which enrols a student immediately.",
+      },
+    },
+    {
       name: "enrollmentOpen",
       type: "checkbox",
       defaultValue: true,

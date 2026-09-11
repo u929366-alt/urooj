@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { isHoneypotTriggered, isRateLimited, jsonError } from "@/lib/api-helpers";
+import { createPendingPayment, sendPaymentInstructions } from "@/lib/lms/payments";
 
 const schema = z.object({
   name: z.string().min(2),
@@ -8,9 +9,16 @@ const schema = z.object({
   phone: z.string().optional(),
   amount: z.coerce.number().positive("Please enter a donation amount greater than 0"),
   cause: z.string().min(2),
-  method: z.enum(["bank", "card"]),
+  message: z.string().max(2000).optional(),
 });
 
+/**
+ * Records a donation and returns the reference the donor must quote.
+ *
+ * There is no payment gateway: the money arrives by bank transfer, and a staff
+ * member confirms it against the statement. Nothing here claims the donation
+ * has been collected — `status` stays "pending" until a human says otherwise.
+ */
 export async function POST(request: NextRequest) {
   if (isRateLimited(request)) {
     return jsonError("Too many submissions. Please try again in a minute.", 429);
@@ -19,6 +27,7 @@ export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => null);
   if (!body) return jsonError("Invalid request body.", 400);
   if (isHoneypotTriggered(body)) {
+    // Silently accept, so a bot cannot tell it was caught.
     return NextResponse.json({ message: "Thank you for your generosity." });
   }
 
@@ -27,13 +36,31 @@ export async function POST(request: NextRequest) {
     return jsonError(parsed.error.issues[0]?.message ?? "Invalid submission.", 422);
   }
 
-  // NOTE: This stub does not process real payments. A production build
-  // must integrate a licensed payment gateway (e.g. EasyPaisa/JazzCash
-  // merchant APIs, Stripe for cards) — see README "Backend & CMS scope".
-  console.log("[donation] Pledge received:", parsed.data);
+  const { name, email, phone, amount, cause, message } = parsed.data;
 
-  return NextResponse.json({
-    message:
-      "Thank you for your pledge! Our development team will contact you with payment instructions.",
-  });
+  try {
+    const payment = await createPendingPayment({
+      purpose: "donation",
+      amount,
+      payerName: name,
+      payerEmail: email,
+      payerPhone: phone,
+      cause,
+      message,
+    });
+
+    await sendPaymentInstructions(payment);
+
+    return NextResponse.json({
+      message: "Thank you. Please complete your transfer using the reference below.",
+      reference: payment.reference,
+      redirectTo: `/learn/pay/${payment.reference}`,
+    });
+  } catch (error) {
+    console.error("[donation] could not record the donation:", error);
+    return jsonError(
+      "We could not record your donation just now. Please try again, or email us.",
+      500,
+    );
+  }
 }

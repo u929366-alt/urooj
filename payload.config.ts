@@ -22,6 +22,7 @@ import { Submissions } from "./src/collections/Submissions.ts";
 import { SubmissionFiles } from "./src/collections/SubmissionFiles.ts";
 import { Discussions, DiscussionReplies } from "./src/collections/Discussions.ts";
 import { Certificates } from "./src/collections/Certificates.ts";
+import { Payments } from "./src/collections/Payments.ts";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -126,6 +127,7 @@ export default buildConfig({
     Discussions,
     DiscussionReplies,
     Certificates,
+    Payments,
   ],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET ?? "",

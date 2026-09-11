@@ -8,6 +8,8 @@ import { getPayload } from "payload";
 import config from "@payload-config";
 import { getCurrentUser } from "./auth";
 import { issueCertificateIfComplete } from "./completion";
+import { grantsAccess } from "./queries";
+import { createPendingPayment, sendPaymentInstructions } from "./payments";
 
 const AUTH_COOKIE = "payload-token";
 
@@ -218,14 +220,35 @@ export async function enrollAction(formData: FormData) {
     overrideAccess: true,
   });
 
+  // A priced course is held until the fee is confirmed; a free one opens now.
+  const price = course.price ?? 0;
+  const startingStatus = price > 0 ? "pending_payment" : "active";
+
   if (existing.docs[0]) {
     if (existing.docs[0].status === "withdrawn") {
       await payload.update({
         collection: "enrollments",
         id: existing.docs[0].id,
-        data: { status: "active" },
+        data: { status: startingStatus },
         overrideAccess: true,
       });
+    } else if (existing.docs[0].status === "pending_payment") {
+      // Already waiting on a transfer — send them back to the instructions
+      // rather than raising a second payment for the same place.
+      const open = await payload.find({
+        collection: "payments",
+        where: {
+          and: [
+            { payer: { equals: user.id } },
+            { course: { equals: course.id } },
+            { status: { equals: "pending" } },
+          ],
+        },
+        limit: 1,
+        depth: 0,
+        overrideAccess: true,
+      });
+      if (open.docs[0]) redirect(`/learn/pay/${open.docs[0].reference}`);
     }
   } else {
     await payload.create({
@@ -233,11 +256,25 @@ export async function enrollAction(formData: FormData) {
       data: {
         student: user.id,
         course: course.id,
-        status: "active",
+        status: startingStatus,
         enrolledAt: new Date().toISOString(),
       },
       overrideAccess: true,
     });
+  }
+
+  if (price > 0) {
+    const payment = await createPendingPayment({
+      purpose: "course",
+      amount: price,
+      payerName: user.name,
+      payerEmail: user.email,
+      payerPhone: user.phone ?? undefined,
+      payerId: user.id,
+      courseId: course.id,
+    });
+    await sendPaymentInstructions(payment);
+    redirect(`/learn/pay/${payment.reference}`);
   }
 
   revalidatePath(`/learn/courses/${courseSlug}`);
@@ -266,7 +303,7 @@ export async function toggleLessonCompleteAction(formData: FormData) {
     limit: 1,
     overrideAccess: true,
   });
-  if (!enrollment.docs[0] || enrollment.docs[0].status === "withdrawn") {
+  if (!grantsAccess(enrollment.docs[0])) {
     redirect(returnTo);
   }
 

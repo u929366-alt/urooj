@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { Send } from "lucide-react";
 import { Label, Input, Select, ErrorText, FieldGroup } from "@/components/forms/Field";
@@ -16,7 +17,7 @@ const schema = z.object({
   phone: z.string().optional(),
   amount: z.coerce.number().positive("Please enter an amount greater than 0"),
   cause: z.string().min(1, "Please select a cause"),
-  method: z.enum(["bank", "card"]),
+  message: z.string().max(2000).optional(),
 });
 
 type FormErrors = Partial<Record<keyof z.infer<typeof schema>, string>>;
@@ -24,13 +25,17 @@ type FormErrors = Partial<Record<keyof z.infer<typeof schema>, string>>;
 const presetAmounts = [1000, 2500, 5000, 10000];
 
 export function DonationForm() {
+  const router = useRouter();
   const [errors, setErrors] = useState<FormErrors>({});
   const [amount, setAmount] = useState<number | "">(2500);
   const { status, message, submit } = useFormSubmit("/api/donation");
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
+    // Held onto now: React nulls currentTarget once the handler returns, so
+    // reading it after an await silently throws and skips everything after.
+    const form = e.currentTarget;
+    const formData = new FormData(form);
     const data = Object.fromEntries(formData.entries());
     const parsed = schema.safeParse(data);
     if (!parsed.success) {
@@ -40,8 +45,14 @@ export function DonationForm() {
       return;
     }
     setErrors({});
-    const ok = await submit({ ...parsed.data, [HONEYPOT_FIELD]: data[HONEYPOT_FIELD] });
-    if (ok) e.currentTarget.reset();
+    const result = await submit({ ...parsed.data, [HONEYPOT_FIELD]: data[HONEYPOT_FIELD] });
+    if (!result) return;
+    form.reset();
+
+    // The server allocates the reference; send the donor straight to the
+    // instructions page that shows it.
+    const redirectTo = typeof result.redirectTo === "string" ? result.redirectTo : null;
+    if (redirectTo) router.push(redirectTo);
   }
 
   return (
@@ -109,21 +120,18 @@ export function DonationForm() {
       </FieldGroup>
 
       <FieldGroup>
-        <Label htmlFor="d-method" required>Preferred Payment Method</Label>
-        <Select id="d-method" name="method" defaultValue="bank">
-          <option value="bank">Bank Transfer</option>
-          <option value="card">Credit / Debit Card</option>
-        </Select>
-        <ErrorText>{errors.method}</ErrorText>
+        <Label htmlFor="d-message">Message (optional)</Label>
+        <Input id="d-message" name="message" placeholder="In memory of…, or a note for our team" />
+        <ErrorText>{errors.message}</ErrorText>
       </FieldGroup>
 
       <Button type="submit" disabled={status === "submitting"} className="w-full">
         <Send className="h-4 w-4" />
-        {status === "submitting" ? "Submitting..." : "Confirm Donation Pledge"}
+        {status === "submitting" ? "Please wait…" : "Continue to payment details"}
       </Button>
       <p className="mt-3 text-center text-xs text-gray-500">
-        This form records your pledge — our team will follow up with secure payment
-        instructions for your chosen method.
+        Donations are made by bank transfer. The next page gives you our account
+        details and a reference to quote, which we also email to you.
       </p>
     </form>
   );

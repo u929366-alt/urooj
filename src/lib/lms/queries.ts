@@ -15,6 +15,20 @@ import type { Course, Enrollment, Lesson, Module, User } from "@/payload-types";
  * `getLessonForStudent`, which checks enrolment first.
  */
 
+/**
+ * Does this enrolment grant access to the course?
+ *
+ * Only "active" and "completed" do. Written as an allow-list rather than
+ * "anything but withdrawn", because adding the "pending_payment" state would
+ * otherwise have silently handed full course access to everyone who clicked
+ * enrol on a paid course without paying.
+ */
+export function grantsAccess(
+  enrolment: { status?: string | null } | null | undefined,
+): boolean {
+  return enrolment?.status === "active" || enrolment?.status === "completed";
+}
+
 export type CourseOutline = {
   course: Course;
   modules: Array<{ module: Module; lessons: Lesson[] }>;
@@ -171,7 +185,7 @@ export async function getLessonForStudent(
 
   const staff = user?.role === "instructor" || user?.role === "admin";
   const enrollment = user ? await getEnrollment(user.id, course.id) : null;
-  const enrolled = Boolean(enrollment && enrollment.status !== "withdrawn");
+  const enrolled = grantsAccess(enrollment);
 
   if (!enrolled && !staff && !lesson.preview) {
     return { ok: false, reason: "not-enrolled" };

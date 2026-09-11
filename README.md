@@ -158,6 +158,39 @@ new password, and the student is signed in straight away. Tokens are single use 
 expire after an hour. The form always reports success even for an address that is not
 registered, so it cannot be used to find out who has an account.
 
+### Payments
+
+There is **no payment gateway**. Stripe and PayPal do not offer merchant accounts to
+Pakistani organisations, and Hunarsaaz has no local gateway account, so money arrives by
+bank transfer and a staff member confirms it.
+
+| Step | Who |
+| --- | --- |
+| Donate, or enrol on a priced course | payer |
+| Gets a reference plus the bank details, on screen and by email | automatic |
+| Transfers the money quoting that reference | payer |
+| `/learn/finance` → Mark received | staff |
+| Receipt number issued and emailed; a paid course opens | automatic |
+
+Course prices live on the course (`price`, 0 = free). Enrolling on a priced course
+creates an enrolment with status `pending_payment`, which **grants nothing** until the
+fee is confirmed.
+
+That last point is load-bearing. Access is decided by `grantsAccess()` in
+`src/lib/lms/queries.ts`, which allows only `active` and `completed`. It is written as
+an allow-list rather than "anything except withdrawn" precisely so that adding
+`pending_payment` could not silently hand full course access to everyone who clicked
+enrol without paying — which is exactly what the previous nine separate checks would
+have done.
+
+Nothing here touches card details, and no payer can change their own payment's status:
+`status`, `receiptNumber` and `confirmedAt` reject writes from anyone but staff.
+
+**Adding a gateway later** is one function that takes a `Payment` and returns a redirect
+URL, plus a callback route that verifies the gateway's signature and calls
+`confirmPayment()`. Nothing else changes. Realistic options for Pakistan are JazzCash,
+Easypaisa, PayFast, Safepay or 1Link — all need an approved merchant account first.
+
 ### Deploying to cPanel shared hosting
 
 Requires **Setup Node.js App** in cPanel (Software section). If it is not there, ask
