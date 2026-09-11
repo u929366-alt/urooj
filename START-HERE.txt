@@ -17,8 +17,9 @@ Then open that account's "Connect Devices" page and note the outgoing
 (SMTP) server and port. It is usually mail.hunarsaaz.pk on port 465, and
 the username is the full email address.
 
-This is what sends password-reset emails. Without it, anyone who forgets
-their password cannot get back in.
+This sends password resets, payment instructions and receipts. Without
+it, people who forget their password cannot get back in, and donors get
+no reference to quote on their transfer.
 
 
 STEP 2 — UPLOAD
@@ -85,34 +86,63 @@ BECOMES THE ADMIN. Use a real address such as ceo@hunarsaaz.pk and a
 strong password.
 
 Then add your courses: Courses first, then Modules inside a course, then
-Lessons inside a module.
+Lessons inside a module. Leave a course's Price at 0 to keep it free.
 
 
-STEP 8 — TEST THE PASSWORD RESET
---------------------------------
-Go to /learn/login, click "Forgotten your password?", and enter your own
-address. The email should arrive within a minute. If it does not, the
-SMTP details in step 4 are wrong — check them against the mailbox's
-"Connect Devices" page.
+STEP 8 — TEST IT
+----------------
+Two things worth checking straight away:
+
+  Password reset  /learn/login > "Forgotten your password?" > your own
+                  address. The email should arrive within a minute. If it
+                  does not, the SMTP details in step 4 are wrong.
+
+  Donation        /donate > fill it in. You should land on a page showing
+                  your bank details and a reference, and get an email.
+                  The donation then appears at /learn/finance for you to
+                  confirm once the money arrives.
 
 
 WHERE THINGS ARE
 ----------------
 
   /                     the public website
+  /donate               donations
   /learn/courses        course catalogue, open to everyone
   /learn                a student's own courses and progress
-  /admin                staff area: courses, lessons, users, grading
+  /learn/finance        STAFF: confirm payments that have arrived
+  /learn/teach          STAFF: grading and student progress
+  /admin                STAFF: courses, lessons, users, everything else
+
+
+ABOUT PAYMENTS
+--------------
+There is no card gateway. Stripe and PayPal do not accept Pakistani
+organisations, and you have no local gateway account yet, so money comes
+by bank transfer:
+
+  1. Donor or student is given a REFERENCE and your Allied Bank details.
+  2. They transfer the money quoting that reference.
+  3. You open /learn/finance and click "Mark received".
+  4. A receipt is emailed automatically. If it was a course fee, the
+     course opens for that student at the same moment.
+
+A student who has not paid gets NOTHING — no lessons, quizzes,
+assignments or discussion. Their place is simply held.
+
+Check the amount on the bank statement matches before confirming. The
+site cannot verify that for you.
 
 
 BACKUPS — PLEASE READ
 ---------------------
 
-data/hunarsaaz.db holds EVERY student account, grade and certificate, and
-it is the only copy. Download it regularly.
+data/hunarsaaz.db holds EVERY student account, grade, certificate and
+payment record, and it is the only copy. Download it regularly.
 
 When you upload a newer version of the site, never overwrite these three:
 
   data/            public/uploads/            private-uploads/
 
-Doing so erases student records and their submitted work.
+Doing so erases student records, their submitted work, and your payment
+history.
