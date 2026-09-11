@@ -12,6 +12,11 @@ import { Modules } from "./src/collections/Modules.ts";
 import { Lessons } from "./src/collections/Lessons.ts";
 import { Enrollments } from "./src/collections/Enrollments.ts";
 import { LessonProgress } from "./src/collections/LessonProgress.ts";
+import { Quizzes } from "./src/collections/Quizzes.ts";
+import { QuizAttempts } from "./src/collections/QuizAttempts.ts";
+import { Assignments } from "./src/collections/Assignments.ts";
+import { Submissions } from "./src/collections/Submissions.ts";
+import { SubmissionFiles } from "./src/collections/SubmissionFiles.ts";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -34,6 +39,11 @@ export default buildConfig({
     Lessons,
     Enrollments,
     LessonProgress,
+    Quizzes,
+    QuizAttempts,
+    Assignments,
+    Submissions,
+    SubmissionFiles,
   ],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET ?? "",

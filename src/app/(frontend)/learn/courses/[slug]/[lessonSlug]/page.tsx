@@ -9,6 +9,8 @@ import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { LessonVideo } from "@/components/learn/LessonVideo";
 import { ProgressBar } from "@/components/learn/ProgressBar";
+import { QuizBlock } from "@/components/learn/QuizBlock";
+import { AssignmentBlock } from "@/components/learn/AssignmentBlock";
 import { getCurrentUser } from "@/lib/lms/auth";
 import { toggleLessonCompleteAction } from "@/lib/lms/actions";
 import {
@@ -16,11 +18,25 @@ import {
   getCompletedLessonIds,
   getLessonForStudent,
 } from "@/lib/lms/queries";
+import {
+  getAssignmentsForLesson,
+  getAttemptsForQuiz,
+  getMySubmission,
+  getQuizForLesson,
+  toStudentQuiz,
+} from "@/lib/lms/assessment";
 import type { Media } from "@/payload-types";
 
-type Params = { params: Promise<{ slug: string; lessonSlug: string }> };
+type Params = {
+  params: Promise<{ slug: string; lessonSlug: string }>;
+  searchParams: Promise<{ quiz?: string; work?: string }>;
+};
 
-export async function generateMetadata({ params }: Params): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string; lessonSlug: string }>;
+}): Promise<Metadata> {
   const { slug, lessonSlug } = await params;
   const user = await getCurrentUser();
   const access = await getLessonForStudent(slug, lessonSlug, user);
@@ -30,8 +46,9 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   };
 }
 
-export default async function LessonPage({ params }: Params) {
+export default async function LessonPage({ params, searchParams }: Params) {
   const { slug, lessonSlug } = await params;
+  const notices = await searchParams;
   const user = await getCurrentUser();
   const access = await getLessonForStudent(slug, lessonSlug, user);
 
@@ -67,6 +84,24 @@ export default async function LessonPage({ params }: Params) {
   const isDone = completedIds.has(String(lesson.id));
   const doneCount = lessons.filter((item) => completedIds.has(String(item.id))).length;
   const returnTo = `/learn/courses/${slug}/${lessonSlug}`;
+
+  // Assessment for this lesson. Only fetched for enrolled viewers; the quiz is
+  // passed through toStudentQuiz() at render so answers never reach the page.
+  const quiz = enrolled ? await getQuizForLesson(lesson.id) : null;
+  const quizAttempts = quiz && user ? await getAttemptsForQuiz(user.id, quiz.id) : [];
+  const assignments = enrolled ? await getAssignmentsForLesson(lesson.id) : [];
+  const submissionsByAssignment = new Map(
+    user
+      ? (
+          await Promise.all(
+            assignments.map(
+              async (assignment) =>
+                [String(assignment.id), await getMySubmission(user.id, assignment.id)] as const,
+            ),
+          )
+        ).filter((entry): entry is [string, NonNullable<(typeof entry)[1]>] => entry[1] !== null)
+      : [],
+  );
 
   const attachments = (lesson.attachments ?? []).filter(
     (row): row is { label: string; file: Media; id?: string | null } =>
@@ -127,6 +162,26 @@ export default async function LessonPage({ params }: Params) {
               </ul>
             </section>
           )}
+
+          {enrolled && quiz && (
+            <QuizBlock
+              quiz={toStudentQuiz(quiz)}
+              attempts={quizAttempts}
+              returnTo={returnTo}
+              notice={notices.quiz}
+            />
+          )}
+
+          {enrolled &&
+            assignments.map((assignment) => (
+              <AssignmentBlock
+                key={assignment.id}
+                assignment={assignment}
+                submission={submissionsByAssignment.get(String(assignment.id)) ?? null}
+                returnTo={returnTo}
+                notice={notices.work}
+              />
+            ))}
 
           {enrolled && user?.role === "student" && (
             <form action={toggleLessonCompleteAction} className="mt-10">

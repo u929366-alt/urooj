@@ -123,11 +123,33 @@ cannot be part of a `STATIC_EXPORT=1` build.
 | `/learn` | student | Dashboard of enrolled courses and progress |
 | `/learn/courses` | public | Course catalogue |
 | `/learn/courses/[slug]` | public | Course outline and enrolment |
-| `/learn/courses/[slug]/[lesson]` | enrolled | Lesson player |
+| `/learn/courses/[slug]/[lesson]` | enrolled | Lesson player, quiz and assignment |
+| `/learn/teach` | staff | Grading queue |
 
 Content model: a **course** has ordered **modules**, each with ordered **lessons**. An
 **enrolment** puts a student on a course; a **lesson-progress** row records each lesson
-they tick off.
+they tick off. A lesson may also carry a **quiz** and one or more **assignments**;
+sitting a quiz writes a **quiz-attempt**, and answering an assignment writes a
+**submission** that an instructor grades.
+
+`npm run seed:assessment` adds a sample quiz and assignment to the seeded course.
+
+### Assessment rules
+
+- **Quizzes are marked on the server.** The browser posts only which options were
+  ticked. `markQuiz()` compares them with the stored answers and writes the result;
+  `quiz-attempts` refuses creates from anyone but the server, so a score cannot be
+  posted in by hand. A "select several" question scores only on an exact match.
+- **The answer key never reaches the browser.** The `correct` flag has field-level read
+  access limited to staff, and `toStudentQuiz()` strips it again for the portal, which
+  queries with overrideAccess and would otherwise bypass that rule. Explanations are
+  withheld too.
+- **Student work is private.** Assignment files go to `private-uploads/`, never
+  `public/`, and are served only through Payload's file route, which applies the
+  collection's read rule: the owner and staff, nobody else.
+- **Grades are staff-only fields.** A student owns their submission row and may revise
+  it until it is marked, but `grade`, `feedback` and `status` reject writes from them.
+  Instructors can only grade submissions on courses they teach.
 
 ### Authorisation
 

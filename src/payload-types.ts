@@ -74,6 +74,11 @@ export interface Config {
     lessons: Lesson;
     enrollments: Enrollment;
     'lesson-progress': LessonProgress;
+    quizzes: Quiz;
+    'quiz-attempts': QuizAttempt;
+    assignments: Assignment;
+    submissions: Submission;
+    'submission-files': SubmissionFile;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -88,6 +93,11 @@ export interface Config {
     lessons: LessonsSelect<false> | LessonsSelect<true>;
     enrollments: EnrollmentsSelect<false> | EnrollmentsSelect<true>;
     'lesson-progress': LessonProgressSelect<false> | LessonProgressSelect<true>;
+    quizzes: QuizzesSelect<false> | QuizzesSelect<true>;
+    'quiz-attempts': QuizAttemptsSelect<false> | QuizAttemptsSelect<true>;
+    assignments: AssignmentsSelect<false> | AssignmentsSelect<true>;
+    submissions: SubmissionsSelect<false> | SubmissionsSelect<true>;
+    'submission-files': SubmissionFilesSelect<false> | SubmissionFilesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -336,6 +346,162 @@ export interface LessonProgress {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "quizzes".
+ */
+export interface Quiz {
+  id: number;
+  title: string;
+  course: number | Course;
+  /**
+   * The lesson this quiz appears at the end of.
+   */
+  lesson?: (number | null) | Lesson;
+  description?: string | null;
+  /**
+   * Percentage needed to pass.
+   */
+  passingScore: number;
+  /**
+   * 0 means unlimited attempts.
+   */
+  maxAttempts: number;
+  questions?:
+    | {
+        prompt: string;
+        type: 'single' | 'multiple';
+        options?:
+          | {
+              text: string;
+              correct?: boolean | null;
+              id?: string | null;
+            }[]
+          | null;
+        /**
+         * Shown after the student submits.
+         */
+        explanation?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "quiz-attempts".
+ */
+export interface QuizAttempt {
+  id: number;
+  student: number | User;
+  quiz: number | Quiz;
+  course: number | Course;
+  scorePercent: number;
+  correctCount: number;
+  questionCount: number;
+  passed?: boolean | null;
+  submittedAt: string;
+  /**
+   * What the student chose, for review.
+   */
+  responses?:
+    | {
+        questionIndex: number;
+        /**
+         * Chosen option indexes, comma separated.
+         */
+        selected?: string | null;
+        correct?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "assignments".
+ */
+export interface Assignment {
+  id: number;
+  title: string;
+  /**
+   * Leave blank to generate from the title.
+   */
+  slug?: string | null;
+  course: number | Course;
+  /**
+   * Optional. Shows at the end of this lesson.
+   */
+  lesson?: (number | null) | Lesson;
+  instructions?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  dueDate?: string | null;
+  maxPoints: number;
+  /**
+   * Let students attach files.
+   */
+  allowFiles?: boolean | null;
+  acceptingSubmissions?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "submissions".
+ */
+export interface Submission {
+  id: number;
+  student: number | User;
+  assignment: number | Assignment;
+  course: number | Course;
+  text?: string | null;
+  files?: (number | SubmissionFile)[] | null;
+  submittedAt?: string | null;
+  status: 'submitted' | 'graded' | 'returned';
+  /**
+   * Points awarded.
+   */
+  grade?: number | null;
+  feedback?: string | null;
+  gradedBy?: (number | null) | User;
+  gradedAt?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "submission-files".
+ */
+export interface SubmissionFile {
+  id: number;
+  owner?: (number | null) | User;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -385,6 +551,26 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'lesson-progress';
         value: number | LessonProgress;
+      } | null)
+    | ({
+        relationTo: 'quizzes';
+        value: number | Quiz;
+      } | null)
+    | ({
+        relationTo: 'quiz-attempts';
+        value: number | QuizAttempt;
+      } | null)
+    | ({
+        relationTo: 'assignments';
+        value: number | Assignment;
+      } | null)
+    | ({
+        relationTo: 'submissions';
+        value: number | Submission;
+      } | null)
+    | ({
+        relationTo: 'submission-files';
+        value: number | SubmissionFile;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -555,6 +741,113 @@ export interface LessonProgressSelect<T extends boolean = true> {
   completedAt?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "quizzes_select".
+ */
+export interface QuizzesSelect<T extends boolean = true> {
+  title?: T;
+  course?: T;
+  lesson?: T;
+  description?: T;
+  passingScore?: T;
+  maxAttempts?: T;
+  questions?:
+    | T
+    | {
+        prompt?: T;
+        type?: T;
+        options?:
+          | T
+          | {
+              text?: T;
+              correct?: T;
+              id?: T;
+            };
+        explanation?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "quiz-attempts_select".
+ */
+export interface QuizAttemptsSelect<T extends boolean = true> {
+  student?: T;
+  quiz?: T;
+  course?: T;
+  scorePercent?: T;
+  correctCount?: T;
+  questionCount?: T;
+  passed?: T;
+  submittedAt?: T;
+  responses?:
+    | T
+    | {
+        questionIndex?: T;
+        selected?: T;
+        correct?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "assignments_select".
+ */
+export interface AssignmentsSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  course?: T;
+  lesson?: T;
+  instructions?: T;
+  dueDate?: T;
+  maxPoints?: T;
+  allowFiles?: T;
+  acceptingSubmissions?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "submissions_select".
+ */
+export interface SubmissionsSelect<T extends boolean = true> {
+  student?: T;
+  assignment?: T;
+  course?: T;
+  text?: T;
+  files?: T;
+  submittedAt?: T;
+  status?: T;
+  grade?: T;
+  feedback?: T;
+  gradedBy?: T;
+  gradedAt?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "submission-files_select".
+ */
+export interface SubmissionFilesSelect<T extends boolean = true> {
+  owner?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
