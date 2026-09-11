@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { BookOpen } from "lucide-react";
+import { Award, BookOpen } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { ProgressBar } from "@/components/learn/ProgressBar";
 import { requireUser } from "@/lib/lms/auth";
 import { getCompletedLessonIds, getCourseOutline, listMyEnrollments } from "@/lib/lms/queries";
+import { listMyCertificates } from "@/lib/lms/completion";
 import type { Course } from "@/payload-types";
 
 export const metadata: Metadata = {
@@ -38,6 +39,7 @@ export default async function LearnDashboard() {
   );
 
   const active = cards.filter((card) => card !== null);
+  const certificates = await listMyCertificates(user.id);
 
   return (
     <Container className="py-12">
@@ -96,6 +98,31 @@ export default async function LearnDashboard() {
             </Card>
           ))}
         </div>
+      )}
+
+      {certificates.length > 0 && (
+        <section className="mt-14">
+          <h2 className="font-display text-xl font-semibold text-primary-900">
+            My certificates
+          </h2>
+          <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {certificates.map((certificate) => (
+              <Card key={certificate.id} className="flex items-start gap-3 p-5">
+                <Award className="mt-0.5 h-6 w-6 shrink-0 text-secondary-500" aria-hidden />
+                <div className="min-w-0">
+                  <p className="font-semibold text-primary-900">{certificate.courseTitle}</p>
+                  <p className="mt-0.5 font-mono text-xs text-gray-500">{certificate.serial}</p>
+                  <Link
+                    href={`/learn/certificates/${certificate.serial}`}
+                    className="mt-2 inline-block text-sm font-semibold text-primary-600 hover:underline"
+                  >
+                    View &amp; print →
+                  </Link>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </section>
       )}
     </Container>
   );

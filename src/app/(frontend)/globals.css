@@ -154,3 +154,29 @@ h1, h2, h3, h4, h5, h6 {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Printing a certificate should produce the certificate alone, not the whole
+   page. Everything outside .certificate is dropped. */
+@media print {
+  header,
+  footer,
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    background: #fff;
+  }
+
+  .certificate {
+    border-width: 3px;
+    box-shadow: none;
+    max-width: 100%;
+    page-break-inside: avoid;
+  }
+
+  @page {
+    size: A4 landscape;
+    margin: 12mm;
+  }
+}

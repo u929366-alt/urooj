@@ -124,6 +124,10 @@ cannot be part of a `STATIC_EXPORT=1` build.
 | `/learn/courses` | public | Course catalogue |
 | `/learn/courses/[slug]` | public | Course outline and enrolment |
 | `/learn/courses/[slug]/[lesson]` | enrolled | Lesson player, quiz and assignment |
+| `/learn/courses/[slug]/discussion` | enrolled | Course Q&A threads |
+| `/learn/certificates/[serial]` | holder, staff | Printable certificate |
+| `/verify/[serial]` | public | Certificate check for employers |
+| `/learn/teach/courses` | staff | Courses taught, with per-student progress |
 | `/learn/teach` | staff | Grading queue |
 
 Content model: a **course** has ordered **modules**, each with ordered **lessons**. An
@@ -150,6 +154,24 @@ sitting a quiz writes a **quiz-attempt**, and answering an assignment writes a
 - **Grades are staff-only fields.** A student owns their submission row and may revise
   it until it is marked, but `grade`, `feedback` and `status` reject writes from them.
   Instructors can only grade submissions on courses they teach.
+- **Discussions are scoped by enrolment.** The read rule on `discussions` looks up which
+  courses the requester is enrolled on and limits the query to those, so a signed-in
+  student cannot read another course's threads through the API. The thread page also
+  rechecks that the thread belongs to the course in the URL.
+- **Certificates cannot be self-issued.** `issueCertificateIfComplete()` recounts the
+  lessons and the student's progress from the database before writing one, and the
+  collection refuses creates from every other route.
+
+### Certificates
+
+When a student ticks off the last lesson, the enrolment is marked complete and a
+certificate is issued with a random serial (`HS-2026-XXXXXXXX`). They can print it or
+save it as PDF from `/learn/certificates/[serial]` — print rules in `globals.css` drop
+the site chrome so only the certificate appears.
+
+`/verify/[serial]` is public so an employer holding a printout can check it without an
+account. It deliberately shows only the holder's name, the course and the date — no
+email, no grades, no progress.
 
 ### Authorisation
 

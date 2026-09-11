@@ -79,6 +79,9 @@ export interface Config {
     assignments: Assignment;
     submissions: Submission;
     'submission-files': SubmissionFile;
+    discussions: Discussion;
+    'discussion-replies': DiscussionReply;
+    certificates: Certificate;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -98,6 +101,9 @@ export interface Config {
     assignments: AssignmentsSelect<false> | AssignmentsSelect<true>;
     submissions: SubmissionsSelect<false> | SubmissionsSelect<true>;
     'submission-files': SubmissionFilesSelect<false> | SubmissionFilesSelect<true>;
+    discussions: DiscussionsSelect<false> | DiscussionsSelect<true>;
+    'discussion-replies': DiscussionRepliesSelect<false> | DiscussionRepliesSelect<true>;
+    certificates: CertificatesSelect<false> | CertificatesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -502,6 +508,59 @@ export interface SubmissionFile {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "discussions".
+ */
+export interface Discussion {
+  id: number;
+  title: string;
+  body: string;
+  course: number | Course;
+  /**
+   * Optional: ties the thread to one lesson.
+   */
+  lesson?: (number | null) | Lesson;
+  author: number | User;
+  pinned?: boolean | null;
+  /**
+   * Stops new replies.
+   */
+  locked?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "discussion-replies".
+ */
+export interface DiscussionReply {
+  id: number;
+  body: string;
+  discussion: number | Discussion;
+  /**
+   * Denormalised so the read rule can scope by enrolment.
+   */
+  course: number | Course;
+  author: number | User;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "certificates".
+ */
+export interface Certificate {
+  id: number;
+  serial: string;
+  student: number | User;
+  course: number | Course;
+  studentName: string;
+  courseTitle: string;
+  issuedAt: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -571,6 +630,18 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'submission-files';
         value: number | SubmissionFile;
+      } | null)
+    | ({
+        relationTo: 'discussions';
+        value: number | Discussion;
+      } | null)
+    | ({
+        relationTo: 'discussion-replies';
+        value: number | DiscussionReply;
+      } | null)
+    | ({
+        relationTo: 'certificates';
+        value: number | Certificate;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -848,6 +919,47 @@ export interface SubmissionFilesSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "discussions_select".
+ */
+export interface DiscussionsSelect<T extends boolean = true> {
+  title?: T;
+  body?: T;
+  course?: T;
+  lesson?: T;
+  author?: T;
+  pinned?: T;
+  locked?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "discussion-replies_select".
+ */
+export interface DiscussionRepliesSelect<T extends boolean = true> {
+  body?: T;
+  discussion?: T;
+  course?: T;
+  author?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "certificates_select".
+ */
+export interface CertificatesSelect<T extends boolean = true> {
+  serial?: T;
+  student?: T;
+  course?: T;
+  studentName?: T;
+  courseTitle?: T;
+  issuedAt?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

@@ -17,6 +17,8 @@ import { QuizAttempts } from "./src/collections/QuizAttempts.ts";
 import { Assignments } from "./src/collections/Assignments.ts";
 import { Submissions } from "./src/collections/Submissions.ts";
 import { SubmissionFiles } from "./src/collections/SubmissionFiles.ts";
+import { Discussions, DiscussionReplies } from "./src/collections/Discussions.ts";
+import { Certificates } from "./src/collections/Certificates.ts";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -44,6 +46,9 @@ export default buildConfig({
     Assignments,
     Submissions,
     SubmissionFiles,
+    Discussions,
+    DiscussionReplies,
+    Certificates,
   ],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET ?? "",

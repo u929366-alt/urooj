@@ -7,6 +7,7 @@ import { z } from "zod";
 import { getPayload } from "payload";
 import config from "@payload-config";
 import { getCurrentUser } from "./auth";
+import { issueCertificateIfComplete } from "./completion";
 
 const AUTH_COOKIE = "payload-token";
 
@@ -231,6 +232,12 @@ export async function toggleLessonCompleteAction(formData: FormData) {
       },
       overrideAccess: true,
     });
+  }
+
+  // Finishing the last lesson closes the enrolment and issues a certificate.
+  // Recounted from the database inside, so ticking a lesson cannot fake it.
+  if (completed) {
+    await issueCertificateIfComplete(user.id, Number(courseId));
   }
 
   revalidatePath(returnTo);
