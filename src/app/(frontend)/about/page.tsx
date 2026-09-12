@@ -7,7 +7,7 @@ import { Card } from "@/components/ui/Card";
 import { PlaceholderImage } from "@/components/ui/PlaceholderImage";
 import { coreValues } from "@/data/stats";
 import Image from "next/image";
-import { advisers, officeBearers, team, type Person } from "@/data/team";
+import { officeBearers, team, type Person } from "@/data/team";
 import { Users, Target, Eye } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -141,10 +141,6 @@ export default function AboutPage() {
           <div className="mt-10">
             <h3 className="font-display text-lg font-semibold text-primary-900">Office Bearers</h3>
             <PeopleGrid people={officeBearers} />
-          </div>
-          <div className="mt-14">
-            <h3 className="font-display text-lg font-semibold text-primary-900">Advisers</h3>
-            <PeopleGrid people={advisers} />
           </div>
           <div className="mt-14">
             <h3 className="font-display text-lg font-semibold text-primary-900">Our Team</h3>
