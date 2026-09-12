@@ -1,0 +1,63 @@
+hunarsaaz-website.zip — the main site at hunarsaaz.pk
+=====================================================
+
+WHAT THIS IS
+
+The plain-HTML website: Home, About, Programs, Policy & Advisory,
+Get Involved, Media, Contact. No Node.js, no database — it just sits in
+public_html and is served as files.
+
+This is NOT the learning portal. The portal is hunarsaaz-site.zip in this
+same place, and it goes to learn.hunarsaaz.pk. Do not mix the two up:
+this one belongs in public_html, that one must never go near it.
+
+WHAT CHANGED
+
+Asma Ahmed added to the About page as Senior Adviser, in a new "Advisers"
+section between Office Bearers and Our Team.
+
+
+HOW TO PUT IT ONLINE
+
+1. Download hunarsaaz-website.zip to your computer.
+
+2. cPanel > File Manager > public_html
+
+3. BACK UP FIRST. Select everything currently in public_html, click
+   Compress, and save the resulting zip somewhere outside public_html —
+   your home directory is fine. If anything goes wrong you can put the old
+   site back from it.
+
+4. Delete the old site files from public_html.
+
+   Leave these alone if you see them — they are not part of the website:
+     .well-known      cgi-bin       any folder named after a subdomain
+     (learn.hunarsaaz.pk lives next to public_html, not inside it, so it
+     is not affected either way)
+
+5. Upload hunarsaaz-website.zip into public_html.
+
+6. Right-click it > Extract, into public_html.
+
+7. Delete hunarsaaz-website.zip.
+
+8. Check that .htaccess is there. In File Manager, Settings (top right) >
+   tick "Show Hidden Files (dotfiles)". Without .htaccess the addresses
+   with no .html on the end stop working.
+
+9. Open https://hunarsaaz.pk/about/ and press Ctrl+Shift+R. Asma Ahmed
+   should appear under Advisers.
+
+
+IF THE PAGES LOOK UNSTYLED
+
+You have a half-uploaded site: the HTML arrived but the _next folder did
+not. Extract the zip again over the top.
+
+
+NEXT TIME
+
+Every text or photo change on these pages means a fresh zip from us — the
+pages are built files, not editable in an admin panel. The learning
+portal is the opposite: courses, lessons and students are all managed at
+learn.hunarsaaz.pk/admin without any upload.
