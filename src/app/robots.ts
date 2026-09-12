@@ -3,6 +3,10 @@ import { siteConfig } from "@/lib/site";
 
 // Read per request, not baked in at build time, so one build can serve the
 // main site and the portal subdomain with the right rules for each.
+//
+// Next requires this to be a literal, and rejects "force-dynamic" outright in
+// an export build, so scripts/build-static.sh rewrites the line to
+// "force-static" for that build and puts it back afterwards.
 export const dynamic = "force-dynamic";
 
 export default function robots(): MetadataRoute.Robots {

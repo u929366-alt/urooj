@@ -4,6 +4,10 @@ import { programs } from "@/data/programs";
 import { posts } from "@/data/blog";
 
 // Read per request so the URLs match whichever host is serving it.
+//
+// Next requires this to be a literal, and rejects "force-dynamic" outright in
+// an export build, so scripts/build-static.sh rewrites the line to
+// "force-static" for that build and puts it back afterwards.
 export const dynamic = "force-dynamic";
 
 export default function sitemap(): MetadataRoute.Sitemap {
