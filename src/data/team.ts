@@ -53,6 +53,15 @@ export const officeBearers: Person[] = [
   },
 ];
 
+export const advisers: Person[] = [
+  {
+    name: "Asma Ahmed",
+    role: "Senior Adviser — Inclusion, Training Systems and Psychosocial Wellbeing",
+    photo: "/team/asma-ahmed.jpg",
+    bio: "Asma Ahmed is a Consultant Clinical Psychologist and Master Trainer with over 20 years of experience in mental health, neurodevelopmental disorders, professional training, and institutional development. She is Co-Founder of The Gateway for Special Needs, Karachi, a multidisciplinary platform for children with neurodevelopmental needs and their families. She has previously served as Head of Shifaam Wellness Place and as Director Training and Outreach at the Pakistan Centre for Autism, leading nationwide professional development, advocacy, and partnership initiatives. Her consultancy work spans autism unit development, inclusive education, curriculum design, disability advocacy, and clinical service establishment. She has delivered more than 2,000 training workshops and awareness seminars across Pakistan and received the 2018 Women's Achievement Award from the Government of Sindh. At Hunarsaaz, she advises on inclusive vocational training design, trainer capacity building and quality assurance, and the psychosocial factors affecting training completion and income sustainability among marginalised youth and women. Her contribution supports both the Taxila TVET centre and the organisation's applied research on skills and livelihoods.",
+  },
+];
+
 export const team: Person[] = [
   {
     name: "Rana Iftikhar Raza",
