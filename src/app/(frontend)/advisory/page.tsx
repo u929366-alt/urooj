@@ -159,12 +159,6 @@ const associates: {
     bio: "Over three decades of international governance, financial oversight, and corporate leadership experience across multilateral institutions, regulatory bodies, and industrial enterprises. She has held key positions including Member of Pakistan's Competition Commission, Chair of oversight and audit committees at the UNHCR, UNAIDS, and ILO in Geneva, and board director roles at the Aquaculture Stewardship Council, World Agroforestry Centre, CIFOR, CGIAR, AJK Bank, and several state-owned corporations — spanning financial reporting, internal and external audit, risk management, mergers and restructuring, and regulatory compliance. She has led major treasury and capital restructuring initiatives and advised public and private sector clients on regulatory strategy and institutional capacity building. At Hunar Saaz, she anchors work on financial governance, institutional oversight, and organizational risk management.",
   },
   {
-    name: "Asma Ahmed",
-    role: "Senior Adviser | Inclusion, Training Systems, and Psychosocial Wellbeing",
-    photo: "/team/asma-ahmed.jpg",
-    bio: "A Consultant Clinical Psychologist and Master Trainer with over twenty years of experience in mental health, neurodevelopmental disorders, professional training, and institutional development. She is Co-Founder of The Gateway for Special Needs, Karachi, a multidisciplinary platform for children with neurodevelopmental needs and their families, and has previously served as Head of Shifaam Wellness Place and as Director Training and Outreach at the Pakistan Centre for Autism, leading nationwide professional development, advocacy, and partnership initiatives. Her consultancy work spans autism unit development, inclusive education, curriculum design, disability advocacy, and clinical service establishment, and she has delivered more than 2,000 training workshops and awareness seminars across Pakistan — work recognized with the 2018 Women's Achievement Award from the Government of Sindh. At Hunar Saaz, she advises on inclusive vocational training design, trainer capacity building and quality assurance, and the psychosocial factors affecting training completion and income sustainability among marginalised youth and women, supporting both the Taxila TVET centre and the organisation's applied research on skills and livelihoods.",
-  },
-  {
     name: "Waqar Sherazi",
     role: "Senior Associate | Policy, Research, and Evaluation",
     photo: "/team/waqar-sherazi.jpg",
@@ -180,6 +174,12 @@ const associates: {
     role: "Senior Associate | Data Systems, EMIS, and Digital Governance",
     photo: "/team/rana-iftikhar-raza.jpg",
     bio: "A senior data systems and digital governance specialist with over thirty years of experience in Education Management Information Systems (EMIS), GIS-based planning, large-scale surveys, and public sector information systems. He has played a foundational role in the design, digitization, and institutionalization of EMIS and decision-support systems across multiple provinces, with expertise spanning system architecture, spatial data integration, survey operations, third-party validations, and capacity building. At Hunar Saaz, he leads work on data systems, digital transformation, and evidence infrastructure.",
+  },
+  {
+    name: "Asma Ahmed",
+    role: "Senior Adviser | Inclusion, Training Systems, and Psychosocial Wellbeing",
+    photo: "/team/asma-ahmed.jpg",
+    bio: "A Consultant Clinical Psychologist and Master Trainer with over twenty years of experience in mental health, neurodevelopmental disorders, professional training, and institutional development. She is Co-Founder of The Gateway for Special Needs, Karachi, a multidisciplinary platform for children with neurodevelopmental needs and their families, and has previously served as Head of Shifaam Wellness Place and as Director Training and Outreach at the Pakistan Centre for Autism, leading nationwide professional development, advocacy, and partnership initiatives. Her consultancy work spans autism unit development, inclusive education, curriculum design, disability advocacy, and clinical service establishment, and she has delivered more than 2,000 training workshops and awareness seminars across Pakistan — work recognized with the 2018 Women's Achievement Award from the Government of Sindh. At Hunar Saaz, she advises on inclusive vocational training design, trainer capacity building and quality assurance, and the psychosocial factors affecting training completion and income sustainability among marginalised youth and women, supporting both the Taxila TVET centre and the organisation's applied research on skills and livelihoods.",
   },
   {
     name: "Urooj Shafi",
