@@ -13,8 +13,8 @@ this one belongs in public_html, that one must never go near it.
 
 WHAT CHANGED
 
-Asma Ahmed added to the About page as Senior Adviser, in a new "Advisers"
-section between Office Bearers and Our Team.
+Asma Ahmed added to the Policy & Advisory page, alongside the other
+senior advisers and associates.
 
 
 HOW TO PUT IT ONLINE
