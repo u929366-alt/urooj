@@ -5,11 +5,15 @@ import type { CourseContent } from "./types.ts";
  * fundamentals, website, SEO, paid search, social, content, email, analytics,
  * then earning from it — but written here from scratch.
  *
- * `recognition` is deliberately "hunarsaaz". Change it to "navttc_aligned"
- * only once someone has read NAVTTC's curriculum document for this trade and
- * confirmed the modules match, and to "navttc_recognised" only if Hunarsaaz
- * holds the accreditation on paper. A student reads this as what their
- * certificate is worth.
+ * Marked "navttc_aligned" on Hunarsaaz's instruction. That tells students the
+ * syllabus follows NAVTTC's published curriculum for this trade — a claim that
+ * has not yet been checked against the document itself, because navttc.gov.pk
+ * could not be reached when this was written. Someone should compare the two
+ * and correct the modules where they differ.
+ *
+ * It is not "navttc_recognised", and must not become so unless Hunarsaaz holds
+ * the accreditation on paper: a student reads that as what their certificate
+ * is worth to an employer.
  */
 export const digitalMarketing: CourseContent = {
   slug: "digital-marketing",
@@ -29,7 +33,7 @@ No prior marketing knowledge is assumed. If you can use a browser and type, you 
   sector: "Information Technology",
   courseCode: "HS-DM-01",
   nvqfLevel: "2",
-  recognition: "hunarsaaz",
+  recognition: "navttc_aligned",
 
   level: "beginner",
   language: "both",
