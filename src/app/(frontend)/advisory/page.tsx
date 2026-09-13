@@ -170,16 +170,16 @@ const associates: {
     bio: "Over three decades of senior public sector leadership across federal and provincial governments, including positions as Federal Secretary, Additional Secretary, Commissioner, and head of major public institutions — with responsibilities spanning economic governance, trade diplomacy, education, social protection, disaster response, investment promotion, and regulatory reform. He has represented Pakistan in multilateral settings and led complex negotiations and administrative systems. At Hunar Saaz, he anchors work on governance reform, public sector systems, and institutional effectiveness.",
   },
   {
+    name: "Asma Ahmed",
+    role: "Senior Associate | Inclusion, Training Systems, and Psychosocial Wellbeing",
+    photo: "/team/asma-ahmed.jpg",
+    bio: "A Consultant Clinical Psychologist and Master Trainer with over twenty years of experience in mental health, neurodevelopmental disorders, professional training, and institutional development. She is Co-Founder of The Gateway for Special Needs, Karachi, a multidisciplinary platform for children with neurodevelopmental needs and their families, and has previously served as Head of Shifaam Wellness Place and as Director Training and Outreach at the Pakistan Centre for Autism, leading nationwide professional development, advocacy, and partnership initiatives. Her consultancy work spans autism unit development, inclusive education, curriculum design, disability advocacy, and clinical service establishment, and she has delivered more than 2,000 training workshops and awareness seminars across Pakistan — work recognized with the 2018 Women's Achievement Award from the Government of Sindh. At Hunar Saaz, she advises on inclusive vocational training design, trainer capacity building and quality assurance, and the psychosocial factors affecting training completion and income sustainability among marginalised youth and women, supporting both the Taxila TVET centre and the organisation's applied research on skills and livelihoods.",
+  },
+  {
     name: "Rana Iftikhar Raza",
     role: "Senior Associate | Data Systems, EMIS, and Digital Governance",
     photo: "/team/rana-iftikhar-raza.jpg",
     bio: "A senior data systems and digital governance specialist with over thirty years of experience in Education Management Information Systems (EMIS), GIS-based planning, large-scale surveys, and public sector information systems. He has played a foundational role in the design, digitization, and institutionalization of EMIS and decision-support systems across multiple provinces, with expertise spanning system architecture, spatial data integration, survey operations, third-party validations, and capacity building. At Hunar Saaz, he leads work on data systems, digital transformation, and evidence infrastructure.",
-  },
-  {
-    name: "Asma Ahmed",
-    role: "Senior Adviser | Inclusion, Training Systems, and Psychosocial Wellbeing",
-    photo: "/team/asma-ahmed.jpg",
-    bio: "A Consultant Clinical Psychologist and Master Trainer with over twenty years of experience in mental health, neurodevelopmental disorders, professional training, and institutional development. She is Co-Founder of The Gateway for Special Needs, Karachi, a multidisciplinary platform for children with neurodevelopmental needs and their families, and has previously served as Head of Shifaam Wellness Place and as Director Training and Outreach at the Pakistan Centre for Autism, leading nationwide professional development, advocacy, and partnership initiatives. Her consultancy work spans autism unit development, inclusive education, curriculum design, disability advocacy, and clinical service establishment, and she has delivered more than 2,000 training workshops and awareness seminars across Pakistan — work recognized with the 2018 Women's Achievement Award from the Government of Sindh. At Hunar Saaz, she advises on inclusive vocational training design, trainer capacity building and quality assurance, and the psychosocial factors affecting training completion and income sustainability among marginalised youth and women, supporting both the Taxila TVET centre and the organisation's applied research on skills and livelihoods.",
   },
   {
     name: "Urooj Shafi",
