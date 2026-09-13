@@ -1,0 +1,163 @@
+HUNARSAAZ LEARNING PORTAL — UPDATE WITH THE COURSES
+===================================================
+
+This goes to learn.hunarsaaz.pk, in the folder:
+
+    /home2/lqonfyud/hunarsaaz-portal
+
+NOT public_html. The database in data/ holds every student account, grade
+and payment record; inside public_html a stranger could download it.
+
+
+READ THIS FIRST — THE DATABASE IS REPLACED
+------------------------------------------
+
+This update adds new fields to courses, and a live site cannot add columns
+to its own database. So data/hunarsaaz.db is REPLACED rather than kept.
+
+The database in this zip contains:
+
+    the three courses, published
+    NO user accounts
+    NO students, enrolments, payments or submissions
+
+Replacing it therefore ERASES:
+
+    your admin account (you create it again in step 6 — one minute)
+    any course, student, enrolment, payment or submission on the site now
+
+If you have real students, real payments or courses you typed in
+yourself, STOP and say so before doing this. There is another way to do
+it that keeps them; it is just slower.
+
+If the only thing on the site is the admin account you made while
+testing, carry on. That is the expected case.
+
+
+STEP 1 — BACK UP WHAT IS THERE
+------------------------------
+cPanel > File Manager > /home2/lqonfyud/hunarsaaz-portal
+
+Right-click each of these and Download, to your own computer:
+
+    data/hunarsaaz.db
+    public/uploads          (if it has anything in it)
+    private-uploads         (if it has anything in it)
+
+Keep them. If anything goes wrong they are how you get back.
+
+
+STEP 2 — STOP THE APP
+---------------------
+cPanel > Setup Node.js App > your application > Stop
+
+Replacing files under a running app can leave it half-updated.
+
+
+STEP 3 — DELETE THE OLD APP FILES
+---------------------------------
+In /home2/lqonfyud/hunarsaaz-portal, delete these and only these:
+
+    .next
+    node_modules
+    public
+    src
+    data
+    server.js
+    package.json
+    START-HERE.txt
+
+Leave private-uploads alone if it has student work in it.
+
+Deleting .next and node_modules matters. Extracting over the top of them
+leaves old files behind that can conflict with the new ones.
+
+
+STEP 4 — UPLOAD AND EXTRACT
+---------------------------
+Upload hunarsaaz-portal.zip into /home2/lqonfyud/hunarsaaz-portal,
+right-click it > Extract, then delete the zip.
+
+Check afterwards that these sit DIRECTLY in hunarsaaz-portal, not inside
+another folder:
+
+    server.js   package.json   START-HERE-UPDATE.txt
+    .next   node_modules   public   data   private-uploads   src
+
+If they are one level down, go into that folder, Select All, Move them up
+to /home2/lqonfyud/hunarsaaz-portal, and delete the empty folder.
+Passenger looks for server.js at the top of the app root and nowhere else.
+
+Turn on File Manager > Settings > Show Hidden Files to see .next.
+
+
+STEP 5 — START IT
+-----------------
+Your environment variables are still set — cPanel keeps them, they are not
+in the zip. Check they are all still there, then:
+
+Setup Node.js App > Start (or Restart)
+
+DO NOT click "Run NPM Install". Everything is installed already, and
+running it can replace working Linux files with broken ones.
+
+Open https://learn.hunarsaaz.pk/learn/courses
+You should see three courses: Digital Marketing, E-Commerce, Graphic Design.
+
+
+STEP 6 — CREATE YOUR ADMIN ACCOUNT AGAIN
+----------------------------------------
+Go to https://learn.hunarsaaz.pk/admin
+
+THE FIRST ACCOUNT MADE BECOMES THE ADMINISTRATOR. Do this immediately —
+until you do, anyone who finds that page can claim it.
+
+Use a real address such as ceo@hunarsaaz.pk and a strong password.
+
+
+STEP 7 — CHECK THE VIDEOS BEFORE YOU TELL ANYONE
+------------------------------------------------
+29 lessons have a video attached. Those links came from search results and
+have NOT been played by us — the machine that built this cannot reach
+YouTube.
+
+Open each lesson with a video and check it plays and teaches that lesson.
+Where one is wrong, replace it in /admin > Lessons > Video URL.
+
+The other lessons have no video yet, deliberately. Their text stands on its
+own.
+
+
+WHAT IS IN THE COURSES
+----------------------
+
+  Digital Marketing   8 modules, 33 lessons, 8 quizzes, 8 assignments
+  E-Commerce          5 modules, 17 lessons, 5 quizzes, 5 assignments
+  Graphic Design      4 modules, 11 lessons, 4 quizzes, 4 assignments
+
+All three are marked "Aligned to the NAVTTC curriculum" on the course page.
+That is your claim to stand behind: the syllabi were written to follow
+NAVTTC's published trades, but nobody has yet compared them against the
+actual curriculum documents. Get someone to do that.
+
+None is marked NAVTTC-recognised, and none should be unless Hunarsaaz holds
+that accreditation on paper. Students read it as what their certificate is
+worth to an employer.
+
+All three are free (price 0). Change a price in /admin > Courses if you
+want to charge; a paid course holds the student's place until you confirm
+their bank transfer at /learn/finance.
+
+
+BACKUPS — PLEASE READ
+---------------------
+
+data/hunarsaaz.db will hold EVERY student account, grade, certificate and
+payment record, and it is the only copy. Download it regularly.
+
+From the next update onwards, never overwrite these three:
+
+    data/            public/uploads/            private-uploads/
+
+This update is the exception, and only because the site has no student
+records yet.
