@@ -42,4 +42,6 @@ next-env.d.ts
 .env
 public/uploads
 private-uploads
-data/
+# The SQLite database at the repository root. Anchored with a leading slash:
+# a bare "data/" also matches src/data/, which is source, not a database.
+/data/
