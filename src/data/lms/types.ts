@@ -13,11 +13,18 @@
 
 export type VideoRef = {
   /**
-   * The lesson's video, once someone has checked it plays and teaches what it
-   * claims. Left undefined until then.
+   * The lesson's video.
+   *
+   * Every URL here was taken from a real search result, never composed by
+   * hand — but none has been played, because youtube.com is not reachable from
+   * the environment these courses were written in. Treat a filled-in url as a
+   * candidate that still needs one person to open it and confirm it plays,
+   * teaches this lesson, and is not blocked from embedding.
    */
   url?: string;
-  /** What to search for to find a suitable video. Shown to staff in /admin. */
+  /** The video's title as the search returned it, so a wrong one is obvious. */
+  title?: string;
+  /** What to search for, where no url is set yet. */
   search: string;
 };
 

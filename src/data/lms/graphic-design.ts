@@ -79,7 +79,11 @@ No drawing ability is required. Design is decision-making, not illustration.
           title: "What Graphic Design Is For",
           minutes: 15,
           preview: true,
-          video: { search: "what is graphic design principles introduction beginners" },
+          video: {
+            url: "https://www.youtube.com/watch?v=SGT1l9AukLc",
+            title: "Graphic Design for Beginners | Typography, Color Theory, & More",
+            search: "what is graphic design principles introduction beginners",
+          },
           body: `
 ## Design is communication, not decoration
 
@@ -113,7 +117,11 @@ Start looking at every sign, packet and poster you pass and asking what was deci
         {
           title: "Hierarchy, Contrast and Alignment",
           minutes: 22,
-          video: { search: "design principles hierarchy contrast alignment proximity tutorial" },
+          video: {
+            url: "https://www.youtube.com/watch?v=UzsaAgQ4cs8",
+            title: "Mastering Design Theory: Colours, Layout & Typography Explained",
+            search: "design principles hierarchy contrast alignment proximity tutorial",
+          },
           body: `
 ## Hierarchy
 
@@ -420,7 +428,11 @@ Part 5 is required. A designer working in Pakistan who cannot handle Urdu alongs
         {
           title: "Colour That Works",
           minutes: 22,
-          video: { search: "color theory design palette hue saturation contrast accessibility" },
+          video: {
+            url: "https://www.youtube.com/watch?v=Tznnrjkhp7E",
+            title: "Color Theory for Graphic Design: How to Choose Better Colors",
+            search: "color theory design palette hue saturation contrast accessibility",
+          },
           body: `
 ## Three properties
 
@@ -685,7 +697,11 @@ They ask for their logo to be bigger, to contain everything they do, and to look
         {
           title: "Print, Export and Handover",
           minutes: 22,
-          video: { search: "print ready pdf cmyk bleed export design file preparation" },
+          video: {
+            url: "https://www.youtube.com/watch?v=0x8rhNLxAVc",
+            title: "How to Export Canva PDFs for Printing (Bleed, CMYK, & Crop Marks)",
+            search: "print ready pdf cmyk bleed export design file preparation",
+          },
           body: `
 ## RGB and CMYK
 
