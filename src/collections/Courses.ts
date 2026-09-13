@@ -97,6 +97,72 @@ export const Courses: CollectionConfig = {
       admin: { description: "Approximate length in weeks." },
     },
     {
+      name: "sector",
+      type: "text",
+      admin: {
+        description:
+          'The NAVTTC industry sector this sits in, e.g. "Information Technology".',
+      },
+    },
+    {
+      name: "courseCode",
+      type: "text",
+      admin: { position: "sidebar", description: "Optional internal or NAVTTC code." },
+    },
+    {
+      name: "nvqfLevel",
+      type: "select",
+      options: ["1", "2", "3", "4", "5", "6", "7", "8"].map((n) => ({
+        label: `Level ${n}`,
+        value: n,
+      })),
+      admin: {
+        position: "sidebar",
+        description: "Pakistan's National Vocational Qualifications Framework level.",
+      },
+    },
+    {
+      name: "recognition",
+      type: "select",
+      required: true,
+      defaultValue: "hunarsaaz",
+      options: [
+        { label: "NAVTTC-recognised / accredited", value: "navttc_recognised" },
+        { label: "Aligned to a NAVTTC curriculum (not accredited)", value: "navttc_aligned" },
+        { label: "Developed by Hunarsaaz", value: "hunarsaaz" },
+      ],
+      admin: {
+        position: "sidebar",
+        description:
+          "Claiming accreditation Hunarsaaz does not hold misleads students about what their certificate is worth. Only pick the first option for a programme NAVTTC has actually accredited, and keep the paperwork.",
+      },
+    },
+    {
+      name: "prerequisites",
+      type: "textarea",
+      admin: { description: "What a student needs before starting. Say \"None\" if there is nothing." },
+    },
+    { name: "targetLearners", type: "textarea" },
+    {
+      name: "objectives",
+      type: "array",
+      labels: { singular: "Objective", plural: "Learning objectives" },
+      fields: [{ name: "text", type: "text", required: true }],
+    },
+    {
+      name: "outcomes",
+      type: "array",
+      labels: { singular: "Outcome", plural: "Learning outcomes" },
+      fields: [{ name: "text", type: "text", required: true }],
+      admin: { description: "What the student can do by the end — one statement each." },
+    },
+    {
+      name: "careers",
+      type: "array",
+      labels: { singular: "Career", plural: "Career opportunities" },
+      fields: [{ name: "text", type: "text", required: true }],
+    },
+    {
       name: "programSlug",
       type: "text",
       admin: {

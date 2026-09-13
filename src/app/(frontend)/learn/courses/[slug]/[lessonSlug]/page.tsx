@@ -130,7 +130,7 @@ export default async function LessonPage({ params, searchParams }: Params) {
           )}
 
           {lesson.content ? (
-            <div className="prose prose-slate mt-8 max-w-none prose-headings:font-display prose-headings:text-primary-900 prose-a:text-primary-600">
+            <div className="lesson-prose mt-8">
               <RichText data={lesson.content as SerializedEditorState} />
             </div>
           ) : (

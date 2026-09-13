@@ -244,6 +244,48 @@ export interface Course {
    */
   durationWeeks?: number | null;
   /**
+   * The NAVTTC industry sector this sits in, e.g. "Information Technology".
+   */
+  sector?: string | null;
+  /**
+   * Optional internal or NAVTTC code.
+   */
+  courseCode?: string | null;
+  /**
+   * Pakistan's National Vocational Qualifications Framework level.
+   */
+  nvqfLevel?: ('1' | '2' | '3' | '4' | '5' | '6' | '7' | '8') | null;
+  /**
+   * Claiming accreditation Hunarsaaz does not hold misleads students about what their certificate is worth. Only pick the first option for a programme NAVTTC has actually accredited, and keep the paperwork.
+   */
+  recognition: 'navttc_recognised' | 'navttc_aligned' | 'hunarsaaz';
+  /**
+   * What a student needs before starting. Say "None" if there is nothing.
+   */
+  prerequisites?: string | null;
+  targetLearners?: string | null;
+  objectives?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * What the student can do by the end — one statement each.
+   */
+  outcomes?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  careers?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
    * Optional. The slug of the matching programme in src/data/programs.ts, so the public programme page can link here.
    */
   programSlug?: string | null;
@@ -806,6 +848,30 @@ export interface CoursesSelect<T extends boolean = true> {
   level?: T;
   language?: T;
   durationWeeks?: T;
+  sector?: T;
+  courseCode?: T;
+  nvqfLevel?: T;
+  recognition?: T;
+  prerequisites?: T;
+  targetLearners?: T;
+  objectives?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  outcomes?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  careers?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
   programSlug?: T;
   price?: T;
   enrollmentOpen?: T;

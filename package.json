@@ -11,6 +11,7 @@
     "payload:types": "npm run payload -- generate:types",
     "payload:importmap": "npm run payload -- generate:importmap",
     "payload:migrate": "npm run payload -- migrate",
+    "import:courses": "node --experimental-strip-types --no-warnings scripts/import-courses.ts",
     "seed": "node --experimental-strip-types --no-warnings scripts/seed.ts",
     "seed:assessment": "node --experimental-strip-types --no-warnings scripts/seed-assessment.ts"
   },

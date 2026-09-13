@@ -24,9 +24,41 @@ export const Lessons: CollectionConfig = {
     delete: ({ req: { user } }) => user?.role === "admin",
   },
   defaultSort: "order",
+  hooks: {
+    beforeValidate: [
+      async ({ data, originalDoc, req, operation }) => {
+        const slug = data?.slug;
+        const courseRef = data?.course ?? originalDoc?.course;
+        if (!slug || !courseRef) return data;
+
+        const courseId = typeof courseRef === "object" ? courseRef.id : courseRef;
+        const clash = await req.payload.find({
+          collection: "lessons",
+          where: { and: [{ course: { equals: courseId } }, { slug: { equals: slug } }] },
+          limit: 1,
+          depth: 0,
+          overrideAccess: true,
+        });
+
+        const other = clash.docs.find(
+          (doc) => operation === "create" || doc.id !== originalDoc?.id,
+        );
+        if (other) {
+          throw new Error(
+            `Another lesson on this course already uses the address "${slug}". Give this one a different title, or set its slug by hand.`,
+          );
+        }
+        return data;
+      },
+    ],
+  },
   fields: [
     { name: "title", type: "text", required: true },
-    slugField(),
+    // Lesson URLs are /learn/courses/<course>/<lesson>, and the player looks a
+    // lesson up within its course, so the slug only has to be unique there.
+    // Globally unique would be unworkable: "Introduction" belongs in almost
+    // every course. The hook below holds the real constraint.
+    slugField("title", { unique: false }),
     {
       name: "module",
       type: "relationship",

@@ -21,6 +21,44 @@ import type { User } from "@/payload-types";
 
 type Params = { params: Promise<{ slug: string }> };
 
+// Said plainly, because a student reads this as "what is my certificate worth".
+const RECOGNITION: Record<string, { label: string; detail: string }> = {
+  navttc_recognised: {
+    label: "NAVTTC-recognised",
+    detail:
+      "This programme is accredited by the National Vocational and Technical Training Commission.",
+  },
+  navttc_aligned: {
+    label: "Aligned to the NAVTTC curriculum",
+    detail:
+      "The syllabus follows NAVTTC's published curriculum for this trade. The course itself is not NAVTTC-accredited, and the certificate is issued by Hunarsaaz.",
+  },
+  hunarsaaz: {
+    label: "Hunarsaaz course",
+    detail: "Written by Hunarsaaz. The certificate is issued by Hunarsaaz.",
+  },
+};
+
+function SyllabusList({ title, items }: { title: string; items: string[] }) {
+  if (items.length === 0) return null;
+  return (
+    <div>
+      <h2 className="font-display text-xl font-semibold text-primary-900">{title}</h2>
+      <ul className="mt-3 space-y-2">
+        {items.map((item) => (
+          <li key={item} className="flex items-start gap-2 text-gray-600">
+            <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-accent-500" aria-hidden />
+            <span>{item}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+const textsOf = (rows: { text: string }[] | null | undefined): string[] =>
+  (rows ?? []).map((row) => row.text).filter(Boolean);
+
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug } = await params;
   const course = await getCourseBySlug(slug);
@@ -51,6 +89,10 @@ export default async function CoursePage({ params }: Params) {
   const doneCount = lessons.filter((lesson) => completed.has(String(lesson.id))).length;
   const instructor = course.instructor as User | null;
   const firstLesson = lessons[0];
+  const recognition = RECOGNITION[course.recognition];
+  const objectives = textsOf(course.objectives);
+  const outcomes = textsOf(course.outcomes);
+  const careers = textsOf(course.careers);
 
   return (
     <Container className="py-12">
@@ -65,9 +107,40 @@ export default async function CoursePage({ params }: Params) {
           <p className="mt-3 text-lg text-gray-600">{course.summary}</p>
 
           <div className="mt-4 flex flex-wrap items-center gap-2">
+            {course.sector && <Badge tone="neutral">{course.sector}</Badge>}
             {course.level && <Badge tone="primary" className="capitalize">{course.level}</Badge>}
+            {course.nvqfLevel && <Badge tone="neutral">NVQF Level {course.nvqfLevel}</Badge>}
             {course.durationWeeks ? <Badge tone="neutral">{course.durationWeeks} weeks</Badge> : null}
             {instructor?.name && <Badge tone="secondary">Taught by {instructor.name}</Badge>}
+          </div>
+
+          {recognition && (
+            <p className="mt-4 rounded-xl bg-primary-50 px-4 py-3 text-sm text-primary-900">
+              <span className="font-semibold">{recognition.label}.</span>{" "}
+              <span className="text-primary-800">{recognition.detail}</span>
+            </p>
+          )}
+
+          {(course.targetLearners || course.prerequisites) && (
+            <dl className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
+              {course.targetLearners && (
+                <div className="rounded-2xl bg-gray-50 p-5">
+                  <dt className="font-semibold text-primary-900">Who this is for</dt>
+                  <dd className="mt-1 text-sm text-gray-600">{course.targetLearners}</dd>
+                </div>
+              )}
+              {course.prerequisites && (
+                <div className="rounded-2xl bg-gray-50 p-5">
+                  <dt className="font-semibold text-primary-900">What you need first</dt>
+                  <dd className="mt-1 text-sm text-gray-600">{course.prerequisites}</dd>
+                </div>
+              )}
+            </dl>
+          )}
+
+          <div className="mt-10 space-y-8">
+            <SyllabusList title="What this course sets out to do" items={objectives} />
+            <SyllabusList title="What you will be able to do" items={outcomes} />
           </div>
 
           <h2 className="mt-10 font-display text-xl font-semibold text-primary-900">
@@ -134,6 +207,16 @@ export default async function CoursePage({ params }: Params) {
               </Card>
             ))}
           </div>
+
+          {careers.length > 0 && (
+            <div className="mt-10">
+              <SyllabusList title="Where this can lead" items={careers} />
+              <p className="mt-3 text-sm text-gray-500">
+                These are the roles the skills apply to. Hunarsaaz does not guarantee
+                employment.
+              </p>
+            </div>
+          )}
         </div>
 
         <aside className="lg:sticky lg:top-24 lg:self-start">
@@ -221,6 +304,18 @@ export default async function CoursePage({ params }: Params) {
                 <div className="flex justify-between">
                   <dt className="text-gray-500">Duration</dt>
                   <dd className="font-semibold text-gray-800">{course.durationWeeks} weeks</dd>
+                </div>
+              ) : null}
+              {course.nvqfLevel ? (
+                <div className="flex justify-between">
+                  <dt className="text-gray-500">NVQF level</dt>
+                  <dd className="font-semibold text-gray-800">{course.nvqfLevel}</dd>
+                </div>
+              ) : null}
+              {course.courseCode ? (
+                <div className="flex justify-between">
+                  <dt className="text-gray-500">Course code</dt>
+                  <dd className="font-semibold text-gray-800">{course.courseCode}</dd>
                 </div>
               ) : null}
               {course.language ? (
