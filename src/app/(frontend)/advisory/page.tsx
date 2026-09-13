@@ -159,12 +159,6 @@ const associates: {
     bio: "Over three decades of international governance, financial oversight, and corporate leadership experience across multilateral institutions, regulatory bodies, and industrial enterprises. She has held key positions including Member of Pakistan's Competition Commission, Chair of oversight and audit committees at the UNHCR, UNAIDS, and ILO in Geneva, and board director roles at the Aquaculture Stewardship Council, World Agroforestry Centre, CIFOR, CGIAR, AJK Bank, and several state-owned corporations — spanning financial reporting, internal and external audit, risk management, mergers and restructuring, and regulatory compliance. She has led major treasury and capital restructuring initiatives and advised public and private sector clients on regulatory strategy and institutional capacity building. At Hunar Saaz, she anchors work on financial governance, institutional oversight, and organizational risk management.",
   },
   {
-    name: "Waqar Sherazi",
-    role: "Senior Associate | Policy, Research, and Evaluation",
-    photo: "/team/waqar-sherazi.jpg",
-    bio: "A policy, research, and evaluation specialist with nearly two decades of experience at the intersection of social protection, gender equality, WASH, climate resilience, and institutional reform. He has led complex national and international assignments for governments, multilateral agencies, and development partners across Pakistan, South Asia, the Middle East, and Africa — spanning large-scale programme design, digital censuses and registries, quasi-experimental and mixed-methods evaluations, and national policy reporting including Pakistan's reporting under CEDAW and BPfA+30. At Hunar Saaz, he provides strategic leadership on evidence-informed policy design, evaluation quality, and learning systems.",
-  },
-  {
     name: "Ahsan Ali Mangi",
     role: "Senior Associate | Public Policy, Governance, and Institutional Systems",
     bio: "Over three decades of senior public sector leadership across federal and provincial governments, including positions as Federal Secretary, Additional Secretary, Commissioner, and head of major public institutions — with responsibilities spanning economic governance, trade diplomacy, education, social protection, disaster response, investment promotion, and regulatory reform. He has represented Pakistan in multilateral settings and led complex negotiations and administrative systems. At Hunar Saaz, he anchors work on governance reform, public sector systems, and institutional effectiveness.",
@@ -180,6 +174,12 @@ const associates: {
     role: "Senior Associate | Data Systems, EMIS, and Digital Governance",
     photo: "/team/rana-iftikhar-raza.jpg",
     bio: "A senior data systems and digital governance specialist with over thirty years of experience in Education Management Information Systems (EMIS), GIS-based planning, large-scale surveys, and public sector information systems. He has played a foundational role in the design, digitization, and institutionalization of EMIS and decision-support systems across multiple provinces, with expertise spanning system architecture, spatial data integration, survey operations, third-party validations, and capacity building. At Hunar Saaz, he leads work on data systems, digital transformation, and evidence infrastructure.",
+  },
+  {
+    name: "Waqar Sherazi",
+    role: "Senior Associate | Policy, Research, and Evaluation",
+    photo: "/team/waqar-sherazi.jpg",
+    bio: "A policy, research, and evaluation specialist with nearly two decades of experience at the intersection of social protection, gender equality, WASH, climate resilience, and institutional reform. He has led complex national and international assignments for governments, multilateral agencies, and development partners across Pakistan, South Asia, the Middle East, and Africa — spanning large-scale programme design, digital censuses and registries, quasi-experimental and mixed-methods evaluations, and national policy reporting including Pakistan's reporting under CEDAW and BPfA+30. At Hunar Saaz, he provides strategic leadership on evidence-informed policy design, evaluation quality, and learning systems.",
   },
   {
     name: "Urooj Shafi",
