@@ -63,7 +63,10 @@ export const getCourseBySlug = cache(async (slug: string): Promise<Course | null
     collection: "courses",
     where: { slug: { equals: slug } },
     limit: 1,
-    depth: 1,
+    // 2, not 1: the instructor's avatar is an upload hanging off the
+    // instructor, so depth 1 resolves the person but leaves their photograph
+    // as a bare id and the course page renders a blank square.
+    depth: 2,
     overrideAccess: true,
   });
   const course = result.docs[0];

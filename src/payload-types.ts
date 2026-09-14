@@ -159,7 +159,11 @@ export interface User {
   phone?: string | null;
   city?: string | null;
   /**
-   * Shown on instructor profiles.
+   * One line under the name on a course page, e.g. "Master Trainer — 20 years in digital marketing". Instructors only.
+   */
+  headline?: string | null;
+  /**
+   * Shown on the course page for any course this person teaches. Write it for a prospective student deciding whether to enrol.
    */
   bio?: string | null;
   avatar?: (number | null) | Media;
@@ -796,6 +800,7 @@ export interface UsersSelect<T extends boolean = true> {
   role?: T;
   phone?: T;
   city?: T;
+  headline?: T;
   bio?: T;
   avatar?: T;
   updatedAt?: T;

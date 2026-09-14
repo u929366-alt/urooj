@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CheckCircle2, Lock, MessageSquare, PlayCircle } from "lucide-react";
@@ -58,6 +59,55 @@ function SyllabusList({ title, items }: { title: string; items: string[] }) {
 
 const textsOf = (rows: { text: string }[] | null | undefined): string[] =>
   (rows ?? []).map((row) => row.text).filter(Boolean);
+
+/**
+ * Who is teaching this, for a student deciding whether to enrol.
+ *
+ * Deliberately reads only name, headline, bio and avatar off the user. The
+ * record also carries an email, a phone number and a city, and none of that
+ * belongs on a page anyone can open.
+ */
+function InstructorCard({ person }: { person: User }) {
+  const avatar =
+    typeof person.avatar === "object" && person.avatar?.url ? person.avatar.url : null;
+
+  return (
+    <Card className="p-6">
+      <div className="flex items-start gap-4">
+        {avatar ? (
+          <Image
+            src={avatar}
+            alt={person.name}
+            width={80}
+            height={80}
+            className="h-20 w-20 shrink-0 rounded-full object-cover"
+          />
+        ) : (
+          <span
+            aria-hidden
+            className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-primary-100 font-display text-2xl font-bold text-primary-700"
+          >
+            {person.name.trim().charAt(0).toUpperCase()}
+          </span>
+        )}
+        <div className="min-w-0">
+          <h3 className="font-semibold text-primary-900">{person.name}</h3>
+          {person.headline && (
+            <p className="mt-0.5 text-sm text-secondary-600">{person.headline}</p>
+          )}
+          {!person.bio && (
+            <p className="mt-2 text-sm text-gray-500">
+              Profile still being written.
+            </p>
+          )}
+        </div>
+      </div>
+      {person.bio && (
+        <p className="mt-4 whitespace-pre-line text-sm leading-6 text-gray-600">{person.bio}</p>
+      )}
+    </Card>
+  );
+}
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug } = await params;
@@ -207,6 +257,17 @@ export default async function CoursePage({ params }: Params) {
               </Card>
             ))}
           </div>
+
+          {instructor && (
+            <div className="mt-10">
+              <h2 className="font-display text-xl font-semibold text-primary-900">
+                Your instructor
+              </h2>
+              <div className="mt-4">
+                <InstructorCard person={instructor} />
+              </div>
+            </div>
+          )}
 
           {careers.length > 0 && (
             <div className="mt-10">
