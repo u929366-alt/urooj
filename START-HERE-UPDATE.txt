@@ -115,7 +115,24 @@ until you do, anyone who finds that page can claim it.
 Use a real address such as ceo@hunarsaaz.pk and a strong password.
 
 
-STEP 7 — CHECK THE VIDEOS BEFORE YOU TELL ANYONE
+STEP 7 — ADD THE INSTRUCTORS
+----------------------------
+Each course shows a "Your instructor" section, and it only appears once a
+course has one.
+
+  1. /admin > Users > Create. Set Role to Instructor.
+     Fill in Name, Headline (one line, e.g. "Master Trainer - 20 years in
+     digital marketing"), Bio, and Avatar.
+  2. /admin > Courses > open a course > Instructor > pick the person > Save.
+
+The bio is what a student reads while deciding whether to enrol, so write
+it for them rather than as a CV.
+
+Only the name, headline, bio and photograph are shown publicly. The email,
+phone and city on a user record are never put on the page.
+
+
+STEP 8 — CHECK THE VIDEOS BEFORE YOU TELL ANYONE
 ------------------------------------------------
 29 lessons have a video attached. Those links came from search results and
 have NOT been played by us — the machine that built this cannot reach
