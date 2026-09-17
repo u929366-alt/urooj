@@ -67,6 +67,7 @@ export interface Config {
   };
   blocks: {};
   collections: {
+    categories: Category;
     users: User;
     media: Media;
     courses: Course;
@@ -90,6 +91,7 @@ export interface Config {
   };
   collectionsJoins: {};
   collectionsSelect: {
+    categories: CategoriesSelect<false> | CategoriesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     courses: CoursesSelect<false> | CoursesSelect<true>;
@@ -147,44 +149,43 @@ export interface UserAuthOperations {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users".
+ * via the `definition` "categories".
  */
-export interface User {
+export interface Category {
   id: number;
-  name: string;
+  title: string;
   /**
-   * Only admins can change this.
+   * Leave blank to generate from the title.
    */
-  role: 'student' | 'instructor' | 'admin';
-  phone?: string | null;
-  city?: string | null;
+  slug?: string | null;
   /**
-   * One line under the name on a course page, e.g. "Master Trainer — 20 years in digital marketing". Instructors only.
+   * Lowest first on the homepage.
    */
-  headline?: string | null;
+  order: number;
   /**
-   * Shown on the course page for any course this person teaches. Write it for a prospective student deciding whether to enrol.
+   * One or two sentences for the category card.
    */
-  bio?: string | null;
-  avatar?: (number | null) | Media;
+  summary: string;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  icon:
+    'monitor' | 'sparkles' | 'laptop' | 'message' | 'compass' | 'trending' | 'heart' | 'battery' | 'shield' | 'book';
+  coverImage?: (number | null) | Media;
   updatedAt: string;
   createdAt: string;
-  email: string;
-  resetPasswordToken?: string | null;
-  resetPasswordExpiration?: string | null;
-  salt?: string | null;
-  hash?: string | null;
-  loginAttempts?: number | null;
-  lockUntil?: string | null;
-  sessions?:
-    | {
-        id: string;
-        createdAt?: string | null;
-        expiresAt: string;
-      }[]
-    | null;
-  password?: string | null;
-  collection: 'users';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -207,6 +208,82 @@ export interface Media {
   height?: number | null;
   focalX?: number | null;
   focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users".
+ */
+export interface User {
+  id: number;
+  name: string;
+  /**
+   * Only admins can change this.
+   */
+  role: 'student' | 'instructor' | 'admin';
+  phone?: string | null;
+  city?: string | null;
+  /**
+   * One line under the name on a course page, e.g. "Master Trainer — 20 years in digital marketing". Instructors only.
+   */
+  headline?: string | null;
+  /**
+   * Shown on the course page for any course this person teaches. Write it for a prospective student deciding whether to enrol.
+   */
+  bio?: string | null;
+  avatar?: (number | null) | Media;
+  /**
+   * Where they work, if it is theirs to state publicly.
+   */
+  organisation?: string | null;
+  expertise?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Only qualifications this person actually holds and has confirmed. A listed qualification is a claim Hunarsaaz is making on their behalf.
+   */
+  qualifications?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Professional background, in a short paragraph.
+   */
+  experience?: string | null;
+  /**
+   * Full URL to their public profile, if they want it shown.
+   */
+  linkedin?: string | null;
+  /**
+   * Which category pages list this person. Separate from the courses they are assigned to, so a lead instructor can appear for a whole subject area.
+   */
+  teachingCategories?: (number | Category)[] | null;
+  /**
+   * Tick for a sample profile that is not a real person. The portal labels it as an example, so a placeholder is never mistaken for a real member of staff. Untick once genuine details replace it.
+   */
+  isPlaceholder?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  sessions?:
+    | {
+        id: string;
+        createdAt?: string | null;
+        expiresAt: string;
+      }[]
+    | null;
+  password?: string | null;
+  collection: 'users';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -247,6 +324,46 @@ export interface Course {
    * Approximate length in weeks.
    */
   durationWeeks?: number | null;
+  /**
+   * Where this sits in the catalogue.
+   */
+  category?: (number | null) | Category;
+  /**
+   * Short skill names, shown as tags on the course page.
+   */
+  skills?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Estimated total study hours, separate from the calendar length in weeks.
+   */
+  learningHours?: number | null;
+  /**
+   * The practical piece of work that demonstrates the whole course.
+   */
+  finalProject?: string | null;
+  /**
+   * How the learner is assessed, and what each part is worth.
+   */
+  assessmentMethod?: string | null;
+  /**
+   * What a learner must complete to earn the certificate. Shown to them before they enrol, so it has to match what the portal actually enforces.
+   */
+  certificateCriteria?: string | null;
+  resources?:
+    | {
+        label: string;
+        url?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Internal only, never shown to learners. Where this syllabus came from — a NAVTTC qualification code and document URL, another published curriculum, or 'developed by Hunarsaaz'. This is the record behind the recognition claim above, so keep it accurate.
+   */
+  curriculumSource?: string | null;
   /**
    * The NAVTTC industry sector this sits in, e.g. "Information Technology".
    */
@@ -686,6 +803,10 @@ export interface PayloadLockedDocument {
   id: number;
   document?:
     | ({
+        relationTo: 'categories';
+        value: number | Category;
+      } | null)
+    | ({
         relationTo: 'users';
         value: number | User;
       } | null)
@@ -793,6 +914,21 @@ export interface PayloadMigration {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "categories_select".
+ */
+export interface CategoriesSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  order?: T;
+  summary?: T;
+  description?: T;
+  icon?: T;
+  coverImage?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
@@ -803,6 +939,23 @@ export interface UsersSelect<T extends boolean = true> {
   headline?: T;
   bio?: T;
   avatar?: T;
+  organisation?: T;
+  expertise?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  qualifications?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  experience?: T;
+  linkedin?: T;
+  teachingCategories?: T;
+  isPlaceholder?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -853,6 +1006,25 @@ export interface CoursesSelect<T extends boolean = true> {
   level?: T;
   language?: T;
   durationWeeks?: T;
+  category?: T;
+  skills?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  learningHours?: T;
+  finalProject?: T;
+  assessmentMethod?: T;
+  certificateCriteria?: T;
+  resources?:
+    | T
+    | {
+        label?: T;
+        url?: T;
+        id?: T;
+      };
+  curriculumSource?: T;
   sector?: T;
   courseCode?: T;
   nvqfLevel?: T;

@@ -10,6 +10,7 @@ import sharp from "sharp";
 
 import { Users } from "./src/collections/Users.ts";
 import { Media } from "./src/collections/Media.ts";
+import { Categories } from "./src/collections/Categories.ts";
 import { Courses } from "./src/collections/Courses.ts";
 import { Modules } from "./src/collections/Modules.ts";
 import { Lessons } from "./src/collections/Lessons.ts";
@@ -112,6 +113,7 @@ export default buildConfig({
     api: "/cms-api",
   },
   collections: [
+    Categories,
     Users,
     Media,
     Courses,

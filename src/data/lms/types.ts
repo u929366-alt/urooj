@@ -78,9 +78,30 @@ export type ModuleContent = {
   assignment?: AssignmentContent;
 };
 
+export type CategoryContent = {
+  slug: string;
+  title: string;
+  order: number;
+  summary: string;
+  description: string;
+  icon:
+    | "monitor"
+    | "sparkles"
+    | "laptop"
+    | "message"
+    | "compass"
+    | "trending"
+    | "heart"
+    | "battery"
+    | "shield"
+    | "book";
+};
+
 export type CourseContent = {
   slug: string;
   title: string;
+  /** Slug of the category this belongs to. */
+  categorySlug?: string;
   /** One or two sentences for the course card. Max 300 characters. */
   summary: string;
   /** Markdown, shown on the course page. */
@@ -108,6 +129,20 @@ export type CourseContent = {
   objectives: string[];
   outcomes: string[];
   careers: string[];
+  /** Short skill names, shown as tags. */
+  skills?: string[];
+  /** Estimated total study hours, separate from durationWeeks. */
+  learningHours?: number;
+  finalProject?: string;
+  assessmentMethod?: string;
+  certificateCriteria?: string;
+  resources?: { label: string; url?: string }[];
+  /**
+   * Internal note on where the syllabus came from, never shown to learners.
+   * Required, because `recognition` is a claim about a learner's certificate
+   * and it should never be possible to find one without the other.
+   */
+  curriculumSource: string;
 
   modules: ModuleContent[];
 };

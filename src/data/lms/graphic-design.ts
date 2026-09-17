@@ -27,6 +27,9 @@ Every module ends with a real brief — a shop's logo, a poster, a social set, a
 No drawing ability is required. Design is decision-making, not illustration.
 `.trim(),
 
+  categorySlug: "it-and-digital-skills",
+  curriculumSource:
+    "Written by Hunarsaaz. Marked navttc_aligned on Hunarsaaz's instruction; not yet compared against any NAVTTC curriculum document. Verify before relying on the claim.",
   sector: "Information Technology",
   courseCode: "HS-GD-01",
   nvqfLevel: "2",

@@ -158,5 +158,56 @@ export const Users: CollectionConfig = {
       type: "upload",
       relationTo: "media",
     },
+    {
+      name: "organisation",
+      type: "text",
+      admin: { description: "Where they work, if it is theirs to state publicly." },
+    },
+    {
+      name: "expertise",
+      type: "array",
+      labels: { singular: "Area", plural: "Areas of expertise" },
+      fields: [{ name: "text", type: "text", required: true }],
+    },
+    {
+      name: "qualifications",
+      type: "array",
+      labels: { singular: "Qualification", plural: "Qualifications" },
+      fields: [{ name: "text", type: "text", required: true }],
+      admin: {
+        description:
+          "Only qualifications this person actually holds and has confirmed. A listed qualification is a claim Hunarsaaz is making on their behalf.",
+      },
+    },
+    {
+      name: "experience",
+      type: "textarea",
+      admin: { description: "Professional background, in a short paragraph." },
+    },
+    {
+      name: "linkedin",
+      type: "text",
+      admin: { description: "Full URL to their public profile, if they want it shown." },
+    },
+    {
+      name: "teachingCategories",
+      type: "relationship",
+      relationTo: "categories",
+      hasMany: true,
+      admin: {
+        description:
+          "Which category pages list this person. Separate from the courses they are assigned to, so a lead instructor can appear for a whole subject area.",
+      },
+    },
+    {
+      name: "isPlaceholder",
+      type: "checkbox",
+      defaultValue: false,
+      admin: {
+        position: "sidebar",
+        description:
+          "Tick for a sample profile that is not a real person. The portal labels it as an example, so a placeholder is never mistaken for a real member of staff. Untick once genuine details replace it.",
+      },
+    },
   ],
 };

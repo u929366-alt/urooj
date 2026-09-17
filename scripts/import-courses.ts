@@ -27,7 +27,7 @@ import {
   editorConfigFactory,
 } from "@payloadcms/richtext-lexical";
 import config from "../payload.config.ts";
-import { courseContent } from "../src/data/lms/index.ts";
+import { categoryContent, courseContent } from "../src/data/lms/index.ts";
 import type { CourseContent, ModuleContent } from "../src/data/lms/types.ts";
 import type { Lesson } from "../src/payload-types.ts";
 import { slugify } from "../src/collections/fields/slug.ts";
@@ -226,6 +226,7 @@ async function importCourse(
   toRichText: ToRichText,
   instructor: number | undefined,
   course: CourseContent,
+  categoryIds: Map<string, number>,
 ) {
   const found = await payload.find({
     collection: "courses",
@@ -254,6 +255,14 @@ async function importCourse(
     objectives: course.objectives.map((text) => ({ text })),
     outcomes: course.outcomes.map((text) => ({ text })),
     careers: course.careers.map((text) => ({ text })),
+    category: course.categorySlug ? categoryIds.get(course.categorySlug) : undefined,
+    skills: (course.skills ?? []).map((text) => ({ text })),
+    learningHours: course.learningHours,
+    finalProject: course.finalProject,
+    assessmentMethod: course.assessmentMethod,
+    certificateCriteria: course.certificateCriteria,
+    resources: course.resources ?? [],
+    curriculumSource: course.curriculumSource,
   };
 
   let courseId: number;
@@ -288,6 +297,42 @@ async function run() {
   const toRichText: ToRichText = async (markdown) =>
     convertMarkdownToLexical({ editorConfig, markdown }) as RichText;
 
+  // Categories first: courses point at them.
+  const categoryIds = new Map<string, number>();
+  for (const category of categoryContent) {
+    const found = await payload.find({
+      collection: "categories",
+      where: { slug: { equals: category.slug } },
+      limit: 1,
+      depth: 0,
+      overrideAccess: true,
+    });
+    const data = {
+      title: category.title,
+      slug: category.slug,
+      order: category.order,
+      summary: category.summary,
+      description: await toRichText(category.description),
+      icon: category.icon,
+    };
+    if (found.docs[0]) {
+      if (!dryRun) {
+        await payload.update({
+          collection: "categories",
+          id: found.docs[0].id,
+          data,
+          overrideAccess: true,
+        });
+      }
+      categoryIds.set(category.slug, found.docs[0].id);
+      updated += 1;
+    } else if (!dryRun) {
+      const doc = await payload.create({ collection: "categories", data, overrideAccess: true });
+      categoryIds.set(category.slug, doc.id);
+      created += 1;
+    }
+  }
+
   const instructor = await pickInstructor(payload);
   if (!instructor) {
     console.warn(
@@ -312,7 +357,7 @@ async function run() {
   );
 
   for (const course of wanted) {
-    await importCourse(payload, toRichText, instructor, course);
+    await importCourse(payload, toRichText, instructor, course, categoryIds);
   }
 
   console.log(`\nDone. ${created} created, ${updated} updated, ${skipped} left as they were.`);

@@ -20,6 +20,9 @@ You will build a working shop during the course — a real one, with real produc
 No prior experience is needed. If you have ever sold anything to anybody, you already understand the hard part.
 `.trim(),
 
+  categorySlug: "freelancing-and-remote-work",
+  curriculumSource:
+    "Written by Hunarsaaz. Marked navttc_aligned on Hunarsaaz's instruction; not yet compared against any NAVTTC curriculum document. Verify before relying on the claim.",
   sector: "Information Technology",
   courseCode: "HS-EC-01",
   nvqfLevel: "2",

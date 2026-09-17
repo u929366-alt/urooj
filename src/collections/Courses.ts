@@ -97,6 +97,65 @@ export const Courses: CollectionConfig = {
       admin: { description: "Approximate length in weeks." },
     },
     {
+      name: "category",
+      type: "relationship",
+      relationTo: "categories",
+      index: true,
+      admin: { position: "sidebar", description: "Where this sits in the catalogue." },
+    },
+    {
+      name: "skills",
+      type: "array",
+      labels: { singular: "Skill", plural: "Skills you will gain" },
+      fields: [{ name: "text", type: "text", required: true }],
+      admin: { description: "Short skill names, shown as tags on the course page." },
+    },
+    {
+      name: "learningHours",
+      type: "number",
+      min: 0,
+      admin: {
+        position: "sidebar",
+        description: "Estimated total study hours, separate from the calendar length in weeks.",
+      },
+    },
+    {
+      name: "finalProject",
+      type: "textarea",
+      admin: { description: "The practical piece of work that demonstrates the whole course." },
+    },
+    {
+      name: "assessmentMethod",
+      type: "textarea",
+      admin: { description: "How the learner is assessed, and what each part is worth." },
+    },
+    {
+      name: "certificateCriteria",
+      type: "textarea",
+      admin: {
+        description:
+          "What a learner must complete to earn the certificate. Shown to them before they enrol, so it has to match what the portal actually enforces.",
+      },
+    },
+    {
+      name: "resources",
+      type: "array",
+      labels: { singular: "Resource", plural: "Suggested resources" },
+      fields: [
+        { name: "label", type: "text", required: true },
+        { name: "url", type: "text" },
+      ],
+    },
+    {
+      name: "curriculumSource",
+      type: "textarea",
+      admin: {
+        position: "sidebar",
+        description:
+          "Internal only, never shown to learners. Where this syllabus came from — a NAVTTC qualification code and document URL, another published curriculum, or 'developed by Hunarsaaz'. This is the record behind the recognition claim above, so keep it accurate.",
+      },
+    },
+    {
       name: "sector",
       type: "text",
       admin: {
