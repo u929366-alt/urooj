@@ -2,7 +2,7 @@ import "server-only";
 
 import { cache } from "react";
 import { getPayloadClient } from "./auth";
-import type { Course, Enrollment, Lesson, Module, User } from "@/payload-types";
+import type { Category, Course, Enrollment, Lesson, Module, User } from "@/payload-types";
 
 /**
  * Reads for the learning portal.
@@ -200,3 +200,105 @@ export async function getLessonForStudent(
 export function flattenLessons(outline: CourseOutline): Lesson[] {
   return outline.modules.flatMap((entry) => entry.lessons);
 }
+
+/** Categories, in display order, for the catalogue and homepage. */
+export const listCategories = cache(async (): Promise<Category[]> => {
+  const payload = await getPayloadClient();
+  const result = await payload.find({
+    collection: "categories",
+    sort: "order",
+    limit: 50,
+    depth: 0,
+    overrideAccess: true,
+  });
+  return result.docs;
+});
+
+export const getCategoryBySlug = cache(async (slug: string): Promise<Category | null> => {
+  const payload = await getPayloadClient();
+  const result = await payload.find({
+    collection: "categories",
+    where: { slug: { equals: slug } },
+    limit: 1,
+    depth: 0,
+    overrideAccess: true,
+  });
+  return result.docs[0] ?? null;
+});
+
+/**
+ * Instructors for the public instructor pages.
+ *
+ * Selects explicitly rather than returning whole user records: these pages are
+ * public, and a user row also holds an email, a phone number and a city.
+ */
+export const listInstructors = cache(async (): Promise<User[]> => {
+  const payload = await getPayloadClient();
+  const result = await payload.find({
+    collection: "users",
+    where: { role: { in: ["instructor", "admin"] } },
+    sort: "name",
+    limit: 100,
+    depth: 1,
+    overrideAccess: true,
+  });
+  return result.docs;
+});
+
+/** How many lessons each course has, for the catalogue cards. */
+export const countLessonsByCourse = cache(async (): Promise<Record<string, number>> => {
+  const payload = await getPayloadClient();
+  const result = await payload.find({
+    collection: "lessons",
+    limit: 2000,
+    depth: 0,
+    pagination: false,
+    overrideAccess: true,
+  });
+  const counts: Record<string, number> = {};
+  for (const lesson of result.docs) {
+    const id = String(idOf(lesson.course));
+    counts[id] = (counts[id] ?? 0) + 1;
+  }
+  return counts;
+});
+
+/** Published course count per category, for the homepage cards. */
+export const countCoursesByCategory = cache(async (): Promise<Record<string, number>> => {
+  const courses = await listPublishedCourses();
+  const counts: Record<string, number> = {};
+  for (const course of courses) {
+    const id = idOf(course.category);
+    if (id != null) counts[String(id)] = (counts[String(id)] ?? 0) + 1;
+  }
+  return counts;
+});
+
+/** Quiz and assignment titles per module, for the syllabus display. */
+export const getCourseAssessments = cache(
+  async (courseId: number | string): Promise<Record<string, { quiz?: string; assignment?: string }>> => {
+    const payload = await getPayloadClient();
+    const [quizzes, assignments, lessons] = await Promise.all([
+      payload.find({ collection: "quizzes", where: { course: { equals: courseId } }, limit: 200, depth: 0, overrideAccess: true }),
+      payload.find({ collection: "assignments", where: { course: { equals: courseId } }, limit: 200, depth: 0, overrideAccess: true }),
+      payload.find({ collection: "lessons", where: { course: { equals: courseId } }, limit: 500, depth: 0, overrideAccess: true }),
+    ]);
+
+    // Quizzes and assignments hang off a lesson, not a module, so they are
+    // mapped back through the lesson that carries them.
+    const lessonToModule = new Map(lessons.docs.map((lesson) => [lesson.id, idOf(lesson.module)]));
+    const out: Record<string, { quiz?: string; assignment?: string }> = {};
+
+    for (const quiz of quizzes.docs) {
+      const moduleId = lessonToModule.get(Number(idOf(quiz.lesson)));
+      if (moduleId == null) continue;
+      out[String(moduleId)] = { ...out[String(moduleId)], quiz: quiz.title };
+    }
+    for (const assignment of assignments.docs) {
+      const moduleId = lessonToModule.get(Number(idOf(assignment.lesson)));
+      if (moduleId == null) continue;
+      out[String(moduleId)] = { ...out[String(moduleId)], assignment: assignment.title };
+    }
+    return out;
+  },
+);

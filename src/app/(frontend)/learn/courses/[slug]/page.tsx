@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { CheckCircle2, Lock, MessageSquare, PlayCircle } from "lucide-react";
+import { CheckCircle2, MessageSquare } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
@@ -13,10 +13,12 @@ import {
   getCompletedLessonIds,
   getCourseBySlug,
   getCourseOutline,
+  getCourseAssessments,
   getEnrollment,
   grantsAccess,
 } from "@/lib/lms/queries";
 import { formatRupees } from "@/lib/lms/payments";
+import { CourseCurriculum } from "@/components/learn/CourseCurriculum";
 import { siteConfig } from "@/lib/site";
 import type { User } from "@/payload-types";
 
@@ -134,6 +136,7 @@ export default async function CoursePage({ params }: Params) {
   const awaitingPayment = enrollment?.status === "pending_payment";
   const price = course.price ?? 0;
   const completed = user ? await getCompletedLessonIds(user.id, course.id) : new Set<string>();
+  const assessments = await getCourseAssessments(course.id);
 
   const lessons = outline.modules.flatMap((entry) => entry.lessons);
   const doneCount = lessons.filter((lesson) => completed.has(String(lesson.id))).length;
@@ -196,67 +199,32 @@ export default async function CoursePage({ params }: Params) {
           <h2 className="mt-10 font-display text-xl font-semibold text-primary-900">
             What you will cover
           </h2>
-          <div className="mt-4 space-y-4">
-            {outline.modules.length === 0 && (
-              <Card className="p-6 text-sm text-gray-600">
-                The syllabus for this course is being prepared.
-              </Card>
-            )}
-            {outline.modules.map(({ module, lessons: moduleLessons }) => (
-              <Card key={module.id} className="overflow-hidden">
-                <div className="border-b border-gray-100 bg-gray-50/70 px-5 py-3">
-                  <h3 className="font-semibold text-primary-900">{module.title}</h3>
-                  {module.summary && (
-                    <p className="mt-0.5 text-sm text-gray-600">{module.summary}</p>
-                  )}
-                </div>
-                <ul className="divide-y divide-gray-50">
-                  {moduleLessons.map((lesson) => {
-                    const isDone = completed.has(String(lesson.id));
-                    const canOpen = enrolled || lesson.preview;
-                    const Icon = isDone ? CheckCircle2 : canOpen ? PlayCircle : Lock;
-                    return (
-                      <li key={lesson.id} className="flex items-center gap-3 px-5 py-3">
-                        <Icon
-                          className={
-                            isDone
-                              ? "h-5 w-5 shrink-0 text-accent-500"
-                              : canOpen
-                                ? "h-5 w-5 shrink-0 text-primary-500"
-                                : "h-5 w-5 shrink-0 text-gray-300"
-                          }
-                          aria-hidden
-                        />
-                        <span className="flex-1 text-sm text-gray-800">
-                          {canOpen ? (
-                            <Link
-                              href={`/learn/courses/${course.slug}/${lesson.slug}`}
-                              className="hover:underline"
-                            >
-                              {lesson.title}
-                            </Link>
-                          ) : (
-                            lesson.title
-                          )}
-                          {lesson.preview && !enrolled && (
-                            <span className="ml-2 rounded-full bg-accent-50 px-2 py-0.5 text-xs font-semibold text-accent-700">
-                              Free preview
-                            </span>
-                          )}
-                        </span>
-                        {lesson.durationMinutes ? (
-                          <span className="text-xs text-gray-500">{lesson.durationMinutes} min</span>
-                        ) : null}
-                      </li>
-                    );
-                  })}
-                  {moduleLessons.length === 0 && (
-                    <li className="px-5 py-3 text-sm text-gray-500">No lessons yet.</li>
-                  )}
-                </ul>
-              </Card>
-            ))}
-          </div>
+          {outline.modules.length === 0 ? (
+            <Card className="mt-4 p-6 text-sm text-gray-600">
+              The syllabus for this course is being prepared.
+            </Card>
+          ) : (
+            <CourseCurriculum
+              courseSlug={course.slug ?? ""}
+              enrolled={enrolled}
+              modules={outline.modules.map(({ module, lessons: moduleLessons }) => ({
+                id: module.id,
+                title: module.title,
+                summary: module.summary ?? null,
+                quizTitle: assessments[String(module.id)]?.quiz ?? null,
+                assignmentTitle: assessments[String(module.id)]?.assignment ?? null,
+                lessons: moduleLessons.map((lesson) => ({
+                  id: lesson.id,
+                  title: lesson.title,
+                  slug: lesson.slug ?? "",
+                  durationMinutes: lesson.durationMinutes ?? null,
+                  preview: lesson.preview ?? false,
+                  hasVideo: Boolean(lesson.videoUrl),
+                  done: completed.has(String(lesson.id)),
+                })),
+              }))}
+            />
+          )}
 
           {instructor && (
             <div className="mt-10">

@@ -5,19 +5,41 @@ import { Container } from "@/components/ui/Container";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { ProgressBar } from "@/components/learn/ProgressBar";
-import { requireUser } from "@/lib/lms/auth";
+import { getCurrentUser } from "@/lib/lms/auth";
+import { PortalHome } from "@/components/learn/PortalHome";
+import { countCoursesByCategory, listCategories, listInstructors, listPublishedCourses } from "@/lib/lms/queries";
 import { getCompletedLessonIds, getCourseOutline, listMyEnrollments } from "@/lib/lms/queries";
 import { listMyCertificates } from "@/lib/lms/completion";
 import type { Course } from "@/payload-types";
 
 export const metadata: Metadata = {
-  title: "My Learning",
-  description: "Your enrolled courses and progress.",
-  robots: { index: false, follow: false },
+  title: "Learn Skills. Build Your Future.",
+  description:
+    "Hunarsaaz online learning — practical courses in digital skills, AI, freelancing, business and wellbeing. Free to enrol, learn at your own pace.",
 };
 
-export default async function LearnDashboard() {
-  const user = await requireUser("/learn");
+export default async function LearnPage() {
+  // Signed out, this is the portal's front door; signed in, it is your own
+  // courses. Anything private lives below the branch, so the page a search
+  // engine sees is the public one.
+  const user = await getCurrentUser();
+  if (!user) {
+    const [categories, courses, courseCounts, instructors] = await Promise.all([
+      listCategories(),
+      listPublishedCourses(),
+      countCoursesByCategory(),
+      listInstructors(),
+    ]);
+    return (
+      <PortalHome
+        categories={categories}
+        courses={courses}
+        courseCounts={courseCounts}
+        instructorCount={instructors.length}
+      />
+    );
+  }
+
   const enrollments = await listMyEnrollments(user.id);
 
   const cards = await Promise.all(

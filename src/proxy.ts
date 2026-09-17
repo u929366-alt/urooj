@@ -21,7 +21,11 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // Only the pages that require a signed-in student. The catalogue, course
-  // pages and the auth pages themselves stay public.
-  matcher: ["/learn"],
+  // Only pages that require a signed-in student.
+  //
+  // /learn is NOT here any more: it is now the portal's public front door for
+  // signed-out visitors and the dashboard for signed-in ones, and the page
+  // itself makes that choice. Redirecting it here sent every new visitor
+  // straight to a login form instead of the catalogue.
+  matcher: ["/learn/teach/:path*", "/learn/finance/:path*"],
 };
