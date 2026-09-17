@@ -30,7 +30,7 @@ Every module ends with a quiz, and most with a practical assignment marked by yo
 No prior marketing knowledge is assumed. If you can use a browser and type, you can start.
 `.trim(),
 
-  categorySlug: "it-and-digital-skills",
+  categorySlug: "freelancing-and-remote-work",
   curriculumSource:
     "Written by Hunarsaaz, structured to follow NAVTTC's published Digital Marketing trade. Marked navttc_aligned on Hunarsaaz's instruction; the modules have NOT yet been compared against NAVTTC's curriculum document (navttc.gov.pk was unreachable). Someone must verify this before the claim stands.",
   sector: "Information Technology",

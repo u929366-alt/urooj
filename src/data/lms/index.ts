@@ -7,6 +7,8 @@ import { itDigitalCourses } from "./cat-it-digital.ts";
 import { aiCourses } from "./cat-ai.ts";
 import { freelancingCourses } from "./cat-freelancing.ts";
 import { communicationCourses, leadershipCourses } from "./cat-communication-leadership.ts";
+import { enterpriseCourses, wellbeingCourses } from "./cat-enterprise-wellbeing.ts";
+import { burnoutCourses, resilienceCourses } from "./cat-burnout-resilience.ts";
 
 export type { CategoryContent };
 export { categoryContent };
@@ -21,4 +23,8 @@ export const courseContent: CourseContent[] = [
   ...freelancingCourses,
   ...communicationCourses,
   ...leadershipCourses,
+  ...enterpriseCourses,
+  ...wellbeingCourses,
+  ...burnoutCourses,
+  ...resilienceCourses,
 ];
