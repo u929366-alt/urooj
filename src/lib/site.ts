@@ -4,6 +4,15 @@ export const siteConfig = {
   description:
     "Hunarsaaz is a Pakistani NGO based in Taxila, Punjab, empowering youth, women, and marginalized communities through vocational and technical education, entrepreneurship training, digital skills, and employment opportunities.",
   url: "https://hunarsaaz.pk",
+  /**
+   * The learning portal, which is a separate Node application on its own
+   * subdomain. The marketing site is a static export and cannot read the
+   * portal's database, so the two are joined by links rather than merged.
+   *
+   * Donations point here too: a donation has to create a payment record with
+   * a reference, and only the portal can do that.
+   */
+  portalUrl: "https://learn.hunarsaaz.pk",
   email: "ceo@hunarsaaz.pk",
   admissionsEmail: "ceo@hunarsaaz.pk",
   phone: "+92 300 8154597",
@@ -28,6 +37,11 @@ export const mainNav: NavLink[] = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
   {
+    label: "Learn Online",
+    href: "https://learn.hunarsaaz.pk/learn",
+    description: "Free online courses — enrol and study at your own pace",
+  },
+  {
     label: "Programs",
     href: "/programs",
     description: "Browse all vocational training programs",
@@ -43,7 +57,11 @@ export const mainNav: NavLink[] = [
     children: [
       { label: "Admissions", href: "/admissions", description: "Apply as a student" },
       { label: "Volunteer", href: "/volunteer", description: "Give your time & skills" },
-      { label: "Donate", href: "/donate", description: "Support our mission" },
+      {
+        label: "Donate",
+        href: `${siteConfig.portalUrl}/donate`,
+        description: "Support our mission",
+      },
       { label: "Careers", href: "/careers", description: "Join our team" },
     ],
   },

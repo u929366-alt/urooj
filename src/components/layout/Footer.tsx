@@ -18,7 +18,7 @@ const quickLinks = [
   { label: "Policy & Advisory", href: "/advisory" },
   { label: "Admissions", href: "/admissions" },
   { label: "Volunteer", href: "/volunteer" },
-  { label: "Donate", href: "/donate" },
+  { label: "Donate", href: `${siteConfig.portalUrl}/donate` },
   { label: "Careers", href: "/careers" },
   { label: "Blog", href: "/blog" },
   { label: "Impact & Reports", href: "/impact" },

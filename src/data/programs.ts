@@ -12,11 +12,21 @@ export type Program = {
   curriculum: string[];
   careerOpportunities: string[];
   faqs: { question: string; answer: string }[];
+  /**
+   * The matching free course on learn.hunarsaaz.pk, where one exists.
+   *
+   * The on-campus program and the online course are not the same thing — the
+   * online one has no workshop, no equipment and no instructor in the room —
+   * so only set this where the subject genuinely lines up. Most trade skills
+   * cannot be taught online and deliberately have nothing here.
+   */
+  onlineCourse?: { slug: string; title: string };
 };
 
 export const programs: Program[] = [
   {
     slug: "computer-it-skills",
+    onlineCourse: { slug: "microsoft-excel", title: "Microsoft Excel" },
     title: "Computer & IT Skills",
     category: "Technology",
     icon: "Monitor",
@@ -42,6 +52,7 @@ export const programs: Program[] = [
   },
   {
     slug: "graphic-design",
+    onlineCourse: { slug: "graphic-design", title: "Graphic Design" },
     title: "Graphic Design",
     category: "Creative",
     icon: "Palette",
@@ -66,6 +77,7 @@ export const programs: Program[] = [
   },
   {
     slug: "web-development",
+    onlineCourse: { slug: "website-design-and-development", title: "Website Design and Development" },
     title: "Web Development",
     category: "Technology",
     icon: "Code",
@@ -90,6 +102,7 @@ export const programs: Program[] = [
   },
   {
     slug: "digital-marketing",
+    onlineCourse: { slug: "digital-marketing", title: "Digital Marketing" },
     title: "Digital Marketing",
     category: "Technology",
     icon: "Megaphone",
@@ -306,6 +319,7 @@ export const programs: Program[] = [
   },
   {
     slug: "english-language",
+    onlineCourse: { slug: "business-english", title: "Business English" },
     title: "English Language",
     category: "Life Skills",
     icon: "BookOpen",
@@ -330,6 +344,7 @@ export const programs: Program[] = [
   },
   {
     slug: "entrepreneurship",
+    onlineCourse: { slug: "entrepreneurship-fundamentals", title: "Entrepreneurship Fundamentals" },
     title: "Entrepreneurship",
     category: "Life Skills",
     icon: "Lightbulb",
@@ -354,6 +369,7 @@ export const programs: Program[] = [
   },
   {
     slug: "freelancing",
+    onlineCourse: { slug: "freelancing-fundamentals", title: "Freelancing Fundamentals" },
     title: "Freelancing",
     category: "Life Skills",
     icon: "Globe",
@@ -378,6 +394,7 @@ export const programs: Program[] = [
   },
   {
     slug: "financial-literacy",
+    onlineCourse: { slug: "financial-literacy-for-individuals", title: "Financial Literacy for Individuals" },
     title: "Financial Literacy",
     category: "Life Skills",
     icon: "PiggyBank",

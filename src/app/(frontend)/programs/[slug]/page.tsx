@@ -9,6 +9,7 @@ import {
   CheckCircle2,
   Briefcase,
   ArrowRight,
+  Laptop,
 } from "lucide-react";
 import { PageHero } from "@/components/PageHero";
 import { Container } from "@/components/ui/Container";
@@ -173,6 +174,29 @@ export default async function ProgramDetailPage({
                   ← Back to all programs
                 </Link>
               </Card>
+
+              {program.onlineCourse && (
+                <Card className="mt-6 border-primary-100 bg-primary-50 p-6">
+                  <div className="flex items-center gap-2 text-primary-700">
+                    <Laptop className="h-5 w-5 shrink-0" />
+                    <span className="text-sm font-semibold uppercase tracking-wide">
+                      Also available online
+                    </span>
+                  </div>
+                  <p className="mt-3 text-sm text-gray-600">
+                    Can&apos;t get to the campus in Taxila? {program.onlineCourse.title} is a free
+                    self-paced course on our learning portal. It is not a substitute for the
+                    hands-on program, but you can start today.
+                  </p>
+                  <a
+                    href={`${siteConfig.portalUrl}/learn/courses/${program.onlineCourse.slug}`}
+                    className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-primary-700 hover:text-primary-800"
+                  >
+                    View the online course
+                    <ArrowRight className="h-4 w-4" />
+                  </a>
+                </Card>
+              )}
             </aside>
           </div>
         </Container>
