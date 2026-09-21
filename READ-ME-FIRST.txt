@@ -1,44 +1,53 @@
-HUNARSAAZ PORTAL — FIX FOR MISSING INSTRUCTOR PHOTOGRAPHS
-=========================================================
+HUNARSAAZ PORTAL — FEES REMOVED
+===============================
 
 Goes to   /home2/lqonfyud/hunarsaaz-portal   (NOT public_html)
 
 
-YOUR DATABASE IS NOT TOUCHED THIS TIME
---------------------------------------
+YOUR DATABASE IS NOT TOUCHED
+----------------------------
 
-This was a display fault, not a data one. There is deliberately NO data
-folder in this zip, so nothing can overwrite it.
+There is deliberately NO data folder and NO .env file in this zip, so
+neither can be overwritten.
 
 You keep:
 
     your admin account
-    any instructors and photographs you have added
-    any students, enrolments and payments
-    everything else
+    your instructors and their photographs
+    your students, enrolments and payment records
+    your settings in .env
 
-Do NOT delete the data, public/uploads or private-uploads folders.
+Do NOT delete the data, .env, public/uploads or private-uploads folders.
 
 
-WHAT WAS WRONG
---------------
+WHAT CHANGED
+------------
 
-Instructor photographs rendered as broken images. The address the page
-asked for was rejected by the site's own image handler with
+Course fees no longer appear anywhere in the portal, and enrolling never
+asks anyone to pay.
 
-    400  "url" parameter is not allowed
+    the "Fee" line on a course page is gone
+    the price on the catalogue cards is gone
+    "Free to enrol" wording is gone as well, because you are invoicing
+      students separately and the two would contradict each other
+    a student who enrols is admitted straight away
+    nobody is sent to a bank-transfer page any more
+    anyone still stuck on "awaiting payment" from before is let in
 
-Uploaded files were being requested through the full web address rather
-than a plain path, and the image handler refuses that. Now fixed and
-checked: the same photograph returns a proper image.
+Donations are untouched and still work exactly as they did. Your old
+payment records are all still there in the finance page.
+
+Nothing is deleted from the database. The price field is still on each
+course in /admin, it is simply not shown to students and not charged. If
+you ever want fees back, tell me and it is one line to switch on.
 
 
 STEP 1 — BACK UP THE DATABASE ANYWAY
 ------------------------------------
 cPanel > File Manager > /home2/lqonfyud/hunarsaaz-portal > data
 
-Right-click hunarsaaz.db > Download. One file. Takes a moment, and it is
-how you get back if anything goes wrong.
+Right-click hunarsaaz.db > Download. One file. It is how you get back if
+anything goes wrong.
 
 
 STEP 2 — STOP THE APP
@@ -46,7 +55,7 @@ STEP 2 — STOP THE APP
 cPanel > Setup Node.js App > your application > Stop
 
 
-STEP 3 — DELETE ONLY THESE FOUR
+STEP 3 — DELETE ONLY THESE FIVE
 -------------------------------
 In /home2/lqonfyud/hunarsaaz-portal, delete:
 
@@ -59,27 +68,28 @@ In /home2/lqonfyud/hunarsaaz-portal, delete:
 DO NOT DELETE:
 
     data              your database
-    public            your uploaded photographs live in public/uploads
+    .env              your settings and password key
+    public            your uploaded photographs are in public/uploads
     private-uploads   student work
 
-Deleting "public" would take every instructor photograph you have
-uploaded with it. Leave it alone — the new files merge into it.
+Deleting "public" would take every instructor photograph with it. Leave
+it alone — the new files merge into it.
 
-Turn on File Manager > Settings > Show Hidden Files to see .next.
+Turn on File Manager > Settings > Show Hidden Files to see .next and .env.
 
 
 STEP 4 — UPLOAD AND EXTRACT
 ---------------------------
-Upload hunarsaaz-portal-fix.zip into hunarsaaz-portal.
+Upload hunarsaaz-portal-nofee.zip into hunarsaaz-portal.
 Right-click it > Extract. Let it overwrite when asked.
 Then delete the zip.
 
 Afterwards these should all sit directly in hunarsaaz-portal:
 
-    server.js   package.json   READ-ME-FIRST.txt
+    server.js   package.json   READ-ME-FIRST.txt   .env
     .next   node_modules   public   data   private-uploads   src
 
-Note that "data" is still there — it is yours, from before.
+"data" and ".env" are still there — they are yours, from before.
 
 
 STEP 5 — START IT
@@ -91,15 +101,26 @@ DO NOT click "Run NPM Install".
 
 STEP 6 — CHECK
 --------------
-Open the category page you reported, and press Ctrl+Shift+R:
+Open these and press Ctrl+Shift+R on each:
 
-    https://learn.hunarsaaz.pk/learn/categories/resilience-and-workplace-wellbeing
+    https://learn.hunarsaaz.pk/learn/courses
+      no price on any card
 
-The instructor photograph should now appear. Also check:
+    https://learn.hunarsaaz.pk/learn/courses/graphic-design
+      the box on the right says "Enrol in this course", with no Fee line
 
-    https://learn.hunarsaaz.pk/learn/instructors
+Sign in as a student and press Enrol now. You should land straight back
+on the course page saying "You are enrolled" — no payment page.
 
-If a photograph is still missing for one particular person, that person
-probably has no Avatar set — open them in /admin > Users and check. Where
-there is no photograph the page shows the first letter of their name in a
-circle, which is intended, not a fault.
+
+ONE THING TO CHECK IN .env
+--------------------------
+
+Open .env in the File Manager editor and make sure it says
+
+    SITE_URL=https://learn.hunarsaaz.pk
+
+If that address does not match the address people actually use, enrolling
+silently fails and sends the student to the login page instead. Leave
+everything else in the file alone, especially PAYLOAD_SECRET — changing
+it logs everybody out.
