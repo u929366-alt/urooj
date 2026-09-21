@@ -1,0 +1,105 @@
+HUNARSAAZ PORTAL — FIX FOR MISSING INSTRUCTOR PHOTOGRAPHS
+=========================================================
+
+Goes to   /home2/lqonfyud/hunarsaaz-portal   (NOT public_html)
+
+
+YOUR DATABASE IS NOT TOUCHED THIS TIME
+--------------------------------------
+
+This was a display fault, not a data one. There is deliberately NO data
+folder in this zip, so nothing can overwrite it.
+
+You keep:
+
+    your admin account
+    any instructors and photographs you have added
+    any students, enrolments and payments
+    everything else
+
+Do NOT delete the data, public/uploads or private-uploads folders.
+
+
+WHAT WAS WRONG
+--------------
+
+Instructor photographs rendered as broken images. The address the page
+asked for was rejected by the site's own image handler with
+
+    400  "url" parameter is not allowed
+
+Uploaded files were being requested through the full web address rather
+than a plain path, and the image handler refuses that. Now fixed and
+checked: the same photograph returns a proper image.
+
+
+STEP 1 — BACK UP THE DATABASE ANYWAY
+------------------------------------
+cPanel > File Manager > /home2/lqonfyud/hunarsaaz-portal > data
+
+Right-click hunarsaaz.db > Download. One file. Takes a moment, and it is
+how you get back if anything goes wrong.
+
+
+STEP 2 — STOP THE APP
+---------------------
+cPanel > Setup Node.js App > your application > Stop
+
+
+STEP 3 — DELETE ONLY THESE FOUR
+-------------------------------
+In /home2/lqonfyud/hunarsaaz-portal, delete:
+
+    .next
+    node_modules
+    src
+    server.js
+    package.json
+
+DO NOT DELETE:
+
+    data              your database
+    public            your uploaded photographs live in public/uploads
+    private-uploads   student work
+
+Deleting "public" would take every instructor photograph you have
+uploaded with it. Leave it alone — the new files merge into it.
+
+Turn on File Manager > Settings > Show Hidden Files to see .next.
+
+
+STEP 4 — UPLOAD AND EXTRACT
+---------------------------
+Upload hunarsaaz-portal-fix.zip into hunarsaaz-portal.
+Right-click it > Extract. Let it overwrite when asked.
+Then delete the zip.
+
+Afterwards these should all sit directly in hunarsaaz-portal:
+
+    server.js   package.json   READ-ME-FIRST.txt
+    .next   node_modules   public   data   private-uploads   src
+
+Note that "data" is still there — it is yours, from before.
+
+
+STEP 5 — START IT
+-----------------
+Setup Node.js App > Start
+
+DO NOT click "Run NPM Install".
+
+
+STEP 6 — CHECK
+--------------
+Open the category page you reported, and press Ctrl+Shift+R:
+
+    https://learn.hunarsaaz.pk/learn/categories/resilience-and-workplace-wellbeing
+
+The instructor photograph should now appear. Also check:
+
+    https://learn.hunarsaaz.pk/learn/instructors
+
+If a photograph is still missing for one particular person, that person
+probably has no Avatar set — open them in /admin > Users and check. Where
+there is no photograph the page shows the first letter of their name in a
+circle, which is intended, not a fault.
