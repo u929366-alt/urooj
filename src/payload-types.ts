@@ -411,7 +411,7 @@ export interface Course {
    */
   programSlug?: string | null;
   /**
-   * Fee in rupees. 0 makes the course free, which enrols a student immediately.
+   * Not in use. Fees are switched off site-wide (SHOW_COURSE_FEES in src/lib/site.ts): nothing here is shown to students and nothing is charged at enrolment. Invoices are sent separately.
    */
   price: number;
   /**
@@ -458,7 +458,7 @@ export interface Lesson {
    */
   order: number;
   /**
-   * Free sample: readable without enrolling.
+   * Sample lesson: readable without enrolling.
    */
   preview?: boolean | null;
   /**
