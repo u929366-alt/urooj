@@ -19,6 +19,7 @@ import {
 } from "@/lib/lms/queries";
 import { formatRupees } from "@/lib/lms/payments";
 import { CourseCurriculum } from "@/components/learn/CourseCurriculum";
+import { mediaPath } from "@/lib/lms/media";
 import { siteConfig } from "@/lib/site";
 import type { User } from "@/payload-types";
 
@@ -70,8 +71,7 @@ const textsOf = (rows: { text: string }[] | null | undefined): string[] =>
  * belongs on a page anyone can open.
  */
 function InstructorCard({ person }: { person: User }) {
-  const avatar =
-    typeof person.avatar === "object" && person.avatar?.url ? person.avatar.url : null;
+  const avatar = mediaPath(person.avatar);
 
   return (
     <Card className="p-6">

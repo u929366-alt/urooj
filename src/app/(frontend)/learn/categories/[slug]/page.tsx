@@ -13,6 +13,7 @@ import {
   listInstructors,
   listPublishedCourses,
 } from "@/lib/lms/queries";
+import { mediaPath } from "@/lib/lms/media";
 import { siteConfig } from "@/lib/site";
 import type { Category, User } from "@/payload-types";
 
@@ -127,7 +128,7 @@ export default async function CategoryPage({ params }: Params) {
 }
 
 function InstructorRow({ person, courses }: { person: User; courses: { id: number; title: string; slug?: string | null; instructor?: unknown }[] }) {
-  const avatar = typeof person.avatar === "object" && person.avatar?.url ? person.avatar.url : null;
+  const avatar = mediaPath(person.avatar);
   const expertise = (person.expertise ?? []).map((row) => row.text).filter(Boolean);
   const taught = courses.filter((course) => {
     const id = typeof course.instructor === "object" && course.instructor

@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { listCategories, listInstructors, listPublishedCourses } from "@/lib/lms/queries";
+import { mediaPath } from "@/lib/lms/media";
 import { siteConfig } from "@/lib/site";
 import type { Category, Course, User } from "@/payload-types";
 
@@ -70,7 +71,7 @@ function InstructorProfile({
   courses: Course[];
   categories: Category[];
 }) {
-  const avatar = typeof person.avatar === "object" && person.avatar?.url ? person.avatar.url : null;
+  const avatar = mediaPath(person.avatar);
   const expertise = (person.expertise ?? []).map((row) => row.text).filter(Boolean);
   const qualifications = (person.qualifications ?? []).map((row) => row.text).filter(Boolean);
   const taughtCategoryIds = new Set(
