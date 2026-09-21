@@ -18,7 +18,6 @@ export type CurriculumLesson = {
   slug: string;
   durationMinutes: number | null;
   preview: boolean;
-  hasVideo: boolean;
   done: boolean;
 };
 
@@ -148,9 +147,6 @@ export function CourseCurriculum({
                             <span className="ml-2 rounded-full bg-accent-50 px-2 py-0.5 text-xs font-semibold text-accent-700">
                               Preview
                             </span>
-                          )}
-                          {!lesson.hasVideo && (
-                            <span className="ml-2 text-xs text-gray-400">Video coming soon</span>
                           )}
                         </span>
                         {lesson.durationMinutes ? (

@@ -12,6 +12,8 @@ import { ProgressBar } from "@/components/learn/ProgressBar";
 import { QuizBlock } from "@/components/learn/QuizBlock";
 import { AssignmentBlock } from "@/components/learn/AssignmentBlock";
 import { getCurrentUser } from "@/lib/lms/auth";
+import { stripVideoNotice } from "@/lib/lms/lessonContent";
+import { playableVideoUrl } from "@/lib/lms/lessonVideo";
 import { toggleLessonCompleteAction } from "@/lib/lms/actions";
 import {
   flattenLessons,
@@ -84,6 +86,7 @@ export default async function LessonPage({ params, searchParams }: Params) {
   const isDone = completedIds.has(String(lesson.id));
   const doneCount = lessons.filter((item) => completedIds.has(String(item.id))).length;
   const returnTo = `/learn/courses/${slug}/${lessonSlug}`;
+  const videoUrl = playableVideoUrl(lesson);
 
   // Assessment for this lesson. Only fetched for enrolled viewers; the quiz is
   // passed through toStudentQuiz() at render so answers never reach the page.
@@ -123,18 +126,18 @@ export default async function LessonPage({ params, searchParams }: Params) {
             <p className="mt-1 text-sm text-gray-500">{lesson.durationMinutes} min</p>
           ) : null}
 
-          {lesson.videoUrl && (
+          {videoUrl && (
             <div className="mt-6">
-              <LessonVideo url={lesson.videoUrl} title={lesson.title} />
+              <LessonVideo url={videoUrl} title={lesson.title} />
             </div>
           )}
 
           {lesson.content ? (
             <div className="lesson-prose mt-8">
-              <RichText data={lesson.content as SerializedEditorState} />
+              <RichText data={stripVideoNotice(lesson.content as SerializedEditorState)} />
             </div>
           ) : (
-            !lesson.videoUrl && (
+            !videoUrl && (
               <p className="mt-8 text-gray-600">
                 This lesson has no content yet. Please check back soon.
               </p>

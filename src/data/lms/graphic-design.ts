@@ -83,8 +83,6 @@ No drawing ability is required. Design is decision-making, not illustration.
           minutes: 15,
           preview: true,
           video: {
-            url: "https://www.youtube.com/watch?v=SGT1l9AukLc",
-            title: "Graphic Design for Beginners | Typography, Color Theory, & More",
             search: "what is graphic design principles introduction beginners",
           },
           body: `
@@ -121,8 +119,6 @@ Start looking at every sign, packet and poster you pass and asking what was deci
           title: "Hierarchy, Contrast and Alignment",
           minutes: 22,
           video: {
-            url: "https://www.youtube.com/watch?v=UzsaAgQ4cs8",
-            title: "Mastering Design Theory: Colours, Layout & Typography Explained",
             search: "design principles hierarchy contrast alignment proximity tutorial",
           },
           body: `
@@ -432,8 +428,6 @@ Part 5 is required. A designer working in Pakistan who cannot handle Urdu alongs
           title: "Colour That Works",
           minutes: 22,
           video: {
-            url: "https://www.youtube.com/watch?v=Tznnrjkhp7E",
-            title: "Color Theory for Graphic Design: How to Choose Better Colors",
             search: "color theory design palette hue saturation contrast accessibility",
           },
           body: `
@@ -701,8 +695,6 @@ They ask for their logo to be bigger, to contain everything they do, and to look
           title: "Print, Export and Handover",
           minutes: 22,
           video: {
-            url: "https://www.youtube.com/watch?v=0x8rhNLxAVc",
-            title: "How to Export Canva PDFs for Printing (Bleed, CMYK, & Crop Marks)",
             search: "print ready pdf cmyk bleed export design file preparation",
           },
           body: `

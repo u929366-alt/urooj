@@ -76,11 +76,10 @@ The certificate carries a unique ID and can be checked by anyone at /learn/verif
 
 function lessonBody(lesson: LessonSpec): string {
   const covers = lesson.covers.map((point) => `- ${point}`).join("\n");
+  // No "video coming soon" notice: Hunarsaaz does not want lessons announcing
+  // that they are unfinished. Lessons already imported still carry it in the
+  // database and it is dropped when rendered — see src/lib/lms/lessonContent.ts.
   return `
-**Video coming soon.** The recording and full written notes for this lesson are
-still being produced. What is below is the lesson outline, which tells you what
-it covers and what you should be able to do afterwards.
-
 ## What this lesson is for
 
 ${lesson.objective}
@@ -89,7 +88,7 @@ ${lesson.objective}
 
 ${covers}
 
-## Before the video is ready
+## What to do with this
 
 Work through the points above using the suggested resources on the course page,
 and bring anything you could not follow to the course discussion. Your

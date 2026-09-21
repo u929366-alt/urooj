@@ -222,7 +222,6 @@ export default async function CoursePage({ params }: Params) {
                   slug: lesson.slug ?? "",
                   durationMinutes: lesson.durationMinutes ?? null,
                   preview: lesson.preview ?? false,
-                  hasVideo: Boolean(lesson.videoUrl),
                   done: completed.has(String(lesson.id)),
                 })),
               }))}

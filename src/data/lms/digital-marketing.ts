@@ -86,8 +86,6 @@ No prior marketing knowledge is assumed. If you can use a browser and type, you 
           minutes: 15,
           preview: true,
           video: {
-            url: "https://www.youtube.com/watch?v=WUniTVTi_Jk",
-            title: "Digital Marketing 101 - A Complete Beginner's Guide to Marketing",
             search: "what is digital marketing explained for beginners 2026",
           },
           body: `
@@ -119,8 +117,6 @@ Most Pakistani small businesses use one or two of these badly. Someone who can u
           title: "The Digital Marketing Ecosystem",
           minutes: 18,
           video: {
-            url: "https://www.youtube.com/watch?v=F-PXyeYC2s4",
-            title: "Owned, Paid and Earned Media Explained | Digital Marketing Strategy",
             search: "digital marketing channels owned earned paid media explained",
           },
           body: `
@@ -181,8 +177,6 @@ Most successful local businesses run both. The skill is knowing which job each t
           title: "Understanding the Digital Consumer",
           minutes: 20,
           video: {
-            url: "https://www.youtube.com/watch?v=9aPAPANeMKg",
-            title: "How To Create a Buyer Persona to Boost Your Marketing",
             search: "consumer buyer journey digital marketing awareness consideration decision",
           },
           body: `
@@ -339,8 +333,6 @@ Submit as PDF or Word.
           title: "Why Every Campaign Needs a Destination",
           minutes: 14,
           video: {
-            url: "https://www.youtube.com/watch?v=_xo8LLa2JUY",
-            title: "I studied 1000 landing pages and learned this",
             search: "landing page vs homepage conversion explained beginners",
           },
           body: `
@@ -376,8 +368,6 @@ Show the page to someone for two seconds, then hide it. Ask what the business se
           title: "Building a Site Without Writing Code",
           minutes: 22,
           video: {
-            url: "https://www.youtube.com/watch?v=qGKVSl7_1EU",
-            title: "How to Create a High-Converting Landing Page With WordPress",
             search: "build business website WordPress no code beginners tutorial",
           },
           body: `
@@ -410,8 +400,6 @@ Buy the domain in the **client's** name, on the client's account, and give them 
           title: "Writing Pages That Convert",
           minutes: 18,
           video: {
-            url: "https://www.youtube.com/watch?v=saIbEU5a2nA",
-            title: "Create A Landing Page That Converts Like Crazy For Free",
             search: "landing page copywriting formula headline call to action",
           },
           body: `
@@ -598,8 +586,6 @@ SEO is slow. A new site competing for a common term may see nothing for six mont
           title: "Keyword Research",
           minutes: 25,
           video: {
-            url: "https://www.youtube.com/watch?v=qy7XELw6Bc4",
-            title: "Local SEO Keyword Research Tutorial For Local Businesses",
             search: "keyword research tutorial google keyword planner search intent",
           },
           body: `
@@ -664,8 +650,6 @@ Link from each page to other relevant pages on the same site, with link text tha
           title: "Local SEO and Google Business Profile",
           minutes: 18,
           video: {
-            url: "https://www.youtube.com/watch?v=HFT2z3Uj-Q0",
-            title: "Local SEO Full Course and Tutorial | 7 Steps To Optimize Your Google Business Profile",
             search: "google business profile local seo optimization tutorial",
           },
           body: `
@@ -700,8 +684,6 @@ A page for each area served — "carpet cleaning in Wah Cantt", "in Taxila", "in
           title: "Links, Authority and Technical Basics",
           minutes: 20,
           video: {
-            url: "https://www.youtube.com/watch?v=NYEDKq4i26M",
-            title: "How Google REALLY Uses Backlinks (Explained Simply for Local Businesses)",
             search: "backlinks seo link building beginners white hat",
           },
           body: `
@@ -901,8 +883,6 @@ Build a negative list before launch. Then read the search terms report every wee
           title: "Meta Ads — Facebook and Instagram",
           minutes: 22,
           video: {
-            url: "https://www.youtube.com/watch?v=npPEGSpT6H0",
-            title: "How to create a killer Facebook ad testing campaign",
             search: "facebook ads manager campaign objective targeting tutorial 2026",
           },
           body: `
@@ -937,8 +917,6 @@ Write the first line as though it has to survive a thumb moving at speed. It doe
           title: "Budgets, Testing and Knowing When to Stop",
           minutes: 20,
           video: {
-            url: "https://www.youtube.com/watch?v=m9GeffK67vA",
-            title: "How To Master Google Ads A/B Testing in 5 Minutes!",
             search: "ad testing ab test campaign optimization budget management",
           },
           body: `
@@ -1103,8 +1081,6 @@ Pick two. Do them properly for three months before adding a third.
           title: "Content Pillars and the Calendar",
           minutes: 20,
           video: {
-            url: "https://www.youtube.com/watch?v=aAfkNeuX18k",
-            title: "How to Create a Content Calendar in Canva",
             search: "social media content calendar content pillars planning",
           },
           body: `
@@ -1308,8 +1284,6 @@ Marks are weighted to part 4. Anyone can plan; the work is in producing.
           title: "What Content Marketing Is For",
           minutes: 15,
           video: {
-            url: "https://www.youtube.com/watch?v=QC7NENtXIe4",
-            title: "The Beginner's Guide to Content Writing: 7 Must-Know Formats",
             search: "content marketing strategy explained small business",
           },
           body: `
@@ -1341,8 +1315,6 @@ Articles, short videos, carousels, checklists, templates, case studies, FAQs. Ch
           title: "Copywriting Fundamentals",
           minutes: 22,
           video: {
-            url: "https://www.youtube.com/watch?v=9qZcT9I8W4g",
-            title: "Complete Copywriting Tutorial - Examples, Tips and Formulas",
             search: "copywriting basics features benefits aida formula",
           },
           body: `
@@ -1538,8 +1510,6 @@ Everything must be your own work, made for this assignment. Stock photographs sc
           title: "Why the List Is the Asset",
           minutes: 15,
           video: {
-            url: "https://www.youtube.com/watch?v=4IDnIiUFAcY",
-            title: "How email marketing strategies work: A step-by-step guide",
             search: "email marketing why build list owned audience",
           },
           body: `
@@ -1577,8 +1547,6 @@ A small list that wants to hear from you outperforms a large one that does not, 
           title: "Writing Emails People Open",
           minutes: 20,
           video: {
-            url: "https://www.youtube.com/watch?v=vPWCYZsoJaI",
-            title: "I Tested Hundreds of Subject Lines (here are the results)",
             search: "email subject lines open rates copywriting examples",
           },
           body: `
@@ -1625,8 +1593,6 @@ Test it rather than believing any rule you read. For most Pakistani consumer bus
           title: "WhatsApp Business",
           minutes: 20,
           video: {
-            url: "https://www.youtube.com/watch?v=mGJyCH5BIi8",
-            title: "How To Use WhatsApp Marketing for Business: Full Tutorial",
             search: "whatsapp business catalog broadcast list setup tutorial",
           },
           body: `
@@ -1670,8 +1636,6 @@ Order updates, delivery notifications, restock alerts, appointment reminders, an
           title: "Automation, Segmentation and Measurement",
           minutes: 18,
           video: {
-            url: "https://www.youtube.com/watch?v=rJr7z0YCRnk",
-            title: "The Only Email Segmentation System You'll Ever Need",
             search: "email automation segmentation open rate click rate metrics",
           },
           body: `
@@ -1803,8 +1767,6 @@ Part 5 is short and carries real marks. A marketer who is careless with permissi
           title: "Google Analytics and Search Console",
           minutes: 22,
           video: {
-            url: "https://www.youtube.com/watch?v=XEwUtEe_ogY",
-            title: "Get Started with GA4 Reports - Google Analytics 4 Tutorial for Beginners",
             search: "google analytics 4 basics for beginners setup reports",
           },
           body: `
@@ -1846,8 +1808,6 @@ Always ask: did this lead to money, or to an enquiry that leads to money?
           title: "Reporting to a Client",
           minutes: 18,
           video: {
-            url: "https://www.youtube.com/watch?v=ZHUXfNQNtn8",
-            title: "Turn Google Analytics 4 data into client-ready reports",
             search: "monthly marketing report client template kpi",
           },
           body: `

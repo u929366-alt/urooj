@@ -77,8 +77,6 @@ No prior experience is needed. If you have ever sold anything to anybody, you al
           minutes: 16,
           preview: true,
           video: {
-            url: "https://www.youtube.com/watch?v=k7Y63hw1x0w",
-            title: "How to start local e-commerce business in Pakistan on Shopify",
             search: "ecommerce business model explained beginners how online store works",
           },
           body: `
@@ -109,8 +107,6 @@ By the end you will have a live shop with real products, real photographs, real 
           title: "Choosing What to Sell",
           minutes: 22,
           video: {
-            url: "https://www.youtube.com/watch?v=1nZ92pngarg",
-            title: "How To Find Winning Products On Daraz Pakistan | Product Research",
             search: "how to choose product to sell online product research criteria",
           },
           body: `
@@ -146,8 +142,6 @@ Write the exact sentence you would use to sell it. If it does not sound compelli
           title: "Costing, Pricing and Margin",
           minutes: 24,
           video: {
-            url: "https://www.youtube.com/watch?v=6cygKNgYQCU",
-            title: "How to See Profit Margin on Shopify",
             search: "product pricing margin calculation ecommerce cost of goods breakeven",
           },
           body: `
@@ -349,8 +343,6 @@ Whatever you choose, you must be able to defend it in Assignment 2.
           title: "Setting Up a Shopify or WooCommerce Store",
           minutes: 28,
           video: {
-            url: "https://www.youtube.com/watch?v=qDOrZw6Pryo",
-            title: "How to Start Shopify E-Commerce in Pakistan | Step-by-Step Guide",
             search: "shopify store setup tutorial beginners step by step 2026",
           },
           body: `
@@ -384,8 +376,6 @@ Most broken shops have never been through their own checkout. Faults you will on
           title: "Selling on Daraz",
           minutes: 24,
           video: {
-            url: "https://www.youtube.com/watch?v=uAqaRQsWSDQ",
-            title: "Complete Daraz Seller Course | How To Sell On Daraz in Urdu",
             search: "daraz seller account setup product listing tutorial pakistan",
           },
           body: `
