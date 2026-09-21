@@ -90,7 +90,7 @@ export const Lessons: CollectionConfig = {
       defaultValue: false,
       admin: {
         position: "sidebar",
-        description: "Free sample: readable without enrolling.",
+        description: "Sample lesson: readable without enrolling.",
       },
     },
     {

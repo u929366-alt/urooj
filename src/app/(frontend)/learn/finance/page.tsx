@@ -41,7 +41,7 @@ export default async function FinancePage({
     <Container className="py-12">
       <h1 className="font-display text-3xl font-bold text-primary-900">Payments</h1>
       <p className="mt-2 text-gray-600">
-        Donations and course fees. Confirm a payment once it appears on the bank
+        Donations and any course payments. Confirm a payment once it appears on the bank
         statement — that is what issues the receipt and opens a paid course.
       </p>
 

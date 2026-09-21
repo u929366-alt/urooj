@@ -12,8 +12,8 @@ import {
   Shield,
   Sparkles,
   TrendingUp,
+  UserPlus,
   Users,
-  Wallet,
   Wifi,
 } from "lucide-react";
 import { Container } from "@/components/ui/Container";
@@ -61,7 +61,7 @@ const PATHWAYS = [
 const REASONS = [
   { icon: BookOpen, title: "Practical, not theoretical", text: "Every course ends in work you have actually produced — a campaign, a shop, a portfolio, a report." },
   { icon: Wifi, title: "Built for how you connect", text: "Text-first lessons that load on a slow connection, and video where it genuinely helps." },
-  { icon: Wallet, title: "Free to enrol", text: "Every course in the catalogue is free. Where a course is ever paid, the fee is stated before you enrol." },
+  { icon: UserPlus, title: "Enrol in minutes", text: "Register, pick a course and start the same day. No entry test and no waiting for a new intake." },
   { icon: Compass, title: "Learn at your own pace", text: "Your progress is saved as you go, on any device. Stop and continue whenever you can." },
   { icon: Award, title: "A certificate you can verify", text: "Complete a course and get a certificate with an ID anyone can check online." },
   { icon: Users, title: "Written for Pakistan", text: "Rupees, local platforms, local employers, and the obstacles that actually come up here." },
@@ -92,8 +92,8 @@ export function PortalHome({
             </h1>
             <p className="mt-5 text-lg text-primary-100">
               Practical, market-oriented courses in digital skills, AI, freelancing, business and
-              wellbeing — free to enrol, studied at your own pace, and written for the way people
-              actually work in Pakistan.
+              wellbeing — studied at your own pace, and written for the way people actually work in
+              Pakistan.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
@@ -113,7 +113,6 @@ export function PortalHome({
             <dl className="mt-10 flex flex-wrap gap-x-10 gap-y-4">
               <Stat value={String(courses.length)} label="courses" />
               <Stat value={String(categories.length)} label="subject areas" />
-              <Stat value="Free" label="to enrol" />
             </dl>
           </div>
         </Container>

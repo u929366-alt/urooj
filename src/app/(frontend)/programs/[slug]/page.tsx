@@ -4,7 +4,6 @@ import Link from "next/link";
 import {
   Clock,
   Users,
-  Wallet,
   CalendarClock,
   CheckCircle2,
   Briefcase,
@@ -149,13 +148,6 @@ export default async function ProgramDetailPage({
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <Wallet className="mt-0.5 h-5 w-5 shrink-0 text-primary-600" />
-                    <div>
-                      <dt className="font-semibold text-primary-900">Fee</dt>
-                      <dd className="text-gray-600">{program.fee}</dd>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
                     <CalendarClock className="mt-0.5 h-5 w-5 shrink-0 text-primary-600" />
                     <div>
                       <dt className="font-semibold text-primary-900">Schedule</dt>
@@ -184,7 +176,7 @@ export default async function ProgramDetailPage({
                     </span>
                   </div>
                   <p className="mt-3 text-sm text-gray-600">
-                    Can&apos;t get to the campus in Taxila? {program.onlineCourse.title} is a free
+                    Can&apos;t get to the campus in Taxila? {program.onlineCourse.title} is a
                     self-paced course on our learning portal. It is not a substitute for the
                     hands-on program, but you can start today.
                   </p>

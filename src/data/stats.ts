@@ -2,7 +2,7 @@
 export const whyChooseUs = [
   { title: "Experienced Trainers", description: "Industry professionals with years of hands-on teaching experience.", icon: "GraduationCap" },
   { title: "Industry-Relevant Curriculum", description: "Courses designed with employer input to match real market demand.", icon: "ClipboardCheck" },
-  { title: "Affordable Education", description: "Heavily subsidized fees with full scholarships for eligible students.", icon: "HandCoins" },
+  { title: "Open to Everyone", description: "Admission is based on eligibility and commitment, not on what you can pay.", icon: "HandCoins" },
   { title: "Job Placement Assistance", description: "Dedicated support connecting graduates with employers and clients.", icon: "Briefcase" },
   { title: "Modern Labs", description: "Well-equipped computer, design, and trade workshops.", icon: "Cpu" },
   { title: "Certification", description: "Recognized completion certificates for every program.", icon: "Award" },

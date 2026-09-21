@@ -17,7 +17,7 @@ import type { Category, User } from "@/payload-types";
 export const metadata: Metadata = {
   title: "Course Catalogue",
   description:
-    "Browse Hunarsaaz online courses across IT and digital skills, AI, freelancing, communication, leadership, entrepreneurship and wellbeing. Enrol free and study at your own pace.",
+    "Browse Hunarsaaz online courses across IT and digital skills, AI, freelancing, communication, leadership, entrepreneurship and wellbeing. Enrol and study at your own pace.",
   alternates: { canonical: `${siteConfig.url}/learn/courses` },
 };
 
@@ -46,7 +46,6 @@ export default async function CourseCataloguePage({ searchParams }: Params) {
       categoryTitle: category?.title ?? null,
       instructorName: instructor?.name ?? null,
       lessonCount: lessonCounts[String(course.id)] ?? 0,
-      price: course.price ?? 0,
       recognition: course.recognition,
     };
   });
@@ -61,7 +60,7 @@ export default async function CourseCataloguePage({ searchParams }: Params) {
       <SectionHeading
         eyebrow="Learn online"
         title="Course Catalogue"
-        description="Forty-five courses across nine subjects. Enrol free, study at your own pace, and your progress is saved as you go."
+        description="Forty-five courses across nine subjects. Study at your own pace, and your progress is saved as you go."
       />
 
       {rows.length === 0 ? (

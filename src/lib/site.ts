@@ -26,6 +26,20 @@ export const siteConfig = {
   },
 };
 
+/**
+ * Course fees are not shown anywhere and enrolment never asks for payment.
+ * A student enrols, and Hunarsaaz invoices them separately where anything is
+ * owed.
+ *
+ * The price on a course record is still stored and the payments system still
+ * works — this only stops fees being displayed and stops enrolment raising a
+ * charge. Donations are a separate flow and are unaffected.
+ *
+ * Setting this back to true restores the fee line, the "pay by bank transfer"
+ * step and the awaiting-payment hold on enrolment.
+ */
+export const SHOW_COURSE_FEES = false;
+
 export type NavLink = {
   label: string;
   href: string;
@@ -39,7 +53,7 @@ export const mainNav: NavLink[] = [
   {
     label: "Learn Online",
     href: "https://learn.hunarsaaz.pk/learn",
-    description: "Free online courses — enrol and study at your own pace",
+    description: "Online courses — enrol and study at your own pace",
   },
   {
     label: "Programs",

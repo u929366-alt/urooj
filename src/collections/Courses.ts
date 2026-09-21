@@ -239,7 +239,7 @@ export const Courses: CollectionConfig = {
       admin: {
         position: "sidebar",
         description:
-          "Fee in rupees. 0 makes the course free, which enrols a student immediately.",
+          "Not in use. Fees are switched off site-wide (SHOW_COURSE_FEES in src/lib/site.ts): nothing here is shown to students and nothing is charged at enrolment. Invoices are sent separately.",
       },
     },
     {

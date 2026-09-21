@@ -9,7 +9,7 @@ import { getCurrentUser } from "@/lib/lms/auth";
 export const metadata: Metadata = {
   title: "Create Your Learning Account",
   description:
-    "Create a free Hunarsaaz account to enrol in vocational courses and track your progress.",
+    "Create a Hunarsaaz account to enrol in vocational courses and track your progress.",
   robots: { index: false, follow: false },
 };
 
@@ -27,7 +27,7 @@ export default async function RegisterPage({
       <div className="mx-auto max-w-md rounded-2xl border border-gray-100 bg-white p-8 shadow-sm">
         <h1 className="font-display text-2xl font-bold text-primary-900">Create your account</h1>
         <p className="mt-2 text-sm text-gray-600">
-          Free to join. Enrol in a course and pick up where you left off, on any device.
+          Enrol in a course and pick up where you left off, on any device.
         </p>
 
         <div className="mt-6">

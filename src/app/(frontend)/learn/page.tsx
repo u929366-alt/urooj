@@ -15,7 +15,7 @@ import type { Course } from "@/payload-types";
 export const metadata: Metadata = {
   title: "Learn Skills. Build Your Future.",
   description:
-    "Hunarsaaz online learning — practical courses in digital skills, AI, freelancing, business and wellbeing. Free to enrol, learn at your own pace.",
+    "Hunarsaaz online learning — practical courses in digital skills, AI, freelancing, business and wellbeing. Learn at your own pace.",
 };
 
 export default async function LearnPage() {

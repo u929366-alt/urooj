@@ -1,4 +1,4 @@
-import { ArrowRight, Award, BookOpen, Laptop, Wallet } from "lucide-react";
+import { ArrowRight, Award, BookOpen, Laptop, UserPlus } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { siteConfig } from "@/lib/site";
 
@@ -12,8 +12,8 @@ import { siteConfig } from "@/lib/site";
 const CATALOGUE = { courses: 45, subjects: 9 };
 
 const POINTS = [
-  { icon: Wallet, text: "Free to enrol" },
   { icon: Laptop, text: "Study at your own pace" },
+  { icon: UserPlus, text: "Enrol online in minutes" },
   { icon: BookOpen, text: "Quizzes and marked assignments" },
   { icon: Award, text: "Certificate on completion" },
 ];
@@ -31,9 +31,9 @@ export function LearnOnline() {
               Learn online, wherever you are
             </h2>
             <p className="mt-4 max-w-2xl text-lg text-primary-100">
-              {CATALOGUE.courses} free courses across {CATALOGUE.subjects} subjects — digital
-              skills, artificial intelligence, freelancing, business and wellbeing. Written for the
-              way people actually work in Pakistan.
+              {CATALOGUE.courses} courses across {CATALOGUE.subjects} subjects — digital skills,
+              artificial intelligence, freelancing, business and wellbeing. Written for the way
+              people actually work in Pakistan.
             </p>
 
             <ul className="mt-7 grid grid-cols-1 gap-x-8 gap-y-3 sm:grid-cols-2">

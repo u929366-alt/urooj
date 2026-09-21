@@ -10,7 +10,7 @@ import { AdmissionForm } from "@/components/forms/AdmissionForm";
 export const metadata: Metadata = {
   title: "Admissions",
   description:
-    "Apply to Hunarsaaz's free vocational training programs in Taxila. Learn about required documents and the admission process.",
+    "Apply to Hunarsaaz's vocational training programs in Taxila. Learn about required documents and the admission process.",
 };
 
 const requiredDocuments = [
@@ -30,10 +30,9 @@ const admissionSteps = [
 ];
 
 const faqs = [
-  { question: "Is there an application fee?", answer: "No, applying to Hunarsaaz is completely free." },
   { question: "How long does the admission process take?", answer: "Typically 3-5 business days from application to batch confirmation." },
   { question: "Can I apply for more than one program?", answer: "Yes, but we recommend focusing on one program at a time for the best learning outcomes." },
-  { question: "Is there any program fee?", answer: "No — all Hunarsaaz programs are completely free of cost." },
+  { question: "What does a program cost?", answer: "We confirm everything in writing once your application is accepted, including anything payable. There is nothing to pay on this website." },
 ];
 
 export default function AdmissionsPage() {
@@ -43,7 +42,7 @@ export default function AdmissionsPage() {
         breadcrumb="Admissions"
         eyebrow="Join Hunarsaaz"
         title="Start Your Application Today"
-        description="Applying is free, straightforward, and the first step toward a new skill and career."
+        description="Applying is straightforward, and the first step toward a new skill and career."
       />
 
       <section className="py-12">
@@ -80,11 +79,12 @@ export default function AdmissionsPage() {
             </Card>
             <Card className="p-6">
               <Wallet className="h-7 w-7 text-accent-600" />
-              <h2 className="mt-3 font-semibold text-primary-900">Fees</h2>
+              <h2 className="mt-3 font-semibold text-primary-900">After You Apply</h2>
               <p className="mt-3 text-sm text-gray-600">
-                All Hunarsaaz programs are completely free of cost — there is no
-                tuition, application, or certification fee. Training is open to
-                everyone who meets a program&apos;s eligibility criteria.
+                We contact you by phone or email to confirm your batch, and send
+                you everything in writing, including anything payable. Nothing is
+                paid through this website. Training is open to everyone who meets
+                a program&apos;s eligibility criteria.
               </p>
             </Card>
           </div>

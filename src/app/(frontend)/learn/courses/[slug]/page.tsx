@@ -20,7 +20,7 @@ import {
 import { formatRupees } from "@/lib/lms/payments";
 import { CourseCurriculum } from "@/components/learn/CourseCurriculum";
 import { mediaPath } from "@/lib/lms/media";
-import { siteConfig } from "@/lib/site";
+import { SHOW_COURSE_FEES, siteConfig } from "@/lib/site";
 import type { User } from "@/payload-types";
 
 type Params = { params: Promise<{ slug: string }> };
@@ -134,7 +134,10 @@ export default async function CoursePage({ params }: Params) {
   const enrollment = user ? await getEnrollment(user.id, course.id) : null;
   const enrolled = grantsAccess(enrollment);
   const awaitingPayment = enrollment?.status === "pending_payment";
-  const price = course.price ?? 0;
+  // A stored price is only charged while fees are switched on. With them off,
+  // a student enrols and is invoiced separately, so nothing about money is
+  // shown here at all.
+  const chargeable = SHOW_COURSE_FEES && (course.price ?? 0) > 0;
   const completed = user ? await getCompletedLessonIds(user.id, course.id) : new Set<string>();
   const assessments = await getCourseAssessments(course.id);
 
@@ -268,12 +271,12 @@ export default async function CoursePage({ params }: Params) {
             ) : (
               <>
                 <p className="font-display text-lg font-semibold text-primary-900">
-                  {price > 0 ? formatRupees(price) : "Enrol for free"}
+                  {chargeable ? formatRupees(course.price ?? 0) : "Enrol in this course"}
                 </p>
                 <p className="mt-2 text-sm text-gray-600">
                   {awaitingPayment
                     ? "Your place is held. It opens as soon as we confirm your bank transfer."
-                    : price > 0
+                    : chargeable
                       ? "Pay by bank transfer. We confirm within a working day, then the course opens."
                       : "Create an account or sign in to enrol. Your progress is saved as you go."}
                 </p>
@@ -287,7 +290,7 @@ export default async function CoursePage({ params }: Params) {
                       >
                         {awaitingPayment
                           ? "View payment details"
-                          : price > 0
+                          : chargeable
                             ? "Enrol and pay"
                             : "Enrol now"}
                       </button>
@@ -319,12 +322,14 @@ export default async function CoursePage({ params }: Params) {
             )}
 
             <dl className="mt-6 space-y-2 border-t border-gray-100 pt-5 text-sm">
-              <div className="flex justify-between">
-                <dt className="text-gray-500">Fee</dt>
-                <dd className="font-semibold text-gray-800">
-                  {price > 0 ? formatRupees(price) : "Free"}
-                </dd>
-              </div>
+              {SHOW_COURSE_FEES && (
+                <div className="flex justify-between">
+                  <dt className="text-gray-500">Fee</dt>
+                  <dd className="font-semibold text-gray-800">
+                    {formatRupees(course.price ?? 0)}
+                  </dd>
+                </div>
+              )}
               <div className="flex justify-between">
                 <dt className="text-gray-500">Lessons</dt>
                 <dd className="font-semibold text-gray-800">{lessons.length}</dd>

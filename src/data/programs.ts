@@ -7,13 +7,12 @@ export type Program = {
   description: string;
   duration: string;
   eligibility: string;
-  fee: string;
   scheduleNote: string;
   curriculum: string[];
   careerOpportunities: string[];
   faqs: { question: string; answer: string }[];
   /**
-   * The matching free course on learn.hunarsaaz.pk, where one exists.
+   * The matching course on learn.hunarsaaz.pk, where one exists.
    *
    * The on-campus program and the online course are not the same thing — the
    * online one has no workshop, no equipment and no instructor in the room —
@@ -35,7 +34,6 @@ export const programs: Program[] = [
       "This program builds core digital literacy from the ground up — operating systems, MS Office (Word, Excel, PowerPoint), email, and safe internet use — preparing graduates for office, retail, and administrative roles.",
     duration: "3 months",
     eligibility: "Matric pass, ages 16+",
-    fee: "Free of cost",
     scheduleNote: "Morning & evening batches, 3 days/week",
     curriculum: [
       "Computer fundamentals & operating systems",
@@ -61,7 +59,6 @@ export const programs: Program[] = [
       "Learn visual design principles, branding, and industry-standard tools to create logos, social media content, and print materials — with a portfolio-building final project.",
     duration: "4 months",
     eligibility: "Matric/Intermediate, basic computer literacy",
-    fee: "Free of cost",
     scheduleNote: "Evening batches, 4 days/week",
     curriculum: [
       "Design principles & color theory",
@@ -86,7 +83,6 @@ export const programs: Program[] = [
       "A hands-on program covering front-end fundamentals through to deploying real projects, preparing students for junior developer and freelance web work.",
     duration: "5 months",
     eligibility: "Intermediate/FSc, basic English & computer skills",
-    fee: "Free of cost",
     scheduleNote: "Evening batches, 5 days/week",
     curriculum: [
       "HTML5, CSS3 & responsive design",
@@ -111,7 +107,6 @@ export const programs: Program[] = [
       "Covers organic and paid social media marketing, basic SEO, content creation, and analytics — enabling graduates to manage marketing for local businesses or freelance clients.",
     duration: "3 months",
     eligibility: "Matric pass, basic computer literacy",
-    fee: "Free of cost",
     scheduleNote: "Morning & evening batches, 3 days/week",
     curriculum: [
       "Social media marketing (Facebook, Instagram, TikTok)",
@@ -135,7 +130,6 @@ export const programs: Program[] = [
       "From basic stitching to advanced pattern cutting and boutique-level finishing, this program equips women with skills to start a tailoring business or join the garment industry.",
     duration: "6 months",
     eligibility: "No formal education required, ages 15+",
-    fee: "Free of cost",
     scheduleNote: "Morning batches, 5 days/week",
     curriculum: [
       "Hand & machine stitching basics",
@@ -159,7 +153,6 @@ export const programs: Program[] = [
       "A comprehensive beauty and salon program covering skincare, hairstyling, makeup application, and bridal packages — a popular pathway to self-employment for women.",
     duration: "4 months",
     eligibility: "No formal education required, ages 16+",
-    fee: "Free of cost",
     scheduleNote: "Morning batches, 4 days/week",
     curriculum: [
       "Skincare & facials",
@@ -183,7 +176,6 @@ export const programs: Program[] = [
       "Practical training in electrical wiring, circuit installation, and safety standards, preparing students for jobs as domestic or industrial electricians.",
     duration: "4 months",
     eligibility: "Middle pass, ages 16+",
-    fee: "Free of cost",
     scheduleNote: "Morning batches, 5 days/week",
     curriculum: [
       "Electrical safety & tools",
@@ -207,7 +199,6 @@ export const programs: Program[] = [
       "Covers pipe fitting, water supply and drainage systems, fixture installation, and repair — a steady-demand trade skill for local and overseas employment.",
     duration: "3 months",
     eligibility: "No formal education required, ages 16+",
-    fee: "Free of cost",
     scheduleNote: "Morning batches, 5 days/week",
     curriculum: [
       "Pipefitting & tools",
@@ -231,7 +222,6 @@ export const programs: Program[] = [
       "Hands-on training in arc welding, gas welding, and metal fabrication with a strong focus on workplace safety — a high-demand skill in construction and manufacturing.",
     duration: "3 months",
     eligibility: "No formal education required, ages 18+",
-    fee: "Free of cost",
     scheduleNote: "Morning batches, 5 days/week",
     curriculum: [
       "Welding safety & equipment",
@@ -255,7 +245,6 @@ export const programs: Program[] = [
       "Learn to diagnose and fix common smartphone issues, from screen and battery replacement to software troubleshooting and basic micro-soldering.",
     duration: "3 months",
     eligibility: "Matric pass, ages 16+",
-    fee: "Free of cost",
     scheduleNote: "Evening batches, 4 days/week",
     curriculum: [
       "Mobile hardware fundamentals",
@@ -279,7 +268,6 @@ export const programs: Program[] = [
       "Covers engine mechanics, electrical systems, and routine maintenance for cars and motorbikes, preparing students for garage employment or self-employment.",
     duration: "4 months",
     eligibility: "No formal education required, ages 16+",
-    fee: "Free of cost",
     scheduleNote: "Morning batches, 5 days/week",
     curriculum: [
       "Engine fundamentals",
@@ -303,7 +291,6 @@ export const programs: Program[] = [
       "Practical instruction in woodworking tools, furniture construction, and finishing techniques for careers in carpentry workshops or independent furniture-making.",
     duration: "4 months",
     eligibility: "No formal education required, ages 16+",
-    fee: "Free of cost",
     scheduleNote: "Morning batches, 5 days/week",
     curriculum: [
       "Hand & power tools",
@@ -328,7 +315,6 @@ export const programs: Program[] = [
       "Builds confidence in spoken and written English through conversational practice, grammar, and workplace communication skills — a foundation for all other programs.",
     duration: "2 months",
     eligibility: "Open to all, ages 14+",
-    fee: "Free of cost",
     scheduleNote: "Flexible batches, 3 days/week",
     curriculum: [
       "Basic grammar & vocabulary",
@@ -353,7 +339,6 @@ export const programs: Program[] = [
       "Guides graduates of our technical programs through business registration, budgeting, marketing, and customer service to launch and sustain a small business.",
     duration: "6 weeks",
     eligibility: "Open to Hunarsaaz graduates & alumni",
-    fee: "Free of cost",
     scheduleNote: "Weekend workshops",
     curriculum: [
       "Business idea validation",
@@ -378,7 +363,6 @@ export const programs: Program[] = [
       "Teaches graduates of our design, development, and marketing programs how to build freelance profiles, write proposals, and manage international clients and payments.",
     duration: "4 weeks",
     eligibility: "Open to Hunarsaaz graduates with a marketable skill",
-    fee: "Free of cost",
     scheduleNote: "Weekend workshops",
     curriculum: [
       "Building a winning profile",
@@ -403,7 +387,6 @@ export const programs: Program[] = [
       "Practical money-management training covering budgeting, saving, banking basics, and responsible use of microfinance — essential for household and business stability.",
     duration: "3 weeks",
     eligibility: "Open to all",
-    fee: "Free of cost",
     scheduleNote: "Weekend workshops",
     curriculum: [
       "Personal budgeting",

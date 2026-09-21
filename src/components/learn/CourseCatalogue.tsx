@@ -27,7 +27,6 @@ export type CatalogueCourse = {
   categoryTitle: string | null;
   instructorName: string | null;
   lessonCount: number;
-  price: number;
   recognition: string;
 };
 
@@ -321,10 +320,7 @@ function CourseCard({ course }: { course: CatalogueCourse }) {
           )}
         </dl>
 
-        <div className="mt-5 flex items-center justify-between">
-          <span className="font-semibold text-primary-900">
-            {course.price > 0 ? `Rs ${course.price.toLocaleString("en-PK")}` : "Free"}
-          </span>
+        <div className="mt-5 flex items-center justify-end">
           <Link
             href={`/learn/courses/${course.slug}`}
             className="rounded-full bg-secondary-500 px-5 py-2 text-sm font-semibold text-white hover:bg-secondary-600"

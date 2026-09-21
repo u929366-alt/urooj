@@ -10,6 +10,7 @@ import { getCurrentUser } from "./auth";
 import { issueCertificateIfComplete } from "./completion";
 import { grantsAccess } from "./queries";
 import { createPendingPayment, sendPaymentInstructions } from "./payments";
+import { SHOW_COURSE_FEES } from "@/lib/site";
 
 const AUTH_COOKIE = "payload-token";
 
@@ -220,9 +221,12 @@ export async function enrollAction(formData: FormData) {
     overrideAccess: true,
   });
 
-  // A priced course is held until the fee is confirmed; a free one opens now.
+  // With fees switched off nobody is held at the door: the enrolment opens
+  // straight away and any invoice is sent separately, outside the portal.
+  // With them on, a priced course waits until the transfer is confirmed.
   const price = course.price ?? 0;
-  const startingStatus = price > 0 ? "pending_payment" : "active";
+  const chargeable = SHOW_COURSE_FEES && price > 0;
+  const startingStatus = chargeable ? "pending_payment" : "active";
 
   if (existing.docs[0]) {
     if (existing.docs[0].status === "withdrawn") {
@@ -230,6 +234,15 @@ export async function enrollAction(formData: FormData) {
         collection: "enrollments",
         id: existing.docs[0].id,
         data: { status: startingStatus },
+        overrideAccess: true,
+      });
+    } else if (existing.docs[0].status === "pending_payment" && !SHOW_COURSE_FEES) {
+      // Held for a fee that is no longer collected here. Let them in rather
+      // than leaving them stranded on a payment page.
+      await payload.update({
+        collection: "enrollments",
+        id: existing.docs[0].id,
+        data: { status: "active" },
         overrideAccess: true,
       });
     } else if (existing.docs[0].status === "pending_payment") {
@@ -263,7 +276,7 @@ export async function enrollAction(formData: FormData) {
     });
   }
 
-  if (price > 0) {
+  if (chargeable) {
     const payment = await createPendingPayment({
       purpose: "course",
       amount: price,
