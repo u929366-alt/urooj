@@ -242,7 +242,25 @@ export const listInstructors = cache(async (): Promise<User[]> => {
     depth: 1,
     overrideAccess: true,
   });
-  return result.docs;
+
+  // An administrator is not a teacher by virtue of running the site, and the
+  // account that installed the portal should not turn up on a public page
+  // introducing the staff. Admins appear only where someone has deliberately
+  // put them in front of students, by assigning them a course or a subject.
+  const courses = await listPublishedCourses();
+  // Compared as strings: idOf can hand back either, depending on the database.
+  const teaching = new Set(
+    courses
+      .map((course) => idOf(course.instructor))
+      .filter((id) => id != null)
+      .map(String),
+  );
+
+  return result.docs.filter((person) => {
+    if (person.role === "instructor") return true;
+    if (teaching.has(String(person.id))) return true;
+    return (person.teachingCategories ?? []).length > 0;
+  });
 });
 
 /** How many lessons each course has, for the catalogue cards. */
