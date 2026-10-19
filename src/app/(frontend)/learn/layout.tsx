@@ -1,5 +1,13 @@
 import Link from "next/link";
-import { Banknote, BookMarked, ClipboardCheck, GraduationCap, LayoutDashboard, LogOut } from "lucide-react";
+import {
+  Banknote,
+  BookMarked,
+  ClipboardCheck,
+  GraduationCap,
+  LayoutDashboard,
+  LogOut,
+  Radio,
+} from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { getCurrentUser } from "@/lib/lms/auth";
 import { logoutAction } from "@/lib/lms/actions";
@@ -26,6 +34,13 @@ export default async function LearnLayout({ children }: { children: React.ReactN
               <GraduationCap className="h-4 w-4" />
               Course Catalogue
             </Link>
+            <Link
+              href="/learn/live"
+              className="inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-gray-700 hover:bg-primary-50"
+            >
+              <Radio className="h-4 w-4" />
+              Live Classes
+            </Link>
             {(user?.role === "instructor" || user?.role === "admin") && (
               <Link
                 href="/learn/teach/courses"
@@ -42,6 +57,15 @@ export default async function LearnLayout({ children }: { children: React.ReactN
               >
                 <ClipboardCheck className="h-4 w-4" />
                 Grading
+              </Link>
+            )}
+            {(user?.role === "instructor" || user?.role === "admin") && (
+              <Link
+                href="/learn/teach/live"
+                className="inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-gray-700 hover:bg-primary-50"
+              >
+                <Radio className="h-4 w-4" />
+                My Classes
               </Link>
             )}
             {(user?.role === "instructor" || user?.role === "admin") && (

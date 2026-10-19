@@ -2,7 +2,15 @@ import "server-only";
 
 import { cache } from "react";
 import { getPayloadClient } from "./auth";
-import type { Category, Course, Enrollment, Lesson, Module, User } from "@/payload-types";
+import type {
+  Category,
+  Course,
+  Enrollment,
+  Lesson,
+  LiveSession,
+  Module,
+  User,
+} from "@/payload-types";
 
 /**
  * Reads for the learning portal.
@@ -320,3 +328,136 @@ export const getCourseAssessments = cache(
     return out;
   },
 );
+
+/* ------------------------------------------------------------------ *
+ * Live lectures
+ * ------------------------------------------------------------------ */
+
+/**
+ * Lectures that have not finished yet, soonest first.
+ *
+ * "Not finished" rather than "in the future", because a class that started
+ * twenty minutes ago is the one a late student most needs to find.
+ */
+export const listUpcomingSessions = cache(async (limit = 50): Promise<LiveSession[]> => {
+  const payload = await getPayloadClient();
+  const result = await payload.find({
+    collection: "live-sessions",
+    where: {
+      and: [
+        { status: { not_equals: "cancelled" } },
+        { status: { not_equals: "ended" } },
+        // Anything scheduled to begin within the last eight hours is still
+        // worth showing; a longer window would resurrect last week's classes
+        // that nobody ever marked as ended.
+        { startsAt: { greater_than: new Date(Date.now() - 8 * 60 * 60 * 1000).toISOString() } },
+      ],
+    },
+    sort: "startsAt",
+    limit,
+    depth: 1,
+    overrideAccess: true,
+  });
+  return result.docs;
+});
+
+/** Past lectures for a course, newest first — where the recordings are. */
+export const listPastSessionsForCourse = cache(
+  async (courseId: number | string, limit = 20): Promise<LiveSession[]> => {
+    const payload = await getPayloadClient();
+    const result = await payload.find({
+      collection: "live-sessions",
+      where: {
+        and: [{ course: { equals: courseId } }, { status: { equals: "ended" } }],
+      },
+      sort: "-startsAt",
+      limit,
+      depth: 1,
+      overrideAccess: true,
+    });
+    return result.docs;
+  },
+);
+
+/** Upcoming lectures for one course. */
+export const listSessionsForCourse = cache(
+  async (courseId: number | string): Promise<LiveSession[]> => {
+    const sessions = await listUpcomingSessions(100);
+    return sessions.filter((session) => String(idOf(session.course)) === String(courseId));
+  },
+);
+
+export const getSessionByRoom = cache(async (roomName: string): Promise<LiveSession | null> => {
+  const payload = await getPayloadClient();
+  const result = await payload.find({
+    collection: "live-sessions",
+    where: { roomName: { equals: roomName } },
+    limit: 1,
+    depth: 1,
+    overrideAccess: true,
+  });
+  return result.docs[0] ?? null;
+});
+
+/** Every lecture led by one instructor, for their teaching page. */
+export const listSessionsByInstructor = cache(
+  async (instructorId: number | string): Promise<LiveSession[]> => {
+    const payload = await getPayloadClient();
+    const result = await payload.find({
+      collection: "live-sessions",
+      where: { instructor: { equals: instructorId } },
+      sort: "-startsAt",
+      limit: 100,
+      depth: 1,
+      overrideAccess: true,
+    });
+    return result.docs;
+  },
+);
+
+export type JoinVerdict =
+  | { ok: true; moderator: boolean }
+  | { ok: false; reason: "signed-out" | "not-enrolled" | "cancelled" | "finished" };
+
+/**
+ * May this person join this lecture, and in what capacity?
+ *
+ * The one place that answers it. A lecture tied to a course is for the
+ * students enrolled on that course and nobody else; a lecture with no course
+ * is open to any signed-in student. Staff may always join, and the instructor
+ * leading it joins as moderator.
+ */
+export async function canJoinSession(
+  session: LiveSession,
+  user: User | null,
+): Promise<JoinVerdict> {
+  if (!user) return { ok: false, reason: "signed-out" };
+  if (session.status === "cancelled") return { ok: false, reason: "cancelled" };
+  if (session.status === "ended") return { ok: false, reason: "finished" };
+
+  const staff = user.role === "admin" || user.role === "instructor";
+  const leads = String(idOf(session.instructor)) === String(user.id);
+  if (leads) return { ok: true, moderator: true };
+  if (staff) return { ok: true, moderator: user.role === "admin" };
+
+  const courseId = idOf(session.course);
+  if (courseId == null) return { ok: true, moderator: false };
+
+  const enrolment = await getEnrollment(user.id, courseId);
+  if (!grantsAccess(enrolment)) return { ok: false, reason: "not-enrolled" };
+  return { ok: true, moderator: false };
+}
+
+/** Attendance for one lecture, for the instructor's register. */
+export const listAttendance = cache(async (sessionId: number | string) => {
+  const payload = await getPayloadClient();
+  const result = await payload.find({
+    collection: "live-attendance",
+    where: { session: { equals: sessionId } },
+    sort: "joinedAt",
+    limit: 500,
+    depth: 1,
+    overrideAccess: true,
+  });
+  return result.docs;
+});

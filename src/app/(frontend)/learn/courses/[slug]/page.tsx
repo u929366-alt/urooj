@@ -16,7 +16,10 @@ import {
   getCourseAssessments,
   getEnrollment,
   grantsAccess,
+  listPastSessionsForCourse,
+  listSessionsForCourse,
 } from "@/lib/lms/queries";
+import { formatWhen, isJoinable } from "@/lib/lms/time";
 import { formatRupees } from "@/lib/lms/payments";
 import { CourseCurriculum } from "@/components/learn/CourseCurriculum";
 import { mediaPath } from "@/lib/lms/media";
@@ -140,6 +143,11 @@ export default async function CoursePage({ params }: Params) {
   const chargeable = SHOW_COURSE_FEES && (course.price ?? 0) > 0;
   const completed = user ? await getCompletedLessonIds(user.id, course.id) : new Set<string>();
   const assessments = await getCourseAssessments(course.id);
+  const [liveSessions, pastSessions] = await Promise.all([
+    listSessionsForCourse(course.id),
+    listPastSessionsForCourse(course.id),
+  ]);
+  const recordings = pastSessions.filter((session) => session.recordingUrl);
 
   const lessons = outline.modules.flatMap((entry) => entry.lessons);
   const doneCount = lessons.filter((lesson) => completed.has(String(lesson.id))).length;
@@ -198,6 +206,68 @@ export default async function CoursePage({ params }: Params) {
             <SyllabusList title="What this course sets out to do" items={objectives} />
             <SyllabusList title="What you will be able to do" items={outcomes} />
           </div>
+
+          {liveSessions.length > 0 && (
+            <div className="mt-10 rounded-2xl border border-primary-100 bg-primary-50 p-6">
+              <h2 className="font-display text-xl font-semibold text-primary-900">
+                Live classes coming up
+              </h2>
+              <p className="mt-1 text-sm text-primary-800">
+                Online lectures with the instructor, at a set time. Enrol to join.
+              </p>
+              <ul className="mt-4 space-y-3">
+                {liveSessions.map((session) => (
+                  <li
+                    key={session.id}
+                    className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-white px-4 py-3"
+                  >
+                    <div>
+                      <p className="font-semibold text-primary-900">{session.title}</p>
+                      <p className="text-sm text-gray-600">
+                        {formatWhen(session.startsAt)} · {session.durationMinutes ?? 60} min
+                      </p>
+                    </div>
+                    {enrolled ? (
+                      <Link
+                        href={`/learn/live/${session.roomName}`}
+                        className="rounded-full bg-secondary-500 px-5 py-2 text-sm font-semibold text-white hover:bg-secondary-600"
+                      >
+                        {session.status === "live" ||
+                        isJoinable(session.startsAt, session.durationMinutes)
+                          ? "Join"
+                          : "Details"}
+                      </Link>
+                    ) : (
+                      <span className="text-sm text-gray-500">Enrol to join</span>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {enrolled && recordings.length > 0 && (
+            <div className="mt-10">
+              <h2 className="font-display text-xl font-semibold text-primary-900">
+                Past class recordings
+              </h2>
+              <ul className="mt-4 space-y-2">
+                {recordings.map((session) => (
+                  <li key={session.id}>
+                    <a
+                      href={session.recordingUrl ?? "#"}
+                      className="text-primary-600 hover:underline"
+                    >
+                      {session.title}
+                    </a>
+                    <span className="ml-2 text-sm text-gray-500">
+                      {formatWhen(session.startsAt)}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           <h2 className="mt-10 font-display text-xl font-semibold text-primary-900">
             What you will cover

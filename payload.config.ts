@@ -23,6 +23,9 @@ import { Submissions } from "./src/collections/Submissions.ts";
 import { SubmissionFiles } from "./src/collections/SubmissionFiles.ts";
 import { Discussions, DiscussionReplies } from "./src/collections/Discussions.ts";
 import { Certificates } from "./src/collections/Certificates.ts";
+import { ensureLiveTables } from "./src/lib/lms/liveSchema.ts";
+import { LiveSessions } from "./src/collections/LiveSessions.ts";
+import { LiveAttendance } from "./src/collections/LiveAttendance.ts";
 import { Payments } from "./src/collections/Payments.ts";
 
 const filename = fileURLToPath(import.meta.url);
@@ -130,6 +133,8 @@ export default buildConfig({
     DiscussionReplies,
     Certificates,
     Payments,
+    LiveSessions,
+    LiveAttendance,
   ],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET ?? "",
@@ -137,5 +142,14 @@ export default buildConfig({
     outputFile: path.resolve(dirname, "src/payload-types.ts"),
   },
   db,
+  /**
+   * Tables added after the portal went live are created here, because a
+   * production build cannot build its own schema and the live database — full
+   * of students, enrolments and payments — is far too valuable to overwrite
+   * with a prepared one. See src/lib/lms/liveSchema.ts.
+   */
+  onInit: async () => {
+    if (!usePostgres) await ensureLiveTables(sqlitePath);
+  },
   sharp,
 });

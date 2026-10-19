@@ -1,14 +1,21 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Award, BookOpen } from "lucide-react";
+import { Award, BookOpen, Radio } from "lucide-react";
 import { Container } from "@/components/ui/Container";
+import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { ProgressBar } from "@/components/learn/ProgressBar";
 import { getCurrentUser } from "@/lib/lms/auth";
 import { PortalHome } from "@/components/learn/PortalHome";
 import { countCoursesByCategory, listCategories, listInstructors, listPublishedCourses } from "@/lib/lms/queries";
-import { getCompletedLessonIds, getCourseOutline, listMyEnrollments } from "@/lib/lms/queries";
+import {
+  getCompletedLessonIds,
+  getCourseOutline,
+  listMyEnrollments,
+  listUpcomingSessions,
+} from "@/lib/lms/queries";
+import { formatWhen, isJoinable, startsIn } from "@/lib/lms/time";
 import { listMyCertificates } from "@/lib/lms/completion";
 import type { Course } from "@/payload-types";
 
@@ -42,6 +49,20 @@ export default async function LearnPage() {
 
   const enrollments = await listMyEnrollments(user.id);
 
+  // The next live class this student can actually attend: one they are
+  // enrolled for, or an open one. Shown at the top because a class at a fixed
+  // time is the only thing on this page that can be missed.
+  const sessions = await listUpcomingSessions(20);
+  const enrolledCourseIds = new Set(
+    enrollments
+      .filter((row) => row.status === "active" || row.status === "completed")
+      .map((row) => String(typeof row.course === "object" ? row.course?.id : row.course)),
+  );
+  const nextSession = sessions.find((session) => {
+    const courseId = typeof session.course === "object" ? session.course?.id : session.course;
+    return courseId == null || enrolledCourseIds.has(String(courseId));
+  });
+
   const cards = await Promise.all(
     enrollments.map(async (enrollment) => {
       const course = enrollment.course as Course;
@@ -73,6 +94,38 @@ export default async function LearnPage() {
           ? "Pick up where you left off."
           : "You have not enrolled in a course yet."}
       </p>
+
+      {nextSession && (
+        <Card className="mt-8 border-primary-100 bg-primary-50 p-6">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <div className="flex items-center gap-2">
+                {nextSession.status === "live" ? (
+                  <Badge tone="secondary">
+                    <Radio className="mr-1 inline h-3 w-3" aria-hidden />
+                    Live now
+                  </Badge>
+                ) : (
+                  <Badge tone="neutral">{startsIn(nextSession.startsAt) ?? "Starting shortly"}</Badge>
+                )}
+              </div>
+              <h2 className="mt-2 font-display text-lg font-semibold text-primary-900">
+                {nextSession.title}
+              </h2>
+              <p className="mt-1 text-sm text-gray-600">{formatWhen(nextSession.startsAt)}</p>
+            </div>
+            <Link
+              href={`/learn/live/${nextSession.roomName}`}
+              className="rounded-full bg-secondary-500 px-6 py-2.5 text-sm font-semibold text-white hover:bg-secondary-600"
+            >
+              {nextSession.status === "live" ||
+              isJoinable(nextSession.startsAt, nextSession.durationMinutes)
+                ? "Join the class"
+                : "See the details"}
+            </Link>
+          </div>
+        </Card>
+      )}
 
       {active.length === 0 ? (
         <Card className="mt-8 p-8 text-center">

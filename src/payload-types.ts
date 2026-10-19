@@ -84,6 +84,8 @@ export interface Config {
     'discussion-replies': DiscussionReply;
     certificates: Certificate;
     payments: Payment;
+    'live-sessions': LiveSession;
+    'live-attendance': LiveAttendance;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -108,6 +110,8 @@ export interface Config {
     'discussion-replies': DiscussionRepliesSelect<false> | DiscussionRepliesSelect<true>;
     certificates: CertificatesSelect<false> | CertificatesSelect<true>;
     payments: PaymentsSelect<false> | PaymentsSelect<true>;
+    'live-sessions': LiveSessionsSelect<false> | LiveSessionsSelect<true>;
+    'live-attendance': LiveAttendanceSelect<false> | LiveAttendanceSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -780,6 +784,73 @@ export interface Payment {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "live-sessions".
+ */
+export interface LiveSession {
+  id: number;
+  title: string;
+  /**
+   * The room on the video server. Generated automatically, with random characters on the end so nobody can walk into a class by guessing its name. Changing it mid-class would split the room in two.
+   */
+  roomName?: string | null;
+  /**
+   * The course this lecture belongs to. Only students enrolled on it can join. Leave empty for an open session any signed-in student may attend.
+   */
+  course?: (number | null) | Course;
+  /**
+   * Who leads the call. They join as moderator; everyone else does not.
+   */
+  instructor: number | User;
+  /**
+   * What the lecture covers. Shown to students before they join.
+   */
+  description?: string | null;
+  /**
+   * Pakistan time. Students see it in their own device's time zone.
+   */
+  startsAt: string;
+  durationMinutes: number;
+  /**
+   * Set by the instructor from the portal when they start and end the class. Cancelling tells students not to turn up.
+   */
+  status: 'scheduled' | 'live' | 'ended' | 'cancelled';
+  /**
+   * Only for a lecture held somewhere other than the Hunarsaaz video server — a Zoom or Meet link, for instance. Set this and students are sent there instead of into the built-in room.
+   */
+  externalUrl?: string | null;
+  /**
+   * Link to the recording, added after the class. Shown to enrolled students.
+   */
+  recordingUrl?: string | null;
+  /**
+   * How many students joined. Counted by the portal as people arrive.
+   */
+  attendanceCount?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "live-attendance".
+ */
+export interface LiveAttendance {
+  id: number;
+  session: number | LiveSession;
+  student: number | User;
+  joinedAt: string;
+  /**
+   * Empty when the student's browser closed without telling us — a dropped connection, a flat battery, a closed laptop.
+   */
+  leftAt?: string | null;
+  /**
+   * Counted from the heartbeat the lecture room sends while open.
+   */
+  minutesPresent?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -869,6 +940,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'payments';
         value: number | Payment;
+      } | null)
+    | ({
+        relationTo: 'live-sessions';
+        value: number | LiveSession;
+      } | null)
+    | ({
+        relationTo: 'live-attendance';
+        value: number | LiveAttendance;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -1287,6 +1366,38 @@ export interface PaymentsSelect<T extends boolean = true> {
   receiptNumber?: T;
   confirmedAt?: T;
   confirmedBy?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "live-sessions_select".
+ */
+export interface LiveSessionsSelect<T extends boolean = true> {
+  title?: T;
+  roomName?: T;
+  course?: T;
+  instructor?: T;
+  description?: T;
+  startsAt?: T;
+  durationMinutes?: T;
+  status?: T;
+  externalUrl?: T;
+  recordingUrl?: T;
+  attendanceCount?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "live-attendance_select".
+ */
+export interface LiveAttendanceSelect<T extends boolean = true> {
+  session?: T;
+  student?: T;
+  joinedAt?: T;
+  leftAt?: T;
+  minutesPresent?: T;
   updatedAt?: T;
   createdAt?: T;
 }
