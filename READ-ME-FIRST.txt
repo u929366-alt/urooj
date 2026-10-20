@@ -1,5 +1,5 @@
-HUNARSAAZ PORTAL — LIVE LECTURES
-================================
+HUNARSAAZ PORTAL — WORKSHOP REGISTRATION
+========================================
 
 Goes to   /home2/lqonfyud/hunarsaaz-portal   (NOT public_html)
 
@@ -8,56 +8,65 @@ YOUR DATABASE IS NOT TOUCHED
 ----------------------------
 
 There is deliberately NO data folder and NO .env file in this zip, so
-neither can be overwritten.
+neither can be overwritten. You keep your admin account, instructors,
+photographs, students, enrolments and payment records.
 
-You keep your admin account, your instructors and photographs, your
-students, enrolments and payment records, and your settings.
-
-This release ADDS two tables to your database when it starts, for the
-classes and the attendance register. It creates them only if they are
-missing and changes nothing that is already there. Your 45 courses and
-everyone's progress are untouched.
+This release ADDS tables to your database when it starts, for workshops
+and registrations, and adds two columns to one of Payload's own tables.
+It creates them only if they are missing and changes nothing already
+there.
 
 
 WHAT IS NEW
 -----------
 
-Live online classes.
+A registration page for THRIVE 360:
 
-    An instructor schedules a class and attaches it to a course
-    Only students enrolled on that course can join
-    The instructor presses Start, students join from inside the portal
-    Students arrive muted with cameras off, as you want in a lecture
-    The register records who joined and for how long
-    A recording link can be added to the class afterwards
+    https://learn.hunarsaaz.pk/workshops/thrive-360
 
-Students see "Live Classes" in the portal menu, and their next class on
-their dashboard. Instructors see "My Classes".
+Anyone can open it. No account, no login. They fill in their name, email
+and phone, choose Professional (Rs 2,000) or Student (Rs 1,000), say how
+many places, and press register.
+
+They immediately get a payment reference and your bank details on screen
+and by email. The same payment appears in Payments in the portal, next to
+your donations, so confirming it is the job you already know.
+
+You can see every registration in /admin > Workshops > Workshop
+Registrations: name, email, phone, organisation, professional or student,
+how many places, and whether they have paid.
+
+The workshop itself is in /admin > Workshops > Workshops. Change the
+price, the time, the outcomes, anything — it is an ordinary record. The
+Zoom link goes in the "Join URL" field, which is NEVER shown on the
+public page; it is for emailing to people who have paid.
 
 
-BEFORE ANY OF IT WORKS: THE VIDEO SERVER
-----------------------------------------
+THE FLYER
+---------
 
-The video does not run on this hosting and cannot. A video server needs
-open UDP ports, a public address and real bandwidth; cPanel shared
-hosting has none of them.
+The updated flyer is attached separately and also at
 
-Read video-server-setup.md in this zip. It walks through renting a small
-server (about €15-25 a month), pointing meet.hunarsaaz.pk at it, and
-installing Jitsi, including the two settings that let one machine carry
-a class of a hundred.
+    https://learn.hunarsaaz.pk/thrive-360-flyer.jpg
 
-Until that server exists you can still schedule classes — you simply
-cannot hold one. The portal says so plainly rather than failing.
+once this is installed. It has the corrected designation, a "Who can
+attend" strip, and a QR code that opens the registration page.
+
+
+IMPORTANT — THIS ALSO FIXES THE LIVE LECTURES RELEASE
+-----------------------------------------------------
+
+The live-lectures bundle sent earlier has a fault that only shows on a
+database older than that feature: scheduling a class would save the class
+and then throw an error. This release fixes it. If you installed the
+live-lectures bundle, install this one too.
 
 
 STEP 1 — BACK UP THE DATABASE
 -----------------------------
 cPanel > File Manager > /home2/lqonfyud/hunarsaaz-portal > data
 
-Right-click hunarsaaz.db > Download. One file. This release writes to
-your database for the first time, so take the backup — it is how you get
-back if anything goes wrong.
+Right-click hunarsaaz.db > Download. Keep it safe.
 
 
 STEP 2 — STOP THE APP
@@ -79,66 +88,60 @@ DO NOT DELETE:
 
     data              your database
     .env              your settings and password key
-    public            your uploaded photographs are in public/uploads
+    public            your uploaded photographs
     private-uploads   student work
 
-Turn on File Manager > Settings > Show Hidden Files to see .next and .env.
+File Manager > Settings > Show Hidden Files to see .next and .env.
 
 
 STEP 4 — UPLOAD AND EXTRACT
 ---------------------------
-This release comes as three zips because the whole thing is too big to
-download in one piece:
+Three zips, because the whole thing is too big to download in one piece:
 
     portal-part1-app.zip
     portal-part2-next.zip
     portal-part3-rest.zip
 
-Upload all three into hunarsaaz-portal, then extract each one in turn.
-Order does not matter, but all three must be extracted or the app will
-not start. Delete the zips afterwards.
+Upload all three, then extract each one in turn. Order does not matter,
+but all three must be extracted or the app will not start. Delete the
+zips afterwards.
 
 
-STEP 5 — ADD THE VIDEO SETTINGS
--------------------------------
-Only once the video server from video-server-setup.md is running.
-
-Right-click .env > Edit, and add three lines at the end:
-
-    JITSI_DOMAIN=meet.hunarsaaz.pk
-    JITSI_APP_ID=hunarsaaz
-    JITSI_APP_SECRET=the-secret-you-set-on-the-video-server
-
-The id and secret must match the video server exactly. If they do not,
-students reach the class and are thrown straight back out.
-
-Leave everything else in the file alone, especially PAYLOAD_SECRET —
-changing that logs everybody out.
-
-
-STEP 6 — START IT
+STEP 5 — START IT
 -----------------
 Setup Node.js App > Start
 
 DO NOT click "Run NPM Install".
 
 
-STEP 7 — CHECK
+STEP 6 — CHECK
 --------------
-Open https://learn.hunarsaaz.pk/learn/live and press Ctrl+Shift+R.
+Open, with Ctrl+Shift+R:
 
-You should get the Live Classes page saying no classes are scheduled.
-If instead you get an error, the two new tables were not created: tell
-me, and send what the page says.
+    https://learn.hunarsaaz.pk/workshops/thrive-360
 
-Then sign in as an instructor, press "My Classes", and schedule one.
+You should see the workshop with Ms. Asma Ahmed, the fees, "Who can
+attend", and the registration form on the right.
+
+Register yourself with a real email address as a test. You should get a
+reference on screen and an email. Then look in /admin > Workshop
+Registrations and you will see yourself there, and in Payments.
+
+Delete your test registration afterwards from /admin.
 
 
-A NOTE ON RECORDING
--------------------
+BEFORE YOU SHARE THE FLYER
+--------------------------
 
-Jitsi can record, but it needs a second server to do it, because it runs
-a whole browser to make the recording. For now the simpler path is for
-the instructor to record their own screen, upload it wherever you like,
-and paste the link into the finished class — the portal has a box for
-that and shows it to enrolled students.
+Scan the QR code with your own phone first and check it opens the
+registration page. If the page is not live yet, the code will open
+nothing and anyone who scans it will think the workshop is not real.
+
+
+ONE THING TO SET
+----------------
+
+The Zoom link. Open /admin > Workshops > THRIVE 360 and put it in the
+"Join URL" field under "When and where". It is not shown publicly — it
+is there so you have it in one place when you email the people who have
+paid.
