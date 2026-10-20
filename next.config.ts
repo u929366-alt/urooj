@@ -16,6 +16,18 @@ const nextConfig: NextConfig = {
   output: isStaticExport ? "export" : "standalone",
   trailingSlash: isStaticExport,
   images: isStaticExport ? { unoptimized: true } : undefined,
+  experimental: {
+    serverActions: {
+      // Workshop registrants send in a photograph of their bank transfer, and
+      // a photo off a phone is routinely 2-5 MB. The default cap is 1 MB,
+      // which rejects most of them before any of our code runs — with a
+      // server error rather than anything a person could act on.
+      //
+      // 10mb against the 8 MB the upload itself allows, because the limit
+      // counts the whole multipart body, not just the file.
+      bodySizeLimit: "10mb",
+    },
+  },
 };
 
 export default withPayload(nextConfig, { devBundleServerPackages: false });

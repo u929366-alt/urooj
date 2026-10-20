@@ -3,6 +3,7 @@
 import { useActionState, useState } from "react";
 import { useFormStatus } from "react-dom";
 import { CheckCircle2, Copy } from "lucide-react";
+import { ReceiptUpload } from "@/components/learn/ReceiptUpload";
 import {
   registerForWorkshopAction,
   type RegistrationState,
@@ -135,11 +136,29 @@ export function WorkshopRegistrationForm({
               </div>
             </dl>
             <p className="mt-4 text-sm text-gray-600">
-              Send the receipt to{" "}
+              The joining link is emailed once the fee is received.
+            </p>
+          </div>
+        )}
+
+        {success.amount > 0 && success.reference && (
+          <div className="mt-4 rounded-xl bg-white p-5">
+            <h3 className="font-display text-base font-semibold text-primary-900">
+              Already paid? Attach your receipt
+            </h3>
+            <p className="mt-1 text-sm text-gray-600">
+              Fastest way to get your place confirmed. You can also come back to this later —
+              there is a link in your email.
+            </p>
+            <div className="mt-4">
+              <ReceiptUpload reference={success.reference} compact />
+            </div>
+            <p className="mt-3 text-xs text-gray-500">
+              Or email it to{" "}
               <a href={`mailto:${contactEmail}`} className="font-semibold text-primary-600">
                 {contactEmail}
               </a>
-              . The joining link is emailed once the fee is received.
+              .
             </p>
           </div>
         )}

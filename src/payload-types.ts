@@ -88,6 +88,7 @@ export interface Config {
     'live-attendance': LiveAttendance;
     workshops: Workshop;
     'workshop-registrations': WorkshopRegistration;
+    'payment-receipts': PaymentReceipt;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -116,6 +117,7 @@ export interface Config {
     'live-attendance': LiveAttendanceSelect<false> | LiveAttendanceSelect<true>;
     workshops: WorkshopsSelect<false> | WorkshopsSelect<true>;
     'workshop-registrations': WorkshopRegistrationsSelect<false> | WorkshopRegistrationsSelect<true>;
+    'payment-receipts': PaymentReceiptsSelect<false> | PaymentReceiptsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -976,11 +978,42 @@ export interface WorkshopRegistration {
    */
   paymentReference?: string | null;
   /**
+   * The transfer receipt they sent in. Open it, check it against the bank, then confirm the payment in Payments.
+   */
+  receipt?: (number | null) | PaymentReceipt;
+  /**
+   * When the receipt arrived.
+   */
+  receiptUploadedAt?: string | null;
+  /**
    * Rupees, at the time of booking.
    */
   amountDue?: number | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payment-receipts".
+ */
+export interface PaymentReceipt {
+  id: number;
+  registration?: (number | null) | WorkshopRegistration;
+  /**
+   * The payment reference this was sent against.
+   */
+  reference?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1089,6 +1122,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'workshop-registrations';
         value: number | WorkshopRegistration;
+      } | null)
+    | ({
+        relationTo: 'payment-receipts';
+        value: number | PaymentReceipt;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -1605,9 +1642,30 @@ export interface WorkshopRegistrationsSelect<T extends boolean = true> {
   notes?: T;
   status?: T;
   paymentReference?: T;
+  receipt?: T;
+  receiptUploadedAt?: T;
   amountDue?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payment-receipts_select".
+ */
+export interface PaymentReceiptsSelect<T extends boolean = true> {
+  registration?: T;
+  reference?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

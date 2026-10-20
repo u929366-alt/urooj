@@ -14,7 +14,7 @@ export const WorkshopRegistrations: CollectionConfig = {
   slug: "workshop-registrations",
   admin: {
     useAsTitle: "name",
-    defaultColumns: ["name", "workshop", "category", "status", "createdAt"],
+    defaultColumns: ["name", "workshop", "category", "status", "receiptUploadedAt", "createdAt"],
     group: "Workshops",
   },
   access: {
@@ -87,6 +87,20 @@ export const WorkshopRegistrations: CollectionConfig = {
         position: "sidebar",
         description: "The reference the registrant was given to quote on their bank transfer.",
       },
+    },
+    {
+      name: "receipt",
+      type: "relationship",
+      relationTo: "payment-receipts",
+      admin: {
+        description:
+          "The transfer receipt they sent in. Open it, check it against the bank, then confirm the payment in Payments.",
+      },
+    },
+    {
+      name: "receiptUploadedAt",
+      type: "date",
+      admin: { readOnly: true, description: "When the receipt arrived." },
     },
     {
       name: "amountDue",

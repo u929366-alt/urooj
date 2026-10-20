@@ -256,6 +256,26 @@ export async function confirmPayment(
     },
   });
 
+  // Mark the workshop place paid for, so staff do not have to remember to
+  // change it in two places.
+  if (updated.purpose === "workshop") {
+    const registrations = await payload.find({
+      collection: "workshop-registrations",
+      where: { paymentReference: { equals: updated.reference } },
+      limit: 1,
+      depth: 0,
+      overrideAccess: true,
+    });
+    if (registrations.docs[0]) {
+      await payload.update({
+        collection: "workshop-registrations",
+        id: registrations.docs[0].id,
+        data: { status: "confirmed" },
+        overrideAccess: true,
+      });
+    }
+  }
+
   // Release the course place this payment was holding.
   if (updated.purpose === "course") {
     const courseId =

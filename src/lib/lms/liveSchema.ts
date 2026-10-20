@@ -71,6 +71,23 @@ const STATEMENTS = [
 
 /** The workshop tables, added when the first paid workshop was put online. */
 const WORKSHOP_STATEMENTS = [
+  `CREATE TABLE IF NOT EXISTS \`payment_receipts\` (
+	\`id\` integer PRIMARY KEY NOT NULL,
+	\`registration_id\` integer,
+	\`reference\` text,
+	\`updated_at\` text DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) NOT NULL,
+	\`created_at\` text DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) NOT NULL,
+	\`url\` text,
+	\`thumbnail_u_r_l\` text,
+	\`filename\` text,
+	\`mime_type\` text,
+	\`filesize\` numeric,
+	\`width\` numeric,
+	\`height\` numeric,
+	\`focal_x\` numeric,
+	\`focal_y\` numeric,
+	FOREIGN KEY (\`registration_id\`) REFERENCES \`workshop_registrations\`(\`id\`) ON UPDATE no action ON DELETE set null
+)`,
   `CREATE TABLE IF NOT EXISTS \`workshop_registrations\` (
 	\`id\` integer PRIMARY KEY NOT NULL,
 	\`workshop_id\` integer NOT NULL,
@@ -86,7 +103,7 @@ const WORKSHOP_STATEMENTS = [
 	\`payment_reference\` text,
 	\`amount_due\` numeric,
 	\`updated_at\` text DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) NOT NULL,
-	\`created_at\` text DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) NOT NULL,
+	\`created_at\` text DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) NOT NULL, \`receipt_id\` integer, \`receipt_uploaded_at\` text,
 	FOREIGN KEY (\`workshop_id\`) REFERENCES \`workshops\`(\`id\`) ON UPDATE no action ON DELETE set null
 )`,
   `CREATE TABLE IF NOT EXISTS \`workshops\` (
@@ -136,9 +153,15 @@ const WORKSHOP_STATEMENTS = [
 	\`text\` text NOT NULL,
 	FOREIGN KEY (\`_parent_id\`) REFERENCES \`workshops\`(\`id\`) ON UPDATE no action ON DELETE cascade
 )`,
+  `CREATE INDEX IF NOT EXISTS \`payment_receipts_created_at_idx\` ON \`payment_receipts\` (\`created_at\`)`,
+  `CREATE UNIQUE INDEX IF NOT EXISTS \`payment_receipts_filename_idx\` ON \`payment_receipts\` (\`filename\`)`,
+  `CREATE INDEX IF NOT EXISTS \`payment_receipts_reference_idx\` ON \`payment_receipts\` (\`reference\`)`,
+  `CREATE INDEX IF NOT EXISTS \`payment_receipts_registration_idx\` ON \`payment_receipts\` (\`registration_id\`)`,
+  `CREATE INDEX IF NOT EXISTS \`payment_receipts_updated_at_idx\` ON \`payment_receipts\` (\`updated_at\`)`,
   `CREATE INDEX IF NOT EXISTS \`workshop_registrations_created_at_idx\` ON \`workshop_registrations\` (\`created_at\`)`,
   `CREATE INDEX IF NOT EXISTS \`workshop_registrations_email_idx\` ON \`workshop_registrations\` (\`email\`)`,
   `CREATE INDEX IF NOT EXISTS \`workshop_registrations_payment_reference_idx\` ON \`workshop_registrations\` (\`payment_reference\`)`,
+  `CREATE INDEX IF NOT EXISTS \`workshop_registrations_receipt_idx\` ON \`workshop_registrations\` (\`receipt_id\`)`,
   `CREATE INDEX IF NOT EXISTS \`workshop_registrations_updated_at_idx\` ON \`workshop_registrations\` (\`updated_at\`)`,
   `CREATE INDEX IF NOT EXISTS \`workshop_registrations_workshop_idx\` ON \`workshop_registrations\` (\`workshop_id\`)`,
   `CREATE INDEX IF NOT EXISTS \`workshops_audience_order_idx\` ON \`workshops_audience\` (\`_order\`)`,
@@ -189,6 +212,27 @@ const ADDED_COLUMNS: Array<{ table: string; column: string; definition: string; 
     column: "workshop_registrations_id",
     definition: "integer REFERENCES workshop_registrations(id) ON DELETE cascade",
     index: "payload_locked_documents_rels_workshop_registrations_id_idx",
+  },
+  {
+    table: "payload_locked_documents_rels",
+    column: "payment_receipts_id",
+    definition: "integer REFERENCES payment_receipts(id) ON DELETE cascade",
+    index: "payload_locked_documents_rels_payment_receipts_id_idx",
+  },
+  // For a server that already installed the workshop release: its
+  // workshop_registrations table predates receipts, and CREATE TABLE IF NOT
+  // EXISTS will not add a column to a table that is already there.
+  {
+    table: "workshop_registrations",
+    column: "receipt_id",
+    definition: "integer REFERENCES payment_receipts(id) ON DELETE set null",
+    index: "workshop_registrations_receipt_idx",
+  },
+  {
+    table: "workshop_registrations",
+    column: "receipt_uploaded_at",
+    definition: "text",
+    index: "workshop_registrations_receipt_uploaded_at_idx",
   },
 ];
 

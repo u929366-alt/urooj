@@ -85,9 +85,23 @@ function confirmationHTML(
     <tr><td style="padding:4px 16px 4px 0;color:#6b7280">Account title</td><td style="padding:4px 0">${bank.accountTitle}</td></tr>
     <tr><td style="padding:4px 16px 4px 0;color:#6b7280">IBAN</td><td style="padding:4px 0;font-family:monospace">${bank.iban}</td></tr>
   </table>
+  <p style="margin:0 0 16px">
+    Once you have paid, send us the receipt and we will confirm your place:
+  </p>
+  <p style="margin:0 0 16px">
+    <a href="${siteConfig.portalUrl}/workshops/receipt/${args.reference ?? ""}"
+       style="display:inline-block;background:#0b5394;color:#ffffff;text-decoration:none;
+              padding:12px 24px;border-radius:999px;font-weight:bold">
+      Attach your payment receipt
+    </a>
+  </p>
+  <p style="margin:0 0 12px;font-size:13px;color:#6b7280">
+    If the button does not work, open this link:<br>
+    ${siteConfig.portalUrl}/workshops/receipt/${args.reference ?? ""}
+  </p>
   <p style="margin:0 0 12px">
-    Send the transfer receipt to ${workshop.contactEmail ?? siteConfig.email} and we will confirm
-    your place by email. The joining link is sent once the fee is received.
+    You can also email the receipt to ${workshop.contactEmail ?? siteConfig.email}. The joining
+    link is sent once the fee is received.
   </p>`
       : `
   <p style="margin:0 0 12px">
