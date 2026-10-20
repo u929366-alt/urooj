@@ -32,6 +32,21 @@ They immediately get a payment reference and your bank details on screen
 and by email. The same payment appears in Payments in the portal, next to
 your donations, so confirming it is the job you already know.
 
+They can also ATTACH THEIR PAYMENT RECEIPT — a photo of the transfer
+slip, a screenshot from their banking app, or the bank's PDF. There is an
+upload box on the screen straight after registering, and a link in their
+confirmation email that brings them back to it later, which is what most
+people will use because they pay after registering.
+
+When a receipt arrives you get an email about it. The receipt itself is
+on the registration in /admin, under Workshop Registrations. Open it,
+check it against the bank, then confirm the payment in Payments — which
+now marks their place confirmed as well, so it is not two jobs.
+
+Receipts are NOT public. They are photographs of bank transfers, so they
+are stored outside the public folder and only you and your instructors
+can open them.
+
 You can see every registration in /admin > Workshops > Workshop
 Registrations: name, email, phone, organisation, professional or student,
 how many places, and whether they have paid.
@@ -124,10 +139,15 @@ You should see the workshop with Ms. Asma Ahmed, the fees, "Who can
 attend", and the registration form on the right.
 
 Register yourself with a real email address as a test. You should get a
-reference on screen and an email. Then look in /admin > Workshop
-Registrations and you will see yourself there, and in Payments.
+reference on screen and an email.
 
-Delete your test registration afterwards from /admin.
+Then attach any photo as a test receipt, using the box on the same
+screen. You should get a second email telling you a receipt arrived.
+
+Look in /admin > Workshop Registrations: you will see yourself, with the
+receipt attached, and the payment in Payments.
+
+Delete your test registration and test receipt afterwards from /admin.
 
 
 BEFORE YOU SHARE THE FLYER
@@ -136,6 +156,15 @@ BEFORE YOU SHARE THE FLYER
 Scan the QR code with your own phone first and check it opens the
 registration page. If the page is not live yet, the code will open
 nothing and anyone who scans it will think the workshop is not real.
+
+
+A NOTE ON THE private-uploads FOLDER
+------------------------------------
+
+Receipts are written to private-uploads/receipts inside the portal
+folder, alongside the student work already in private-uploads. As with
+everything else there, do not delete that folder when you upgrade — the
+instructions above are careful to leave it alone.
 
 
 ONE THING TO SET
