@@ -69,12 +69,147 @@ const STATEMENTS = [
   "CREATE INDEX IF NOT EXISTS `live_attendance_updated_at_idx` ON `live_attendance` (`updated_at`)",
 ];
 
+/** The workshop tables, added when the first paid workshop was put online. */
+const WORKSHOP_STATEMENTS = [
+  `CREATE TABLE IF NOT EXISTS \`workshop_registrations\` (
+	\`id\` integer PRIMARY KEY NOT NULL,
+	\`workshop_id\` integer NOT NULL,
+	\`name\` text NOT NULL,
+	\`email\` text NOT NULL,
+	\`phone\` text,
+	\`city\` text,
+	\`category\` text DEFAULT 'professional' NOT NULL,
+	\`organisation\` text,
+	\`group_size\` numeric DEFAULT 1,
+	\`notes\` text,
+	\`status\` text DEFAULT 'pending' NOT NULL,
+	\`payment_reference\` text,
+	\`amount_due\` numeric,
+	\`updated_at\` text DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) NOT NULL,
+	\`created_at\` text DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) NOT NULL,
+	FOREIGN KEY (\`workshop_id\`) REFERENCES \`workshops\`(\`id\`) ON UPDATE no action ON DELETE set null
+)`,
+  `CREATE TABLE IF NOT EXISTS \`workshops\` (
+	\`id\` integer PRIMARY KEY NOT NULL,
+	\`title\` text NOT NULL,
+	\`slug\` text,
+	\`tagline\` text,
+	\`summary\` text,
+	\`presenter_name\` text,
+	\`presenter_title\` text,
+	\`presenter_org\` text,
+	\`presenter_photo_id\` integer,
+	\`starts_at\` text NOT NULL,
+	\`ends_at\` text,
+	\`platform\` text DEFAULT 'Zoom',
+	\`join_url\` text,
+	\`price_professional\` numeric DEFAULT 0,
+	\`price_student\` numeric DEFAULT 0,
+	\`fee_note\` text,
+	\`contact_name\` text,
+	\`contact_email\` text,
+	\`status\` text DEFAULT 'open' NOT NULL,
+	\`capacity\` numeric,
+	\`registration_count\` numeric DEFAULT 0,
+	\`updated_at\` text DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) NOT NULL,
+	\`created_at\` text DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) NOT NULL, \`presenter_photo_url\` text,
+	FOREIGN KEY (\`presenter_photo_id\`) REFERENCES \`media\`(\`id\`) ON UPDATE no action ON DELETE set null
+)`,
+  `CREATE TABLE IF NOT EXISTS \`workshops_audience\` (
+	\`_order\` integer NOT NULL,
+	\`_parent_id\` integer NOT NULL,
+	\`id\` text PRIMARY KEY NOT NULL,
+	\`text\` text NOT NULL,
+	FOREIGN KEY (\`_parent_id\`) REFERENCES \`workshops\`(\`id\`) ON UPDATE no action ON DELETE cascade
+)`,
+  `CREATE TABLE IF NOT EXISTS \`workshops_includes\` (
+	\`_order\` integer NOT NULL,
+	\`_parent_id\` integer NOT NULL,
+	\`id\` text PRIMARY KEY NOT NULL,
+	\`text\` text NOT NULL,
+	FOREIGN KEY (\`_parent_id\`) REFERENCES \`workshops\`(\`id\`) ON UPDATE no action ON DELETE cascade
+)`,
+  `CREATE TABLE IF NOT EXISTS \`workshops_outcomes\` (
+	\`_order\` integer NOT NULL,
+	\`_parent_id\` integer NOT NULL,
+	\`id\` text PRIMARY KEY NOT NULL,
+	\`text\` text NOT NULL,
+	FOREIGN KEY (\`_parent_id\`) REFERENCES \`workshops\`(\`id\`) ON UPDATE no action ON DELETE cascade
+)`,
+  `CREATE INDEX IF NOT EXISTS \`workshop_registrations_created_at_idx\` ON \`workshop_registrations\` (\`created_at\`)`,
+  `CREATE INDEX IF NOT EXISTS \`workshop_registrations_email_idx\` ON \`workshop_registrations\` (\`email\`)`,
+  `CREATE INDEX IF NOT EXISTS \`workshop_registrations_payment_reference_idx\` ON \`workshop_registrations\` (\`payment_reference\`)`,
+  `CREATE INDEX IF NOT EXISTS \`workshop_registrations_updated_at_idx\` ON \`workshop_registrations\` (\`updated_at\`)`,
+  `CREATE INDEX IF NOT EXISTS \`workshop_registrations_workshop_idx\` ON \`workshop_registrations\` (\`workshop_id\`)`,
+  `CREATE INDEX IF NOT EXISTS \`workshops_audience_order_idx\` ON \`workshops_audience\` (\`_order\`)`,
+  `CREATE INDEX IF NOT EXISTS \`workshops_audience_parent_id_idx\` ON \`workshops_audience\` (\`_parent_id\`)`,
+  `CREATE INDEX IF NOT EXISTS \`workshops_created_at_idx\` ON \`workshops\` (\`created_at\`)`,
+  `CREATE INDEX IF NOT EXISTS \`workshops_includes_order_idx\` ON \`workshops_includes\` (\`_order\`)`,
+  `CREATE INDEX IF NOT EXISTS \`workshops_includes_parent_id_idx\` ON \`workshops_includes\` (\`_parent_id\`)`,
+  `CREATE INDEX IF NOT EXISTS \`workshops_outcomes_order_idx\` ON \`workshops_outcomes\` (\`_order\`)`,
+  `CREATE INDEX IF NOT EXISTS \`workshops_outcomes_parent_id_idx\` ON \`workshops_outcomes\` (\`_parent_id\`)`,
+  `CREATE INDEX IF NOT EXISTS \`workshops_presenter_photo_idx\` ON \`workshops\` (\`presenter_photo_id\`)`,
+  `CREATE UNIQUE INDEX IF NOT EXISTS \`workshops_slug_idx\` ON \`workshops\` (\`slug\`)`,
+  `CREATE INDEX IF NOT EXISTS \`workshops_starts_at_idx\` ON \`workshops\` (\`starts_at\`)`,
+  `CREATE INDEX IF NOT EXISTS \`workshops_updated_at_idx\` ON \`workshops\` (\`updated_at\`)`,
+];
+
+/**
+ * Columns that must be added to tables that already exist.
+ *
+ * Payload keeps one column per collection on `payload_locked_documents_rels`,
+ * its document-locking table. Adding a collection therefore does not only mean
+ * a new table: it means a new column on that old one, and without it every
+ * create and update on the new collection fails with "no such column" after
+ * the row has already been written.
+ *
+ * SQLite has no ADD COLUMN IF NOT EXISTS, so each one is checked first.
+ */
+const ADDED_COLUMNS: Array<{ table: string; column: string; definition: string; index: string }> = [
+  {
+    table: "payload_locked_documents_rels",
+    column: "live_sessions_id",
+    definition: "integer REFERENCES live_sessions(id) ON DELETE cascade",
+    index: "payload_locked_documents_rels_live_sessions_id_idx",
+  },
+  {
+    table: "payload_locked_documents_rels",
+    column: "live_attendance_id",
+    definition: "integer REFERENCES live_attendance(id) ON DELETE cascade",
+    index: "payload_locked_documents_rels_live_attendance_id_idx",
+  },
+  {
+    table: "payload_locked_documents_rels",
+    column: "workshops_id",
+    definition: "integer REFERENCES workshops(id) ON DELETE cascade",
+    index: "payload_locked_documents_rels_workshops_id_idx",
+  },
+  {
+    table: "payload_locked_documents_rels",
+    column: "workshop_registrations_id",
+    definition: "integer REFERENCES workshop_registrations(id) ON DELETE cascade",
+    index: "payload_locked_documents_rels_workshop_registrations_id_idx",
+  },
+];
+
 export async function ensureLiveTables(sqlitePath: string): Promise<void> {
   try {
     const client = createClient({ url: `file:${sqlitePath}` });
     try {
-      for (const statement of STATEMENTS) {
+      for (const statement of [...STATEMENTS, ...WORKSHOP_STATEMENTS]) {
         await client.execute(statement);
+      }
+
+      for (const entry of ADDED_COLUMNS) {
+        const info = await client.execute(`PRAGMA table_info(\`${entry.table}\`)`);
+        const present = info.rows.some((row) => row.name === entry.column);
+        if (present) continue;
+        await client.execute(
+          `ALTER TABLE \`${entry.table}\` ADD COLUMN \`${entry.column}\` ${entry.definition}`,
+        );
+        await client.execute(
+          `CREATE INDEX IF NOT EXISTS \`${entry.index}\` ON \`${entry.table}\` (\`${entry.column}\`)`,
+        );
       }
     } finally {
       client.close();

@@ -56,6 +56,7 @@ export const Payments: CollectionConfig = {
       options: [
         { label: "Donation", value: "donation" },
         { label: "Course fee", value: "course" },
+        { label: "Workshop fee", value: "workshop" },
       ],
       admin: { position: "sidebar" },
     },

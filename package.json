@@ -13,7 +13,8 @@
     "payload:migrate": "npm run payload -- migrate",
     "import:courses": "node --experimental-strip-types --no-warnings scripts/import-courses.ts",
     "seed": "node --experimental-strip-types --no-warnings scripts/seed.ts",
-    "seed:assessment": "node --experimental-strip-types --no-warnings scripts/seed-assessment.ts"
+    "seed:assessment": "node --experimental-strip-types --no-warnings scripts/seed-assessment.ts",
+    "schema:dump": "node --experimental-strip-types --no-warnings scripts/dump-schema.ts"
   },
   "dependencies": {
     "@payloadcms/db-postgres": "^3.89.0",

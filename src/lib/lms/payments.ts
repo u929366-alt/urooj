@@ -27,17 +27,17 @@ export function formatRupees(amount: number): string {
 }
 
 /** Short, unambiguous, and safe to read down a phone line. */
-function makeReference(purpose: "donation" | "course"): string {
+function makeReference(purpose: "donation" | "course" | "workshop"): string {
   const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   const bytes = randomBytes(6);
   let body = "";
   for (const byte of bytes) body += alphabet[byte % alphabet.length];
-  const tag = purpose === "donation" ? "D" : "C";
+  const tag = purpose === "donation" ? "D" : purpose === "workshop" ? "W" : "C";
   return `HS-${tag}-${body}`;
 }
 
 type CreateArgs = {
-  purpose: "donation" | "course";
+  purpose: "donation" | "course" | "workshop";
   amount: number;
   payerName: string;
   payerEmail: string;
@@ -123,7 +123,9 @@ function paymentEmailHTML(payment: Payment, opts: { confirmed: boolean }) {
   const what =
     payment.purpose === "donation"
       ? `your donation${payment.cause ? ` towards ${payment.cause}` : ""}`
-      : "your course fee";
+      : payment.purpose === "workshop"
+        ? `your place at ${payment.cause ?? "the workshop"}`
+        : "your course fee";
 
   if (opts.confirmed) {
     return `

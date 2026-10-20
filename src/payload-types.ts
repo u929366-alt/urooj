@@ -86,6 +86,8 @@ export interface Config {
     payments: Payment;
     'live-sessions': LiveSession;
     'live-attendance': LiveAttendance;
+    workshops: Workshop;
+    'workshop-registrations': WorkshopRegistration;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -112,6 +114,8 @@ export interface Config {
     payments: PaymentsSelect<false> | PaymentsSelect<true>;
     'live-sessions': LiveSessionsSelect<false> | LiveSessionsSelect<true>;
     'live-attendance': LiveAttendanceSelect<false> | LiveAttendanceSelect<true>;
+    workshops: WorkshopsSelect<false> | WorkshopsSelect<true>;
+    'workshop-registrations': WorkshopRegistrationsSelect<false> | WorkshopRegistrationsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -742,7 +746,7 @@ export interface Payment {
    * Quoted by the payer on their bank transfer.
    */
   reference: string;
-  purpose: 'donation' | 'course';
+  purpose: 'donation' | 'course' | 'workshop';
   /**
    * Set to Confirmed only once the money is on the statement.
    */
@@ -851,6 +855,135 @@ export interface LiveAttendance {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "workshops".
+ */
+export interface Workshop {
+  id: number;
+  title: string;
+  /**
+   * Leave blank to generate from the title.
+   */
+  slug?: string | null;
+  /**
+   * The line under the title on the flyer.
+   */
+  tagline?: string | null;
+  /**
+   * A paragraph for the top of the page and for search results.
+   */
+  summary?: string | null;
+  presenterName?: string | null;
+  /**
+   * e.g. Consultant Clinical Psychologist
+   */
+  presenterTitle?: string | null;
+  presenterOrg?: string | null;
+  presenterPhoto?: (number | null) | Media;
+  /**
+   * Used when no photo is uploaded above. A path to a picture already on the site, such as /team/asma-ahmed.jpg.
+   */
+  presenterPhotoUrl?: string | null;
+  /**
+   * Pakistan time.
+   */
+  startsAt: string;
+  endsAt?: string | null;
+  /**
+   * Zoom, Google Meet, or the name of a venue.
+   */
+  platform?: string | null;
+  /**
+   * The meeting link. NEVER shown on the public page — it is emailed to people who have registered, so the session cannot be crashed by anyone who finds the flyer.
+   */
+  joinUrl?: string | null;
+  /**
+   * Rupees. 0 means free for professionals.
+   */
+  priceProfessional?: number | null;
+  /**
+   * Rupees. 0 means free for students.
+   */
+  priceStudent?: number | null;
+  /**
+   * e.g. Early bird discount available for groups of 5–6 participants.
+   */
+  feeNote?: string | null;
+  /**
+   * What attendees will gain.
+   */
+  outcomes?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Who the workshop is for.
+   */
+  audience?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * What the session includes — handout, certificate, Q&A.
+   */
+  includes?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  contactName?: string | null;
+  contactEmail?: string | null;
+  status: 'draft' | 'open' | 'closed' | 'finished';
+  /**
+   * Leave empty for no limit. Registration closes itself once this is reached.
+   */
+  capacity?: number | null;
+  registrationCount?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "workshop-registrations".
+ */
+export interface WorkshopRegistration {
+  id: number;
+  workshop: number | Workshop;
+  name: string;
+  email: string;
+  phone?: string | null;
+  city?: string | null;
+  category: 'professional' | 'student';
+  /**
+   * Where they work or study.
+   */
+  organisation?: string | null;
+  /**
+   * How many places this registration is for. More than one means they are booking for a group.
+   */
+  groupSize?: number | null;
+  notes?: string | null;
+  /**
+   * Moves to Confirmed when the fee is received. Confirming the payment in Payments does this for you.
+   */
+  status: 'pending' | 'confirmed' | 'cancelled';
+  /**
+   * The reference the registrant was given to quote on their bank transfer.
+   */
+  paymentReference?: string | null;
+  /**
+   * Rupees, at the time of booking.
+   */
+  amountDue?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -948,6 +1081,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'live-attendance';
         value: number | LiveAttendance;
+      } | null)
+    | ({
+        relationTo: 'workshops';
+        value: number | Workshop;
+      } | null)
+    | ({
+        relationTo: 'workshop-registrations';
+        value: number | WorkshopRegistration;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -1398,6 +1539,73 @@ export interface LiveAttendanceSelect<T extends boolean = true> {
   joinedAt?: T;
   leftAt?: T;
   minutesPresent?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "workshops_select".
+ */
+export interface WorkshopsSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  tagline?: T;
+  summary?: T;
+  presenterName?: T;
+  presenterTitle?: T;
+  presenterOrg?: T;
+  presenterPhoto?: T;
+  presenterPhotoUrl?: T;
+  startsAt?: T;
+  endsAt?: T;
+  platform?: T;
+  joinUrl?: T;
+  priceProfessional?: T;
+  priceStudent?: T;
+  feeNote?: T;
+  outcomes?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  audience?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  includes?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  contactName?: T;
+  contactEmail?: T;
+  status?: T;
+  capacity?: T;
+  registrationCount?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "workshop-registrations_select".
+ */
+export interface WorkshopRegistrationsSelect<T extends boolean = true> {
+  workshop?: T;
+  name?: T;
+  email?: T;
+  phone?: T;
+  city?: T;
+  category?: T;
+  organisation?: T;
+  groupSize?: T;
+  notes?: T;
+  status?: T;
+  paymentReference?: T;
+  amountDue?: T;
   updatedAt?: T;
   createdAt?: T;
 }

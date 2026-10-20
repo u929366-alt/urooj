@@ -24,7 +24,10 @@ import { SubmissionFiles } from "./src/collections/SubmissionFiles.ts";
 import { Discussions, DiscussionReplies } from "./src/collections/Discussions.ts";
 import { Certificates } from "./src/collections/Certificates.ts";
 import { ensureLiveTables } from "./src/lib/lms/liveSchema.ts";
+import { seedFirstWorkshop } from "./src/lib/lms/workshopSeed.ts";
 import { LiveSessions } from "./src/collections/LiveSessions.ts";
+import { Workshops } from "./src/collections/Workshops.ts";
+import { WorkshopRegistrations } from "./src/collections/WorkshopRegistrations.ts";
 import { LiveAttendance } from "./src/collections/LiveAttendance.ts";
 import { Payments } from "./src/collections/Payments.ts";
 
@@ -135,6 +138,8 @@ export default buildConfig({
     Payments,
     LiveSessions,
     LiveAttendance,
+    Workshops,
+    WorkshopRegistrations,
   ],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET ?? "",
@@ -148,8 +153,9 @@ export default buildConfig({
    * of students, enrolments and payments — is far too valuable to overwrite
    * with a prepared one. See src/lib/lms/liveSchema.ts.
    */
-  onInit: async () => {
+  onInit: async (payload) => {
     if (!usePostgres) await ensureLiveTables(sqlitePath);
+    await seedFirstWorkshop(payload);
   },
   sharp,
 });
