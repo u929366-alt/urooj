@@ -970,7 +970,7 @@ export interface WorkshopRegistration {
   groupSize?: number | null;
   notes?: string | null;
   /**
-   * Moves to Confirmed when the fee is received. Confirming the payment in Payments does this for you.
+   * Approving the registration in the portal sets this, sends the confirmation email and marks the payment received. Changing it here does none of that.
    */
   status: 'pending' | 'confirmed' | 'cancelled';
   /**
@@ -985,6 +985,14 @@ export interface WorkshopRegistration {
    * When the receipt arrived.
    */
   receiptUploadedAt?: string | null;
+  /**
+   * When a person checked the receipt.
+   */
+  verifiedAt?: string | null;
+  /**
+   * Who checked it.
+   */
+  verifiedBy?: (number | null) | User;
   /**
    * Rupees, at the time of booking.
    */
@@ -1644,6 +1652,8 @@ export interface WorkshopRegistrationsSelect<T extends boolean = true> {
   paymentReference?: T;
   receipt?: T;
   receiptUploadedAt?: T;
+  verifiedAt?: T;
+  verifiedBy?: T;
   amountDue?: T;
   updatedAt?: T;
   createdAt?: T;

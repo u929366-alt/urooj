@@ -7,6 +7,7 @@ import {
   LayoutDashboard,
   LogOut,
   Radio,
+  Ticket,
 } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { getCurrentUser } from "@/lib/lms/auth";
@@ -66,6 +67,15 @@ export default async function LearnLayout({ children }: { children: React.ReactN
               >
                 <Radio className="h-4 w-4" />
                 My Classes
+              </Link>
+            )}
+            {(user?.role === "instructor" || user?.role === "admin") && (
+              <Link
+                href="/learn/workshops"
+                className="inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-gray-700 hover:bg-primary-50"
+              >
+                <Ticket className="h-4 w-4" />
+                Workshops
               </Link>
             )}
             {(user?.role === "instructor" || user?.role === "admin") && (

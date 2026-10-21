@@ -69,14 +69,14 @@ export const WorkshopRegistrations: CollectionConfig = {
       required: true,
       defaultValue: "pending",
       options: [
-        { label: "Registered — awaiting payment", value: "pending" },
+        { label: "Awaiting verification", value: "pending" },
         { label: "Confirmed", value: "confirmed" },
         { label: "Cancelled", value: "cancelled" },
       ],
       admin: {
         position: "sidebar",
         description:
-          "Moves to Confirmed when the fee is received. Confirming the payment in Payments does this for you.",
+          "Approving the registration in the portal sets this, sends the confirmation email and marks the payment received. Changing it here does none of that.",
       },
     },
     {
@@ -101,6 +101,17 @@ export const WorkshopRegistrations: CollectionConfig = {
       name: "receiptUploadedAt",
       type: "date",
       admin: { readOnly: true, description: "When the receipt arrived." },
+    },
+    {
+      name: "verifiedAt",
+      type: "date",
+      admin: { position: "sidebar", readOnly: true, description: "When a person checked the receipt." },
+    },
+    {
+      name: "verifiedBy",
+      type: "relationship",
+      relationTo: "users",
+      admin: { position: "sidebar", readOnly: true, description: "Who checked it." },
     },
     {
       name: "amountDue",

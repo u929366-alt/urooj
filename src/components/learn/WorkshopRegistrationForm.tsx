@@ -2,12 +2,8 @@
 
 import { useActionState, useState } from "react";
 import { useFormStatus } from "react-dom";
-import { CheckCircle2, Copy } from "lucide-react";
-import { ReceiptUpload } from "@/components/learn/ReceiptUpload";
-import {
-  registerForWorkshopAction,
-  type RegistrationState,
-} from "@/lib/lms/workshopActions";
+import { CheckCircle2, Clock, Upload } from "lucide-react";
+import { registerForWorkshopAction, type RegistrationState } from "@/lib/lms/workshopActions";
 
 function Submit({ label }: { label: string }) {
   const { pending } = useFormStatus();
@@ -17,7 +13,7 @@ function Submit({ label }: { label: string }) {
       disabled={pending}
       className="w-full rounded-full bg-secondary-500 px-6 py-3.5 font-semibold text-white transition-colors hover:bg-secondary-600 disabled:pointer-events-none disabled:opacity-60"
     >
-      {pending ? "Registering…" : label}
+      {pending ? "Sending…" : label}
     </button>
   );
 }
@@ -78,7 +74,7 @@ export function WorkshopRegistrationForm({
   );
   const [category, setCategory] = useState<"professional" | "student">("professional");
   const [places, setPlaces] = useState(1);
-  const [copied, setCopied] = useState(false);
+  const [chosen, setChosen] = useState<string | null>(null);
 
   const unit = category === "student" ? priceStudent : priceProfessional;
   const total = unit * places;
@@ -90,37 +86,107 @@ export function WorkshopRegistrationForm({
       <div className="rounded-2xl border border-accent-200 bg-accent-50 p-6">
         <CheckCircle2 className="h-8 w-8 text-accent-600" aria-hidden />
         <h2 className="mt-3 font-display text-xl font-bold text-primary-900">
-          You are registered, {success.name.split(" ")[0]}
+          Thank you, {success.name.split(" ")[0]}
         </h2>
         <p className="mt-2 text-sm text-gray-700">
-          A confirmation has gone to <strong>{success.email}</strong>. If it is not there in a few
-          minutes, check your spam folder.
+          We have your registration and your receipt. An acknowledgement has gone to{" "}
+          <strong>{success.email}</strong>.
         </p>
 
-        {success.amount > 0 && (
-          <div className="mt-5 rounded-xl bg-white p-5">
-            <p className="text-sm text-gray-700">
-              Your place is held. To confirm it, transfer{" "}
-              <strong>{money(success.amount)}</strong> quoting this reference:
+        <div className="mt-5 flex items-start gap-3 rounded-xl bg-white p-5">
+          <Clock className="mt-0.5 h-5 w-5 shrink-0 text-primary-500" aria-hidden />
+          <div className="text-sm text-gray-700">
+            <p className="font-semibold text-primary-900">Your place is not confirmed yet</p>
+            <p className="mt-1">
+              We check every payment against our bank account by hand. Once yours is matched you
+              will get a confirmation email, and the joining link comes with it.
             </p>
-            {success.reference && (
-              <div className="mt-3 flex items-center gap-3">
-                <code className="rounded-lg bg-primary-50 px-4 py-2 font-mono text-lg font-bold tracking-wider text-primary-900">
-                  {success.reference}
-                </code>
-                <button
-                  type="button"
-                  onClick={() => {
-                    void navigator.clipboard?.writeText(success.reference ?? "");
-                    setCopied(true);
-                  }}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-700 hover:bg-gray-50"
-                >
-                  <Copy className="h-3.5 w-3.5" aria-hidden />
-                  {copied ? "Copied" : "Copy"}
-                </button>
-              </div>
-            )}
+          </div>
+        </div>
+
+        <p className="mt-4 text-sm text-gray-600">
+          Anything wrong?{" "}
+          <a href={`mailto:${contactEmail}`} className="font-semibold text-primary-600">
+            {contactEmail}
+          </a>
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <form action={action} className="space-y-5">
+      <input type="hidden" name="slug" value={slug} />
+
+      {state?.error && (
+        <p className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{state.error}</p>
+      )}
+
+      {/* Step one, before any personal details: what to pay and where. */}
+      <div className="rounded-2xl border-2 border-primary-200 bg-primary-50 p-5">
+        <p className="text-xs font-bold uppercase tracking-wide text-primary-700">Step 1 — pay</p>
+        <p className="mt-2 text-sm text-gray-700">
+          Transfer the fee first, then fill in the form below and attach your receipt.
+        </p>
+
+        <fieldset className="mt-4">
+          <legend className="text-sm font-semibold text-primary-900">I am registering as</legend>
+          <div className="mt-2 grid grid-cols-2 gap-3">
+            {(["professional", "student"] as const).map((value) => (
+              <label
+                key={value}
+                className={`cursor-pointer rounded-xl border-2 bg-white px-4 py-3 text-center transition-colors ${
+                  category === value
+                    ? "border-primary-600 ring-2 ring-primary-100"
+                    : "border-gray-200 hover:border-gray-300"
+                }`}
+              >
+                <input
+                  type="radio"
+                  name="category"
+                  value={value}
+                  checked={category === value}
+                  onChange={() => setCategory(value)}
+                  className="sr-only"
+                />
+                <span className="block text-sm font-semibold capitalize text-primary-900">
+                  {value}
+                </span>
+                <span className="mt-0.5 block text-sm text-gray-600">
+                  {money(value === "student" ? priceStudent : priceProfessional)}
+                </span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+
+        <div className="mt-4">
+          <label htmlFor="groupSize" className="block text-sm font-semibold text-primary-900">
+            Number of places
+          </label>
+          <input
+            id="groupSize"
+            name="groupSize"
+            type="number"
+            min={1}
+            max={20}
+            value={places}
+            onChange={(event) => setPlaces(Math.max(1, Number(event.target.value) || 1))}
+            className="mt-1.5 w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 outline-none focus:border-primary-400"
+          />
+        </div>
+
+        {total > 0 && (
+          <>
+            <div className="mt-4 flex items-center justify-between rounded-xl bg-white px-4 py-3">
+              <span className="text-sm text-primary-900">
+                {places > 1 ? `${places} places × ${money(unit)}` : "Amount to transfer"}
+              </span>
+              <span className="font-display text-xl font-bold text-primary-900">
+                {money(total)}
+              </span>
+            </div>
+
             <dl className="mt-4 space-y-1 text-sm">
               <div className="flex gap-2">
                 <dt className="w-28 shrink-0 text-gray-500">Bank</dt>
@@ -132,158 +198,102 @@ export function WorkshopRegistrationForm({
               </div>
               <div className="flex gap-2">
                 <dt className="w-28 shrink-0 text-gray-500">IBAN</dt>
-                <dd className="font-mono text-gray-800">{bank.iban}</dd>
+                <dd className="font-mono text-xs text-gray-800 sm:text-sm">{bank.iban}</dd>
               </div>
             </dl>
-            <p className="mt-4 text-sm text-gray-600">
-              The joining link is emailed once the fee is received.
-            </p>
-          </div>
-        )}
-
-        {success.amount > 0 && success.reference && (
-          <div className="mt-4 rounded-xl bg-white p-5">
-            <h3 className="font-display text-base font-semibold text-primary-900">
-              Already paid? Attach your receipt
-            </h3>
-            <p className="mt-1 text-sm text-gray-600">
-              Fastest way to get your place confirmed. You can also come back to this later —
-              there is a link in your email.
-            </p>
-            <div className="mt-4">
-              <ReceiptUpload reference={success.reference} compact />
-            </div>
-            <p className="mt-3 text-xs text-gray-500">
-              Or email it to{" "}
-              <a href={`mailto:${contactEmail}`} className="font-semibold text-primary-600">
-                {contactEmail}
-              </a>
-              .
-            </p>
-          </div>
+          </>
         )}
       </div>
-    );
-  }
 
-  return (
-    <form action={action} className="space-y-4">
-      <input type="hidden" name="slug" value={slug} />
-
-      {state?.error && (
-        <p className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{state.error}</p>
-      )}
-
-      <Field
-        name="name"
-        label="Full name"
-        required
-        autoComplete="name"
-        error={state?.fieldErrors?.name}
-      />
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <Field
-          name="email"
-          label="Email"
-          type="email"
-          required
-          autoComplete="email"
-          hint="Your joining link goes here"
-          error={state?.fieldErrors?.email}
-        />
-        <Field
-          name="phone"
-          label="Phone / WhatsApp"
-          type="tel"
-          required
-          autoComplete="tel"
-          error={state?.fieldErrors?.phone}
-        />
-      </div>
-
-      <fieldset>
-        <legend className="block text-sm font-semibold text-primary-900">I am registering as</legend>
-        <div className="mt-2 grid grid-cols-2 gap-3">
-          {(["professional", "student"] as const).map((value) => (
-            <label
-              key={value}
-              className={`cursor-pointer rounded-xl border-2 px-4 py-3 text-center transition-colors ${
-                category === value
-                  ? "border-primary-600 bg-primary-50"
-                  : "border-gray-200 hover:border-gray-300"
-              }`}
-            >
-              <input
-                type="radio"
-                name="category"
-                value={value}
-                checked={category === value}
-                onChange={() => setCategory(value)}
-                className="sr-only"
-              />
-              <span className="block text-sm font-semibold capitalize text-primary-900">
-                {value}
-              </span>
-              <span className="mt-0.5 block text-sm text-gray-600">
-                {money(value === "student" ? priceStudent : priceProfessional)}
-              </span>
-            </label>
-          ))}
-        </div>
-      </fieldset>
-
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <Field
-          name="organisation"
-          label={category === "student" ? "Institution" : "Organisation"}
-        />
-        <Field name="city" label="City" autoComplete="address-level2" />
-      </div>
-
-      <div>
-        <label htmlFor="groupSize" className="block text-sm font-semibold text-primary-900">
-          Number of places
-        </label>
-        <input
-          id="groupSize"
-          name="groupSize"
-          type="number"
-          min={1}
-          max={20}
-          value={places}
-          onChange={(event) => setPlaces(Math.max(1, Number(event.target.value) || 1))}
-          className="mt-1.5 w-full rounded-xl border border-gray-200 px-4 py-2.5 outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100"
-        />
-        <p className="mt-1 text-xs text-gray-500">
-          Booking for a group? Put the number of places here and we will contact you about the
-          group rate.
+      <div className="rounded-2xl border-2 border-gray-200 p-5">
+        <p className="text-xs font-bold uppercase tracking-wide text-primary-700">
+          Step 2 — your details
         </p>
-      </div>
 
-      <div>
-        <label htmlFor="notes" className="block text-sm font-semibold text-primary-900">
-          Anything we should know? <span className="font-normal text-gray-500">(optional)</span>
-        </label>
-        <textarea
-          id="notes"
-          name="notes"
-          rows={2}
-          className="mt-1.5 w-full rounded-xl border border-gray-200 px-4 py-2.5 outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100"
-        />
+        <div className="mt-4 space-y-4">
+          <Field
+            name="name"
+            label="Full name"
+            required
+            autoComplete="name"
+            error={state?.fieldErrors?.name}
+          />
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <Field
+              name="email"
+              label="Email"
+              type="email"
+              required
+              autoComplete="email"
+              hint="Your confirmation and joining link go here"
+              error={state?.fieldErrors?.email}
+            />
+            <Field
+              name="phone"
+              label="Phone / WhatsApp"
+              type="tel"
+              required
+              autoComplete="tel"
+              error={state?.fieldErrors?.phone}
+            />
+          </div>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <Field
+              name="organisation"
+              label={category === "student" ? "Institution" : "Organisation"}
+            />
+            <Field name="city" label="City" autoComplete="address-level2" />
+          </div>
+          <div>
+            <label htmlFor="notes" className="block text-sm font-semibold text-primary-900">
+              Anything we should know? <span className="font-normal text-gray-500">(optional)</span>
+            </label>
+            <textarea
+              id="notes"
+              name="notes"
+              rows={2}
+              className="mt-1.5 w-full rounded-xl border border-gray-200 px-4 py-2.5 outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100"
+            />
+          </div>
+        </div>
       </div>
 
       {total > 0 && (
-        <div className="flex items-center justify-between rounded-xl bg-primary-50 px-4 py-3">
-          <span className="text-sm text-primary-900">
-            {places > 1 ? `${places} places × ${money(unit)}` : "Fee"}
-          </span>
-          <span className="font-display text-lg font-bold text-primary-900">{money(total)}</span>
+        <div className="rounded-2xl border-2 border-secondary-200 bg-secondary-50/50 p-5">
+          <p className="text-xs font-bold uppercase tracking-wide text-secondary-700">
+            Step 3 — attach your receipt
+          </p>
+          <p className="mt-2 text-sm text-gray-700">
+            A photo of the transfer slip, a screenshot from your banking app, or the bank&apos;s
+            PDF. Registration is not complete without it.
+          </p>
+
+          <label
+            htmlFor="receipt"
+            className="mt-4 flex cursor-pointer items-center justify-center gap-2 rounded-xl border-2 border-dashed border-secondary-300 bg-white px-4 py-5 text-center text-sm font-medium text-gray-600 hover:border-secondary-500 hover:bg-secondary-50"
+          >
+            <Upload className="h-4 w-4 shrink-0" aria-hidden />
+            {chosen ?? "Choose your receipt"}
+          </label>
+          <input
+            id="receipt"
+            name="receipt"
+            type="file"
+            accept="image/*,application/pdf"
+            required
+            className="sr-only"
+            onChange={(event) => setChosen(event.target.files?.[0]?.name ?? null)}
+          />
+          {state?.fieldErrors?.receipt && (
+            <p className="mt-2 text-sm text-red-600">{state.fieldErrors.receipt}</p>
+          )}
+          <p className="mt-2 text-xs text-gray-500">Up to 8 MB.</p>
         </div>
       )}
 
-      <Submit label={total > 0 ? `Register — ${money(total)}` : "Register"} />
+      <Submit label={total > 0 ? `Send registration — ${money(total)} paid` : "Register"} />
       <p className="text-center text-xs text-gray-500">
-        Nothing is paid on this page. You get a reference and bank details to transfer the fee.
+        We check every payment by hand. Your place is confirmed by email once we have matched it.
       </p>
     </form>
   );

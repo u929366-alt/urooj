@@ -6,6 +6,7 @@ import config from "@payload-config";
 import { z } from "zod";
 import { createPendingPayment, formatRupees, bankInstructions } from "./payments";
 import { getWorkshopBySlug, priceFor, registrationState } from "./workshops";
+import { identifyUpload, MAX_RECEIPT_BYTES } from "./uploads";
 import { siteConfig } from "@/lib/site";
 import type { Workshop } from "@/payload-types";
 
@@ -16,20 +17,20 @@ import type { Workshop } from "@/payload-types";
  * the flyer should be able to book a place in one screen, without being asked
  * to create a login for a learning portal they will never use again.
  *
- * Because it is open to the internet, everything is validated here and the
- * row is written with overrideAccess — the collection itself refuses creation
- * so this is the only door.
+ * The fee is paid before registering, not after. The form will not submit
+ * without a receipt attached, and a registration is not a place until a
+ * member of staff has looked at that receipt and approved it. Until then the
+ * registrant gets an acknowledgement, not a confirmation — the two are
+ * deliberately different emails, because only one of them promises anything.
+ *
+ * Open to the internet, so everything is validated here and the rows are
+ * written with overrideAccess. The collections themselves refuse creation.
  */
 
 export type RegistrationState = {
   error?: string;
   fieldErrors?: Record<string, string>;
-  success?: {
-    name: string;
-    reference: string | null;
-    amount: number;
-    email: string;
-  };
+  success?: { name: string; email: string; amount: number };
 } | null;
 
 const schema = z.object({
@@ -53,12 +54,8 @@ function flatten(error: z.ZodError): Record<string, string> {
   return out;
 }
 
-function confirmationHTML(
-  workshop: Workshop,
-  args: { name: string; amount: number; reference: string | null; places: number },
-) {
-  const bank = bankInstructions();
-  const when = new Intl.DateTimeFormat("en-GB", {
+function formatWhen(value: string): string {
+  return new Intl.DateTimeFormat("en-GB", {
     weekday: "long",
     day: "numeric",
     month: "long",
@@ -67,63 +64,61 @@ function confirmationHTML(
     minute: "2-digit",
     hour12: true,
     timeZone: "Asia/Karachi",
-  }).format(new Date(workshop.startsAt));
+  }).format(new Date(value));
+}
 
-  const payable =
-    args.amount > 0
-      ? `
-  <h2 style="font-size:16px;color:#0b2c49;margin:24px 0 8px">Paying the fee</h2>
-  <p style="margin:0 0 12px">
-    Your place is held. To confirm it, transfer <strong>${formatRupees(args.amount)}</strong>
-    and quote this reference so we can match the payment to you:
-  </p>
-  <p style="margin:0 0 16px;font-size:20px;font-weight:bold;letter-spacing:1px;color:#0b2c49">
-    ${args.reference ?? "—"}
-  </p>
-  <table style="border-collapse:collapse;font-size:14px;margin:0 0 16px">
-    <tr><td style="padding:4px 16px 4px 0;color:#6b7280">Bank</td><td style="padding:4px 0">${bank.bankName}</td></tr>
-    <tr><td style="padding:4px 16px 4px 0;color:#6b7280">Account title</td><td style="padding:4px 0">${bank.accountTitle}</td></tr>
-    <tr><td style="padding:4px 16px 4px 0;color:#6b7280">IBAN</td><td style="padding:4px 0;font-family:monospace">${bank.iban}</td></tr>
-  </table>
-  <p style="margin:0 0 16px">
-    Once you have paid, send us the receipt and we will confirm your place:
-  </p>
-  <p style="margin:0 0 16px">
-    <a href="${siteConfig.portalUrl}/workshops/receipt/${args.reference ?? ""}"
-       style="display:inline-block;background:#0b5394;color:#ffffff;text-decoration:none;
-              padding:12px 24px;border-radius:999px;font-weight:bold">
-      Attach your payment receipt
-    </a>
-  </p>
-  <p style="margin:0 0 12px;font-size:13px;color:#6b7280">
-    If the button does not work, open this link:<br>
-    ${siteConfig.portalUrl}/workshops/receipt/${args.reference ?? ""}
-  </p>
-  <p style="margin:0 0 12px">
-    You can also email the receipt to ${workshop.contactEmail ?? siteConfig.email}. The joining
-    link is sent once the fee is received.
-  </p>`
-      : `
-  <p style="margin:0 0 12px">
-    Your place is confirmed. The joining link will be emailed to you before the session.
-  </p>`;
-
+/**
+ * "We have your registration and your receipt."
+ *
+ * Carefully not a confirmation. Their place is not held until someone has
+ * checked the payment, and this email must not imply otherwise.
+ */
+function acknowledgementHTML(
+  workshop: Workshop,
+  args: { name: string; amount: number; places: number },
+) {
   return `
 <div style="font-family:Arial,Helvetica,sans-serif;max-width:560px;margin:0 auto;padding:24px;color:#1f2937">
-  <h1 style="font-size:20px;color:#0b2c49;margin:0 0 16px">You are registered for ${workshop.title}</h1>
+  <h1 style="font-size:20px;color:#0b2c49;margin:0 0 16px">We have your registration</h1>
   <p style="margin:0 0 12px">Dear ${args.name},</p>
   <p style="margin:0 0 20px">
     Thank you for registering${args.places > 1 ? ` ${args.places} places` : ""} for
-    <strong>${workshop.title}</strong>${workshop.tagline ? ` — ${workshop.tagline}` : ""}.
+    <strong>${workshop.title}</strong>${workshop.tagline ? ` — ${workshop.tagline}` : ""},
+    and for sending your payment receipt.
   </p>
-  <table style="border-collapse:collapse;font-size:14px;margin:0 0 8px">
-    <tr><td style="padding:4px 16px 4px 0;color:#6b7280">When</td><td style="padding:4px 0"><strong>${when}</strong> (Pakistan time)</td></tr>
+  <table style="border-collapse:collapse;font-size:14px;margin:0 0 20px">
+    <tr><td style="padding:4px 16px 4px 0;color:#6b7280">When</td><td style="padding:4px 0"><strong>${formatWhen(workshop.startsAt)}</strong> (Pakistan time)</td></tr>
     <tr><td style="padding:4px 16px 4px 0;color:#6b7280">Where</td><td style="padding:4px 0">${workshop.platform ?? "Online"}</td></tr>
-    ${workshop.presenterName ? `<tr><td style="padding:4px 16px 4px 0;color:#6b7280">Presented by</td><td style="padding:4px 0">${workshop.presenterName}</td></tr>` : ""}
+    <tr><td style="padding:4px 16px 4px 0;color:#6b7280">Amount sent</td><td style="padding:4px 0">${formatRupees(args.amount)}</td></tr>
   </table>
-  ${payable}
+  <p style="margin:0 0 12px">
+    We will check the payment against our bank account and email you to confirm your place.
+    <strong>The joining link comes with that confirmation</strong>, not with this message.
+  </p>
   <p style="margin:24px 0 0;font-size:13px;color:#6b7280">
     Questions? ${workshop.contactName ? `${workshop.contactName} — ` : ""}${workshop.contactEmail ?? siteConfig.email}
+  </p>
+</div>`;
+}
+
+/** What staff get the moment a registration arrives, so none sits unseen. */
+function staffAlertHTML(
+  workshop: Workshop,
+  args: { name: string; email: string; phone: string; amount: number; category: string; places: number },
+) {
+  return `
+<div style="font-family:Arial,Helvetica,sans-serif;max-width:560px;color:#1f2937">
+  <h1 style="font-size:18px;color:#0b2c49;margin:0 0 12px">New registration awaiting your check</h1>
+  <p style="margin:0 0 16px"><strong>${args.name}</strong> has registered for ${workshop.title} and attached a receipt.</p>
+  <table style="border-collapse:collapse;font-size:14px;margin:0 0 16px">
+    <tr><td style="padding:4px 16px 4px 0;color:#6b7280">Email</td><td style="padding:4px 0">${args.email}</td></tr>
+    <tr><td style="padding:4px 16px 4px 0;color:#6b7280">Phone</td><td style="padding:4px 0">${args.phone}</td></tr>
+    <tr><td style="padding:4px 16px 4px 0;color:#6b7280">Category</td><td style="padding:4px 0">${args.category}${args.places > 1 ? ` · ${args.places} places` : ""}</td></tr>
+    <tr><td style="padding:4px 16px 4px 0;color:#6b7280">Amount claimed</td><td style="padding:4px 0"><strong>${formatRupees(args.amount)}</strong></td></tr>
+  </table>
+  <p style="margin:0 0 12px">
+    Open <a href="${siteConfig.portalUrl}/learn/workshops">${siteConfig.portalUrl}/learn/workshops</a>,
+    look at the receipt, and approve it to send their confirmation.
   </p>
 </div>`;
 }
@@ -160,10 +155,49 @@ export async function registerForWorkshopAction(
     };
   }
 
+  const unit = priceFor(workshop, parsed.data.category);
+  const amount = unit * parsed.data.groupSize;
+
+  // The receipt is part of registering, not a follow-up. Checked before
+  // anything is written, so a refused file leaves nothing behind.
+  const file = formData.get("receipt");
+  let receiptFile: { data: Buffer; mimetype: string; name: string; size: number } | null = null;
+
+  if (amount > 0) {
+    if (!(file instanceof File) || file.size === 0) {
+      return {
+        fieldErrors: {
+          receipt: "Please attach your payment receipt — registration needs it.",
+        },
+      };
+    }
+    if (file.size > MAX_RECEIPT_BYTES) {
+      return {
+        fieldErrors: { receipt: "That file is larger than 8 MB. A photo of the receipt is enough." },
+      };
+    }
+    const buffer = Buffer.from(await file.arrayBuffer());
+    const kind = identifyUpload(buffer);
+    if (!kind) {
+      return {
+        fieldErrors: {
+          receipt:
+            "That does not look like a photo or a PDF. Send a screenshot, a photograph of the slip, or the bank's PDF receipt.",
+        },
+      };
+    }
+    receiptFile = {
+      data: buffer,
+      mimetype: kind.mime,
+      name: `${Date.now()}.${kind.ext}`,
+      size: buffer.length,
+    };
+  }
+
   const payload = await getPayload({ config });
 
-  // Someone pressing the button twice, or coming back a week later unsure
-  // whether it went through, should not end up registered twice.
+  // Someone pressing the button twice, or coming back unsure whether it went
+  // through, should not end up registered twice.
   const existing = await payload.find({
     collection: "workshop-registrations",
     where: {
@@ -180,15 +214,11 @@ export async function registerForWorkshopAction(
     return {
       success: {
         name: existing.docs[0].name,
-        reference: existing.docs[0].paymentReference ?? null,
-        amount: existing.docs[0].amountDue ?? 0,
         email: existing.docs[0].email,
+        amount: existing.docs[0].amountDue ?? 0,
       },
     };
   }
-
-  const unit = priceFor(workshop, parsed.data.category);
-  const amount = unit * parsed.data.groupSize;
 
   let reference: string | null = null;
   if (amount > 0) {
@@ -208,13 +238,13 @@ export async function registerForWorkshopAction(
       reference = payment.reference;
     } catch {
       // A failure to allocate a reference must not lose the registration —
-      // the person is far more valuable than the payment row, and staff can
-      // raise an invoice by hand from the admin.
+      // the person matters more than the bookkeeping row, and staff can
+      // raise one by hand from the admin.
       reference = null;
     }
   }
 
-  await payload.create({
+  const registration = await payload.create({
     collection: "workshop-registrations",
     data: {
       workshop: workshop.id,
@@ -226,12 +256,36 @@ export async function registerForWorkshopAction(
       organisation: parsed.data.organisation,
       groupSize: parsed.data.groupSize,
       notes: parsed.data.notes,
-      status: amount > 0 ? "pending" : "confirmed",
+      // Never "confirmed" here, whatever the amount. A place is granted by a
+      // person who has looked at the money, not by this form.
+      status: "pending",
       paymentReference: reference,
       amountDue: amount,
     },
     overrideAccess: true,
   });
+
+  if (receiptFile) {
+    try {
+      const receipt = await payload.create({
+        collection: "payment-receipts",
+        data: { registration: registration.id, reference: reference ?? undefined },
+        file: {
+          ...receiptFile,
+          name: `${reference ?? registration.id}-${receiptFile.name}`,
+        },
+        overrideAccess: true,
+      });
+      await payload.update({
+        collection: "workshop-registrations",
+        id: registration.id,
+        data: { receipt: receipt.id, receiptUploadedAt: new Date().toISOString() },
+        overrideAccess: true,
+      });
+    } catch (error) {
+      console.error("[workshops] could not store the receipt:", error);
+    }
+  }
 
   await payload.update({
     collection: "workshops",
@@ -240,25 +294,47 @@ export async function registerForWorkshopAction(
     overrideAccess: true,
   });
 
-  // Best effort. A mail server that is down should not make the registrant
-  // think their booking failed, because it did not.
+  // Both emails are best effort. A mail server that is down must not make the
+  // registrant think their booking failed, because it did not.
   try {
     await payload.sendEmail({
       to: parsed.data.email,
-      subject: `You are registered — ${workshop.title}`,
-      html: confirmationHTML(workshop, {
+      subject: `We have your registration — ${workshop.title}`,
+      html: acknowledgementHTML(workshop, {
         name: parsed.data.name,
         amount,
-        reference,
         places: parsed.data.groupSize,
       }),
     });
   } catch (error) {
-    console.error("[workshops] confirmation email failed:", error);
+    console.error("[workshops] acknowledgement email failed:", error);
+  }
+
+  try {
+    await payload.sendEmail({
+      to: workshop.contactEmail ?? siteConfig.email,
+      subject: `New registration to check — ${parsed.data.name}`,
+      html: staffAlertHTML(workshop, {
+        name: parsed.data.name,
+        email: parsed.data.email,
+        phone: parsed.data.phone,
+        amount,
+        category: parsed.data.category,
+        places: parsed.data.groupSize,
+      }),
+    });
+  } catch (error) {
+    console.error("[workshops] staff alert failed:", error);
   }
 
   revalidatePath(`/workshops/${workshop.slug}`);
+  revalidatePath("/learn/workshops");
   return {
-    success: { name: parsed.data.name, reference, amount, email: parsed.data.email },
+    success: { name: parsed.data.name, email: parsed.data.email, amount },
   };
+}
+
+/** Bank details for the "pay first" panel on the public page. */
+export async function workshopBankDetails() {
+  return bankInstructions();
 }

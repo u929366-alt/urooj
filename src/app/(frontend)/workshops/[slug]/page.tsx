@@ -229,6 +229,10 @@ export default async function WorkshopPage({ params }: Params) {
                   <h2 className="font-display text-xl font-bold text-primary-900">
                     Register for this workshop
                   </h2>
+                  <p className="mt-2 text-sm text-gray-600">
+                    Pay the fee, then register and attach your receipt. We check every payment by
+                    hand and confirm your place by email.
+                  </p>
                   <div className="mt-3 flex flex-wrap gap-x-6 gap-y-1 text-sm">
                     <p className="text-gray-700">
                       Professionals{" "}

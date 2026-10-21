@@ -101,10 +101,16 @@ const WORKSHOP_STATEMENTS = [
 	\`notes\` text,
 	\`status\` text DEFAULT 'pending' NOT NULL,
 	\`payment_reference\` text,
+	\`receipt_id\` integer,
+	\`receipt_uploaded_at\` text,
+	\`verified_at\` text,
+	\`verified_by_id\` integer,
 	\`amount_due\` numeric,
 	\`updated_at\` text DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) NOT NULL,
-	\`created_at\` text DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) NOT NULL, \`receipt_id\` integer, \`receipt_uploaded_at\` text,
-	FOREIGN KEY (\`workshop_id\`) REFERENCES \`workshops\`(\`id\`) ON UPDATE no action ON DELETE set null
+	\`created_at\` text DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) NOT NULL,
+	FOREIGN KEY (\`workshop_id\`) REFERENCES \`workshops\`(\`id\`) ON UPDATE no action ON DELETE set null,
+	FOREIGN KEY (\`receipt_id\`) REFERENCES \`payment_receipts\`(\`id\`) ON UPDATE no action ON DELETE set null,
+	FOREIGN KEY (\`verified_by_id\`) REFERENCES \`users\`(\`id\`) ON UPDATE no action ON DELETE set null
 )`,
   `CREATE TABLE IF NOT EXISTS \`workshops\` (
 	\`id\` integer PRIMARY KEY NOT NULL,
@@ -116,6 +122,7 @@ const WORKSHOP_STATEMENTS = [
 	\`presenter_title\` text,
 	\`presenter_org\` text,
 	\`presenter_photo_id\` integer,
+	\`presenter_photo_url\` text,
 	\`starts_at\` text NOT NULL,
 	\`ends_at\` text,
 	\`platform\` text DEFAULT 'Zoom',
@@ -129,7 +136,7 @@ const WORKSHOP_STATEMENTS = [
 	\`capacity\` numeric,
 	\`registration_count\` numeric DEFAULT 0,
 	\`updated_at\` text DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) NOT NULL,
-	\`created_at\` text DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) NOT NULL, \`presenter_photo_url\` text,
+	\`created_at\` text DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) NOT NULL,
 	FOREIGN KEY (\`presenter_photo_id\`) REFERENCES \`media\`(\`id\`) ON UPDATE no action ON DELETE set null
 )`,
   `CREATE TABLE IF NOT EXISTS \`workshops_audience\` (
@@ -163,6 +170,7 @@ const WORKSHOP_STATEMENTS = [
   `CREATE INDEX IF NOT EXISTS \`workshop_registrations_payment_reference_idx\` ON \`workshop_registrations\` (\`payment_reference\`)`,
   `CREATE INDEX IF NOT EXISTS \`workshop_registrations_receipt_idx\` ON \`workshop_registrations\` (\`receipt_id\`)`,
   `CREATE INDEX IF NOT EXISTS \`workshop_registrations_updated_at_idx\` ON \`workshop_registrations\` (\`updated_at\`)`,
+  `CREATE INDEX IF NOT EXISTS \`workshop_registrations_verified_by_idx\` ON \`workshop_registrations\` (\`verified_by_id\`)`,
   `CREATE INDEX IF NOT EXISTS \`workshop_registrations_workshop_idx\` ON \`workshop_registrations\` (\`workshop_id\`)`,
   `CREATE INDEX IF NOT EXISTS \`workshops_audience_order_idx\` ON \`workshops_audience\` (\`_order\`)`,
   `CREATE INDEX IF NOT EXISTS \`workshops_audience_parent_id_idx\` ON \`workshops_audience\` (\`_parent_id\`)`,
@@ -233,6 +241,18 @@ const ADDED_COLUMNS: Array<{ table: string; column: string; definition: string; 
     column: "receipt_uploaded_at",
     definition: "text",
     index: "workshop_registrations_receipt_uploaded_at_idx",
+  },
+  {
+    table: "workshop_registrations",
+    column: "verified_at",
+    definition: "text",
+    index: "workshop_registrations_verified_at_idx",
+  },
+  {
+    table: "workshop_registrations",
+    column: "verified_by_id",
+    definition: "integer REFERENCES users(id) ON DELETE set null",
+    index: "workshop_registrations_verified_by_idx",
   },
 ];
 

@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { getPayload } from "payload";
 import config from "@payload-config";
+import { identifyUpload, MAX_RECEIPT_BYTES } from "./uploads";
 import { siteConfig } from "@/lib/site";
 import type { Workshop } from "@/payload-types";
 
@@ -19,38 +20,10 @@ import type { Workshop } from "@/payload-types";
  * file called receipt.jpg that is not an image does not get written to disk.
  */
 
-const MAX_BYTES = 8 * 1024 * 1024;
-
 export type ReceiptState =
   | { error: string }
   | { success: true; filename: string }
   | null;
-
-/** What the first bytes of each allowed format look like. */
-const SIGNATURES: Array<{ mime: string; ext: string; test: (b: Buffer) => boolean }> = [
-  { mime: "image/jpeg", ext: "jpg", test: (b) => b[0] === 0xff && b[1] === 0xd8 && b[2] === 0xff },
-  {
-    mime: "image/png",
-    ext: "png",
-    test: (b) => b.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])),
-  },
-  {
-    mime: "image/webp",
-    ext: "webp",
-    test: (b) => b.subarray(0, 4).toString("ascii") === "RIFF" && b.subarray(8, 12).toString("ascii") === "WEBP",
-  },
-  {
-    mime: "image/heic",
-    ext: "heic",
-    test: (b) => b.subarray(4, 8).toString("ascii") === "ftyp" &&
-      ["heic", "heix", "hevc", "mif1", "heim"].includes(b.subarray(8, 12).toString("ascii")),
-  },
-  { mime: "application/pdf", ext: "pdf", test: (b) => b.subarray(0, 5).toString("ascii") === "%PDF-" },
-];
-
-function identify(buffer: Buffer): { mime: string; ext: string } | null {
-  return SIGNATURES.find((signature) => signature.test(buffer)) ?? null;
-}
 
 export async function uploadReceiptAction(
   _prev: ReceiptState,
@@ -80,12 +53,12 @@ export async function uploadReceiptAction(
   if (!(file instanceof File) || file.size === 0) {
     return { error: "Please choose the receipt file first." };
   }
-  if (file.size > MAX_BYTES) {
+  if (file.size > MAX_RECEIPT_BYTES) {
     return { error: "That file is larger than 8 MB. A photo of the receipt is enough." };
   }
 
   const buffer = Buffer.from(await file.arrayBuffer());
-  const kind = identify(buffer);
+  const kind = identifyUpload(buffer);
   if (!kind) {
     return {
       error:
