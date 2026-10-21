@@ -23,6 +23,19 @@ WHAT THIS CHANGES
   It is also in the portal menu as "Workshops" (admins and teachers
   only — students never see it).
 
+  The confirmation email is Ms. Asma Ahmed's letter, word for word.
+  It is already in the system — you do not have to paste it in. If you
+  ever want to change it:
+
+      /admin -> Workshops -> THRIVE 360 -> "Confirmation email"
+
+  It is in two boxes, one for the paragraphs above the Workshop
+  Details table and one for the paragraphs below it, ending with the
+  sign-off. The greeting ("Dear <their name>,"), the line confirming
+  their payment, and the Details table are added around it
+  automatically, so the date, time and speaker can never drift out of
+  step with the workshop record.
+
 
 WHAT YOU ARE UPLOADING
 
@@ -122,17 +135,24 @@ STEP 7 — Tidy up
   That is it. You are done.
 
 
-STEP 8 — One thing only you can do
+STEP 8 — On or before 10 November
 
-  The confirmation email contains the joining link for the workshop,
-  and that link is blank until you set it.
+  The letter says the platform will be shared by email on 10 November,
+  so until then the confirmation email prints exactly that under
+  Venue/Platform. Nothing to do now.
+
+  When you have the Zoom link:
 
     Go to  https://learn.hunarsaaz.pk/admin
     ->  Workshops  ->  THRIVE 360  ->  "Join URL"
-    ->  paste your Zoom link  ->  Save.
+    ->  paste the Zoom link  ->  Save.
 
-  Until you do that, the confirmation email will say "the joining
-  link will be emailed to you before the session" instead.
+  From then on every confirmation carries the link and a "Join on
+  Zoom" button, and the Venue/Platform line changes by itself. People
+  confirmed BEFORE you set it will not have it, so they still need the
+  link sent round on the 10th.
+
+  (The line shown until then is editable too: same page, "Venue note".)
 
 
 IF IT GOES WRONG
