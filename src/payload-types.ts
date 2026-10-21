@@ -899,6 +899,10 @@ export interface Workshop {
    */
   joinUrl?: string | null;
   /**
+   * What the confirmation email says under Venue/Platform while there is no joining link yet, e.g. "Will be shared by email on 10 November 2026". Once the joining link above is filled in, that is sent instead and this is ignored.
+   */
+  venueNote?: string | null;
+  /**
    * Rupees. 0 means free for professionals.
    */
   priceProfessional?: number | null;
@@ -910,6 +914,14 @@ export interface Workshop {
    * e.g. Early bird discount available for groups of 5–6 participants.
    */
   feeNote?: string | null;
+  /**
+   * Goes above Workshop Details, after "Dear <name>,".
+   */
+  confirmationIntro?: string | null;
+  /**
+   * Goes below Workshop Details, ending with the sign-off.
+   */
+  confirmationClosing?: string | null;
   /**
    * What attendees will gain.
    */
@@ -1605,9 +1617,12 @@ export interface WorkshopsSelect<T extends boolean = true> {
   endsAt?: T;
   platform?: T;
   joinUrl?: T;
+  venueNote?: T;
   priceProfessional?: T;
   priceStudent?: T;
   feeNote?: T;
+  confirmationIntro?: T;
+  confirmationClosing?: T;
   outcomes?:
     | T
     | {

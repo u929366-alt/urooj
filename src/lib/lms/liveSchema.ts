@@ -137,6 +137,9 @@ const WORKSHOP_STATEMENTS = [
 	\`registration_count\` numeric DEFAULT 0,
 	\`updated_at\` text DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) NOT NULL,
 	\`created_at\` text DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) NOT NULL,
+	\`venue_note\` text,
+	\`confirmation_intro\` text,
+	\`confirmation_closing\` text,
 	FOREIGN KEY (\`presenter_photo_id\`) REFERENCES \`media\`(\`id\`) ON UPDATE no action ON DELETE set null
 )`,
   `CREATE TABLE IF NOT EXISTS \`workshops_audience\` (
@@ -195,8 +198,12 @@ const WORKSHOP_STATEMENTS = [
  * the row has already been written.
  *
  * SQLite has no ADD COLUMN IF NOT EXISTS, so each one is checked first.
+ *
+ * `index` is given only where Payload itself would index the column — it
+ * indexes relationships, not free text. An index SQLite did not ask for is
+ * not harmless either: a column carrying one cannot be dropped afterwards.
  */
-const ADDED_COLUMNS: Array<{ table: string; column: string; definition: string; index: string }> = [
+const ADDED_COLUMNS: Array<{ table: string; column: string; definition: string; index?: string }> = [
   {
     table: "payload_locked_documents_rels",
     column: "live_sessions_id",
@@ -240,19 +247,35 @@ const ADDED_COLUMNS: Array<{ table: string; column: string; definition: string; 
     table: "workshop_registrations",
     column: "receipt_uploaded_at",
     definition: "text",
-    index: "workshop_registrations_receipt_uploaded_at_idx",
   },
   {
     table: "workshop_registrations",
     column: "verified_at",
     definition: "text",
-    index: "workshop_registrations_verified_at_idx",
   },
   {
     table: "workshop_registrations",
     column: "verified_by_id",
     definition: "integer REFERENCES users(id) ON DELETE set null",
     index: "workshop_registrations_verified_by_idx",
+  },
+  // What the confirmation letter says under Venue/Platform until there is a
+  // joining link to send instead.
+  {
+    table: "workshops",
+    column: "venue_note",
+    definition: "text",
+  },
+  // The body of the confirmation letter, written by whoever is presenting.
+  {
+    table: "workshops",
+    column: "confirmation_intro",
+    definition: "text",
+  },
+  {
+    table: "workshops",
+    column: "confirmation_closing",
+    definition: "text",
   },
 ];
 
@@ -271,9 +294,11 @@ export async function ensureLiveTables(sqlitePath: string): Promise<void> {
         await client.execute(
           `ALTER TABLE \`${entry.table}\` ADD COLUMN \`${entry.column}\` ${entry.definition}`,
         );
-        await client.execute(
-          `CREATE INDEX IF NOT EXISTS \`${entry.index}\` ON \`${entry.table}\` (\`${entry.column}\`)`,
-        );
+        if (entry.index) {
+          await client.execute(
+            `CREATE INDEX IF NOT EXISTS \`${entry.index}\` ON \`${entry.table}\` (\`${entry.column}\`)`,
+          );
+        }
       }
     } finally {
       client.close();

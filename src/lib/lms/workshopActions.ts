@@ -4,11 +4,11 @@ import { revalidatePath } from "next/cache";
 import { getPayload } from "payload";
 import config from "@payload-config";
 import { z } from "zod";
-import { createPendingPayment, formatRupees, bankInstructions } from "./payments";
+import { createPendingPayment, bankInstructions } from "./payments";
 import { getWorkshopBySlug, priceFor, registrationState } from "./workshops";
 import { identifyUpload, MAX_RECEIPT_BYTES } from "./uploads";
+import { acknowledgementHTML, staffAlertHTML } from "./workshopEmails";
 import { siteConfig } from "@/lib/site";
-import type { Workshop } from "@/payload-types";
 
 /**
  * Workshop registration, for members of the public.
@@ -52,75 +52,6 @@ function flatten(error: z.ZodError): Record<string, string> {
     out[key] ??= issue.message;
   }
   return out;
-}
-
-function formatWhen(value: string): string {
-  return new Intl.DateTimeFormat("en-GB", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
-    hour12: true,
-    timeZone: "Asia/Karachi",
-  }).format(new Date(value));
-}
-
-/**
- * "We have your registration and your receipt."
- *
- * Carefully not a confirmation. Their place is not held until someone has
- * checked the payment, and this email must not imply otherwise.
- */
-function acknowledgementHTML(
-  workshop: Workshop,
-  args: { name: string; amount: number; places: number },
-) {
-  return `
-<div style="font-family:Arial,Helvetica,sans-serif;max-width:560px;margin:0 auto;padding:24px;color:#1f2937">
-  <h1 style="font-size:20px;color:#0b2c49;margin:0 0 16px">We have your registration</h1>
-  <p style="margin:0 0 12px">Dear ${args.name},</p>
-  <p style="margin:0 0 20px">
-    Thank you for registering${args.places > 1 ? ` ${args.places} places` : ""} for
-    <strong>${workshop.title}</strong>${workshop.tagline ? ` — ${workshop.tagline}` : ""},
-    and for sending your payment receipt.
-  </p>
-  <table style="border-collapse:collapse;font-size:14px;margin:0 0 20px">
-    <tr><td style="padding:4px 16px 4px 0;color:#6b7280">When</td><td style="padding:4px 0"><strong>${formatWhen(workshop.startsAt)}</strong> (Pakistan time)</td></tr>
-    <tr><td style="padding:4px 16px 4px 0;color:#6b7280">Where</td><td style="padding:4px 0">${workshop.platform ?? "Online"}</td></tr>
-    <tr><td style="padding:4px 16px 4px 0;color:#6b7280">Amount sent</td><td style="padding:4px 0">${formatRupees(args.amount)}</td></tr>
-  </table>
-  <p style="margin:0 0 12px">
-    We will check the payment against our bank account and email you to confirm your place.
-    <strong>The joining link comes with that confirmation</strong>, not with this message.
-  </p>
-  <p style="margin:24px 0 0;font-size:13px;color:#6b7280">
-    Questions? ${workshop.contactName ? `${workshop.contactName} — ` : ""}${workshop.contactEmail ?? siteConfig.email}
-  </p>
-</div>`;
-}
-
-/** What staff get the moment a registration arrives, so none sits unseen. */
-function staffAlertHTML(
-  workshop: Workshop,
-  args: { name: string; email: string; phone: string; amount: number; category: string; places: number },
-) {
-  return `
-<div style="font-family:Arial,Helvetica,sans-serif;max-width:560px;color:#1f2937">
-  <h1 style="font-size:18px;color:#0b2c49;margin:0 0 12px">New registration awaiting your check</h1>
-  <p style="margin:0 0 16px"><strong>${args.name}</strong> has registered for ${workshop.title} and attached a receipt.</p>
-  <table style="border-collapse:collapse;font-size:14px;margin:0 0 16px">
-    <tr><td style="padding:4px 16px 4px 0;color:#6b7280">Email</td><td style="padding:4px 0">${args.email}</td></tr>
-    <tr><td style="padding:4px 16px 4px 0;color:#6b7280">Phone</td><td style="padding:4px 0">${args.phone}</td></tr>
-    <tr><td style="padding:4px 16px 4px 0;color:#6b7280">Category</td><td style="padding:4px 0">${args.category}${args.places > 1 ? ` · ${args.places} places` : ""}</td></tr>
-    <tr><td style="padding:4px 16px 4px 0;color:#6b7280">Amount claimed</td><td style="padding:4px 0"><strong>${formatRupees(args.amount)}</strong></td></tr>
-  </table>
-  <p style="margin:0 0 12px">
-    Open <a href="${siteConfig.portalUrl}/learn/workshops">${siteConfig.portalUrl}/learn/workshops</a>,
-    look at the receipt, and approve it to send their confirmation.
-  </p>
-</div>`;
 }
 
 export async function registerForWorkshopAction(

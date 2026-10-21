@@ -87,6 +87,14 @@ export const Workshops: CollectionConfig = {
               "The meeting link. NEVER shown on the public page — it is emailed to people who have registered, so the session cannot be crashed by anyone who finds the flyer.",
           },
         },
+        {
+          name: "venueNote",
+          type: "text",
+          admin: {
+            description:
+              "What the confirmation email says under Venue/Platform while there is no joining link yet, e.g. \"Will be shared by email on 10 November 2026\". Once the joining link above is filled in, that is sent instead and this is ignored.",
+          },
+        },
       ],
     },
     {
@@ -111,6 +119,32 @@ export const Workshops: CollectionConfig = {
           name: "feeNote",
           type: "text",
           admin: { description: "e.g. Early bird discount available for groups of 5–6 participants." },
+        },
+      ],
+    },
+    {
+      type: "collapsible",
+      label: "Confirmation email",
+      admin: {
+        description:
+          "The letter sent when a registration is approved on the Workshops page. Leave a blank line between paragraphs. The greeting, the line confirming the payment, and the Workshop Details table are added around this automatically.",
+      },
+      fields: [
+        {
+          name: "confirmationIntro",
+          type: "textarea",
+          admin: {
+            rows: 10,
+            description: "Goes above Workshop Details, after \"Dear <name>,\".",
+          },
+        },
+        {
+          name: "confirmationClosing",
+          type: "textarea",
+          admin: {
+            rows: 10,
+            description: "Goes below Workshop Details, ending with the sign-off.",
+          },
         },
       ],
     },
