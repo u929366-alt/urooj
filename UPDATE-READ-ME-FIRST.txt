@@ -1,0 +1,163 @@
+HUNARSAAZ PORTAL — UPDATE
+Workshop registration now waits for you to check the payment
+=============================================================
+
+WHAT THIS CHANGES
+
+  Before: someone filled in the form and was registered. Nobody checked
+          whether they had actually paid.
+
+  Now:    they pay first, attach a photo of the transfer slip, and the
+          form will not send without it. They get an email that says
+          "we have your registration" — NOT a confirmation.
+
+          You then open a new page, look at the receipt next to the
+          amount and the reference, and press "Payment verified —
+          approve". ONLY THAT sends them the confirmation email with
+          the joining link. Nothing else sends it.
+
+          If the payment is wrong, press "Something's wrong", type a
+          line explaining why, and they get that by email instead.
+
+  The new page is at:  https://learn.hunarsaaz.pk/learn/workshops
+  It is also in the portal menu as "Workshops" (admins and teachers
+  only — students never see it).
+
+
+WHAT YOU ARE UPLOADING
+
+  This is a SMALL update. The big node_modules folder has NOT changed,
+  so you do not touch it at all. Only five things go up:
+
+      .next          (folder)
+      public         (folder)
+      src            (folder)
+      server.js      (file)
+      package.json   (file)
+
+  Total about 40 MB extracted. Last time it was 190 MB.
+
+
+STEP BY STEP
+============
+
+STEP 1 — Unzip it on your computer
+
+  Right-click  portal-update.zip  ->  "Extract All..."  ->  Extract.
+  You now have a folder called  portal-update  containing the five
+  things listed above.
+
+
+STEP 2 — Open FileZilla and connect
+
+  Same connection you used last time. On the RIGHT-hand side (the
+  server), go into the folder:
+
+      /hunarsaaz-portal
+
+
+STEP 3 — Put the old .next safely to one side (DO NOT DELETE IT)
+
+  On the right-hand side, find the folder called  .next
+  Right-click it  ->  Rename  ->  type:   .next-old
+  Press Enter.
+
+  This is your way back if anything goes wrong. Do not skip it.
+
+  (If FileZilla is not showing .next, click Server menu ->
+   "Force showing hidden files".)
+
+
+STEP 4 — Upload the five things
+
+  On the LEFT-hand side of FileZilla, go into your  portal-update
+  folder.
+
+  Select all five:  .next, public, src, server.js, package.json
+  Drag them to the RIGHT-hand side, into /hunarsaaz-portal
+
+  If it asks "file already exists", choose:
+      Action: Overwrite
+      and tick "Always use this action"  then OK.
+
+  Wait for the transfer queue at the bottom to go completely empty.
+  It should take a few minutes. DO NOT restart anything until it is
+  empty and shows no failed transfers.
+
+  If any file says "failed" in the bottom window, right-click it and
+  choose "Reset and requeue" until it goes through.
+
+
+STEP 5 — Restart the portal
+
+  Go to cPanel  ->  Setup Node.js App  ->  find the portal app  ->
+  press RESTART.
+
+  Wait about 30 seconds.
+
+
+STEP 6 — Check it worked
+
+  Open these two pages:
+
+    https://learn.hunarsaaz.pk/learn          (should load as normal)
+    https://hunarsaaz.pk/workshops/thrive-360 (the registration form)
+
+  On the registration form you should now see three numbered steps:
+    Step 1 — pay
+    Step 2 — your details
+    Step 3 — attach your receipt
+
+  Then log in at https://learn.hunarsaaz.pk/learn/login and open
+    https://learn.hunarsaaz.pk/learn/workshops
+  It should say "Workshop registrations".
+
+  IF ALL THREE WORK  ->  go to Step 7.
+  IF SOMETHING IS BROKEN  ->  go to "IF IT GOES WRONG" below.
+
+
+STEP 7 — Tidy up
+
+  Back in FileZilla, right-click  .next-old  ->  Delete.
+  That is it. You are done.
+
+
+STEP 8 — One thing only you can do
+
+  The confirmation email contains the joining link for the workshop,
+  and that link is blank until you set it.
+
+    Go to  https://learn.hunarsaaz.pk/admin
+    ->  Workshops  ->  THRIVE 360  ->  "Join URL"
+    ->  paste your Zoom link  ->  Save.
+
+  Until you do that, the confirmation email will say "the joining
+  link will be emailed to you before the session" instead.
+
+
+IF IT GOES WRONG
+================
+
+  Nothing is lost. Put the old version back:
+
+    1. In FileZilla, delete the new  .next  folder.
+    2. Rename  .next-old  back to  .next
+    3. cPanel -> Setup Node.js App -> RESTART.
+
+  The portal is exactly as it was. Then tell me what you saw and I
+  will fix it.
+
+
+NOTES
+=====
+
+  * Your database is not touched. Every student, course and payment
+    stays exactly where it is. The two new bits of information the
+    portal needs (who checked a payment, and when) are added by the
+    portal itself the first time it starts up.
+
+  * Nobody who already registered is affected. Existing registrations
+    simply appear on the new page as "already dealt with".
+
+  * There is no .env file in this zip. Your settings in cPanel stay
+    as they are.
