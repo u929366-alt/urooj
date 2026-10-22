@@ -1,54 +1,60 @@
 HUNARSAAZ PORTAL — UPDATE
-Workshop registration now waits for you to check the payment
-=============================================================
+One email, sent only when you confirm the payment
+=================================================
 
 WHAT THIS CHANGES
 
-  Before: someone filled in the form and was registered. Nobody checked
-          whether they had actually paid.
+1. NOBODY GETS AN EMAIL WHEN THEY REGISTER.
+   The candidate fills in the form, attaches the payment proof, and is
+   told on screen that their place is not confirmed yet and that we
+   will write when the payment has been checked. No email at all.
+   YOU get an email, so you know a registration is waiting.
 
-  Now:    they pay first, attach a photo of the transfer slip, and the
-          form will not send without it. They get an email that says
-          "we have your registration" — NOT a confirmation.
+2. ONE EMAIL, AND IT IS MS. ASMA AHMED'S LETTER.
+   It goes out the moment you mark the registration confirmed, and
+   nothing else sends it. It is her letter word for word, with the
+   date, time, venue and speaker filled in from the workshop record.
 
-          You then open a new page, look at the receipt next to the
-          amount and the reference, and press "Payment verified —
-          approve". ONLY THAT sends them the confirmation email with
-          the joining link. Nothing else sends it.
+3. CONFIRMING NOW WORKS FROM ANY OF THREE PLACES.
+   Before, only one of them actually sent anything, which is why
+   confirming in the admin appeared to do nothing. All three now do
+   exactly the same thing:
 
-          If the payment is wrong, press "Something's wrong", type a
-          line explaining why, and they get that by email instead.
+     a) learn.hunarsaaz.pk/learn/workshops -> "Payment verified —
+        approve"   (the easiest: the receipt is shown next to the
+        amount, so you can check it there and then)
+     b) /admin -> Workshop Registrations -> open the person ->
+        Status -> Confirmed -> Save
+     c) /admin -> Payments -> open the payment -> Status ->
+        Confirmed -> Save
 
-  The new page is at:  https://learn.hunarsaaz.pk/learn/workshops
-  It is also in the portal menu as "Workshops" (admins and teachers
-  only — students never see it).
+   Any of those sends the letter, marks the payment received, issues
+   the receipt number, and records who confirmed it and when. Doing it
+   twice does not send it twice.
 
-  The confirmation email is Ms. Asma Ahmed's letter, word for word.
-  It is already in the system — you do not have to paste it in. If you
-  ever want to change it:
+4. REGISTRATION IS ONE STEP, NOT TWO.
+   The form no longer says "Step 1 / Step 2 / Step 3". It is one
+   registration, and it will not send at all until the payment proof
+   is attached. The old separate "upload your receipt afterwards" page
+   has been removed, so there is no way to be half-registered.
 
-      /admin -> Workshops -> THRIVE 360 -> "Confirmation email"
-
-  It is in two boxes, one for the paragraphs above the Workshop
-  Details table and one for the paragraphs below it, ending with the
-  sign-off. The greeting ("Dear <their name>,"), the line confirming
-  their payment, and the Details table are added around it
-  automatically, so the date, time and speaker can never drift out of
-  step with the workshop record.
+5. THE FLYER.
+   Sent separately. The Hunarsaaz logo is considerably larger, and
+   "HR professionals and managers" now reads "Professionals". The
+   wording on the website changes to match by itself when the portal
+   restarts.
 
 
 WHAT YOU ARE UPLOADING
 
-  This is a SMALL update. The big node_modules folder has NOT changed,
-  so you do not touch it at all. Only five things go up:
+  The big node_modules folder has NOT changed. You do not touch it.
+  Only these five:
 
       .next          (folder)
       public         (folder)
       src            (folder)
       server.js      (file)
       package.json   (file)
-
-  Total about 40 MB extracted. Last time it was 190 MB.
 
 
 STEP BY STEP
@@ -57,127 +63,108 @@ STEP BY STEP
 STEP 1 — Unzip it on your computer
 
   Right-click  portal-update.zip  ->  "Extract All..."  ->  Extract.
-  You now have a folder called  portal-update  containing the five
-  things listed above.
+  You get a folder  portal-update  holding the five things above.
+  If you cannot see .next, in that window: View menu -> tick
+  "Hidden items".
 
 
 STEP 2 — Open FileZilla and connect
 
-  Same connection you used last time. On the RIGHT-hand side (the
-  server), go into the folder:
+  On the RIGHT-hand side go into:   /hunarsaaz-portal
+  If .next is not showing there: Server menu -> "Force showing hidden
+  files".
 
-      /hunarsaaz-portal
 
+STEP 3 — Rename the old .next (do not delete it this time)
 
-STEP 3 — Put the old .next safely to one side (DO NOT DELETE IT)
+  Right-click  .next  ->  Rename  ->  .next-old   ->  Enter.
 
-  On the right-hand side, find the folder called  .next
-  Right-click it  ->  Rename  ->  type:   .next-old
-  Press Enter.
-
-  This is your way back if anything goes wrong. Do not skip it.
-
-  (If FileZilla is not showing .next, click Server menu ->
-   "Force showing hidden files".)
+  If there is no .next there at all, that is fine — carry on.
 
 
 STEP 4 — Upload the five things
 
-  On the LEFT-hand side of FileZilla, go into your  portal-update
-  folder.
+  On the LEFT, go into  portal-update.
+  Select  .next, public, src, server.js, package.json
+  Drag them to the RIGHT, into /hunarsaaz-portal.
+  If asked: Action "Overwrite", tick "Always use this action", OK.
 
-  Select all five:  .next, public, src, server.js, package.json
-  Drag them to the RIGHT-hand side, into /hunarsaaz-portal
+  WAIT until the queue at the bottom is completely empty.
 
-  If it asks "file already exists", choose:
-      Action: Overwrite
-      and tick "Always use this action"  then OK.
-
-  Wait for the transfer queue at the bottom to go completely empty.
-  It should take a few minutes. DO NOT restart anything until it is
-  empty and shows no failed transfers.
-
-  If any file says "failed" in the bottom window, right-click it and
-  choose "Reset and requeue" until it goes through.
+  Then look at the bottom panel's "Failed transfers" tab. If anything
+  is listed there, right-click -> "Reset and requeue all files" and
+  let it finish. THIS MATTERS: one missing file out of two thousand
+  is enough to make a page fail.
 
 
-STEP 5 — Restart the portal
+STEP 5 — Restart
 
-  Go to cPanel  ->  Setup Node.js App  ->  find the portal app  ->
-  press RESTART.
-
-  Wait about 30 seconds.
+  cPanel -> Setup Node.js App -> the portal app -> RESTART.
+  Wait 30 seconds.
 
 
-STEP 6 — Check it worked
+STEP 6 — Check
 
-  Open these two pages:
+  1. https://learn.hunarsaaz.pk/learn
+  2. https://hunarsaaz.pk/workshops/thrive-360   (should be ONE form,
+     no "Step 1", and "Who can attend" should say "Professionals")
+  3. https://learn.hunarsaaz.pk/learn/workshops  (after logging in)
 
-    https://learn.hunarsaaz.pk/learn          (should load as normal)
-    https://hunarsaaz.pk/workshops/thrive-360 (the registration form)
-
-  On the registration form you should now see three numbered steps:
-    Step 1 — pay
-    Step 2 — your details
-    Step 3 — attach your receipt
-
-  Then log in at https://learn.hunarsaaz.pk/learn/login and open
-    https://learn.hunarsaaz.pk/learn/workshops
-  It should say "Workshop registrations".
-
-  IF ALL THREE WORK  ->  go to Step 7.
-  IF SOMETHING IS BROKEN  ->  go to "IF IT GOES WRONG" below.
+  All three good -> Step 7.
+  Anything black or broken -> see "IF A PAGE WILL NOT LOAD" below.
 
 
 STEP 7 — Tidy up
 
-  Back in FileZilla, right-click  .next-old  ->  Delete.
-  That is it. You are done.
+  FileZilla -> right-click  .next-old  ->  Delete.
 
 
-STEP 8 — On or before 10 November
+STEP 8 — Try it once, end to end
 
-  The letter says the platform will be shared by email on 10 November,
-  so until then the confirmation email prints exactly that under
-  Venue/Platform. Nothing to do now.
+  Worth five minutes before the flyer goes out:
 
-  When you have the Zoom link:
+  1. Register yourself on the form with any photo as the receipt.
+     You should get NO email.
+  2. Confirm it at /learn/workshops.
+  3. You should get exactly one email: the letter.
 
-    Go to  https://learn.hunarsaaz.pk/admin
-    ->  Workshops  ->  THRIVE 360  ->  "Join URL"
-    ->  paste the Zoom link  ->  Save.
-
-  From then on every confirmation carries the link and a "Join on
-  Zoom" button, and the Venue/Platform line changes by itself. People
-  confirmed BEFORE you set it will not have it, so they still need the
-  link sent round on the 10th.
-
-  (The line shown until then is editable too: same page, "Venue note".)
+  If the letter looks right, you are ready.
 
 
-IF IT GOES WRONG
-================
+IF A PAGE WILL NOT LOAD
+=======================
 
-  Nothing is lost. Put the old version back:
+  The portal now writes down exactly what it did to the database when
+  it started. That line tells me what is wrong in one go:
 
-    1. In FileZilla, delete the new  .next  folder.
-    2. Rename  .next-old  back to  .next
-    3. cPanel -> Setup Node.js App -> RESTART.
+    cPanel -> Setup Node.js App -> open the portal app. The screen
+    shows the LOG FILE PATH. Open that file in File Manager (right-
+    click -> View), go to the bottom, and look for lines beginning
+    [schema].
 
-  The portal is exactly as it was. Then tell me what you saw and I
-  will fix it.
+  You will see either:
+
+     [schema] database is up to date
+       -> the database is fine, so it is a missing file. Go back to
+          FileZilla and re-upload; check "Failed transfers".
+
+  or:
+
+     [schema] 2 statement(s) failed; ...
+       -> send me those lines and I will fix it.
+
+  To put the old version back at any time: delete the new .next,
+  rename .next-old back to .next, RESTART.
 
 
 NOTES
 =====
 
-  * Your database is not touched. Every student, course and payment
-    stays exactly where it is. The two new bits of information the
-    portal needs (who checked a payment, and when) are added by the
-    portal itself the first time it starts up.
-
-  * Nobody who already registered is affected. Existing registrations
-    simply appear on the new page as "already dealt with".
-
-  * There is no .env file in this zip. Your settings in cPanel stay
-    as they are.
+  * Your database is not touched. Students, courses, payments and
+    everyone who has already registered stay exactly as they are.
+  * Anyone already marked confirmed will NOT be emailed again.
+  * There is no .env file in this zip. Your cPanel settings stay as
+    they are.
+  * The Zoom link: /admin -> Workshops -> THRIVE 360 -> "Join URL".
+    Until you set it, the letter says the platform will be shared by
+    email on 10 November, which is what it should say.
