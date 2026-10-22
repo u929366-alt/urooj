@@ -279,37 +279,79 @@ const ADDED_COLUMNS: Array<{ table: string; column: string; definition: string; 
   },
 ];
 
+/**
+ * Bring the database up to the schema this build expects.
+ *
+ * Every statement stands on its own. It used to be one try around the whole
+ * lot, which meant a single statement the database would not accept took the
+ * rest down with it silently — and since the columns are added last, the
+ * failure that showed up was a page erroring on a column that was never
+ * added, nowhere near the statement that actually went wrong. Now a failure
+ * is logged, named, and stepped over.
+ *
+ * None of it is fatal. A missing table breaks one feature; throwing here
+ * would take down the whole portal, which is a bad day for everyone.
+ */
 export async function ensureLiveTables(sqlitePath: string): Promise<void> {
+  let client;
   try {
-    const client = createClient({ url: `file:${sqlitePath}` });
-    try {
-      for (const statement of [...STATEMENTS, ...WORKSHOP_STATEMENTS]) {
-        await client.execute(statement);
-      }
+    client = createClient({ url: `file:${sqlitePath}` });
+  } catch (error) {
+    console.error(`[schema] could not open the database at ${sqlitePath}:`, error);
+    return;
+  }
 
-      for (const entry of ADDED_COLUMNS) {
+  const failures: string[] = [];
+  const added: string[] = [];
+
+  try {
+    for (const statement of [...STATEMENTS, ...WORKSHOP_STATEMENTS]) {
+      try {
+        await client.execute(statement);
+      } catch (error) {
+        // The first line is enough to recognise which statement it was.
+        const what = statement.split("\n")[0].slice(0, 80);
+        failures.push(`${what} — ${error}`);
+      }
+    }
+
+    for (const entry of ADDED_COLUMNS) {
+      const where = `${entry.table}.${entry.column}`;
+      try {
         const info = await client.execute(`PRAGMA table_info(\`${entry.table}\`)`);
-        const present = info.rows.some((row) => row.name === entry.column);
-        if (present) continue;
+        if (info.rows.length === 0) {
+          // No such table. Either it is about to be created by a later
+          // release, or a statement above failed; either way, not here.
+          continue;
+        }
+        if (info.rows.some((row) => row.name === entry.column)) continue;
+
         await client.execute(
           `ALTER TABLE \`${entry.table}\` ADD COLUMN \`${entry.column}\` ${entry.definition}`,
         );
+        added.push(where);
+
         if (entry.index) {
           await client.execute(
             `CREATE INDEX IF NOT EXISTS \`${entry.index}\` ON \`${entry.table}\` (\`${entry.column}\`)`,
           );
         }
+      } catch (error) {
+        failures.push(`${where} — ${error}`);
       }
-    } finally {
-      client.close();
     }
-  } catch (error) {
-    // Deliberately not fatal. If this fails the live-class pages will error
-    // with "no such table", which is a bad day for one feature; throwing here
-    // would take down the whole portal, which is a bad day for everyone.
+  } finally {
+    client.close();
+  }
+
+  if (added.length > 0) {
+    console.log(`[schema] added ${added.length} column(s): ${added.join(", ")}`);
+  }
+  if (failures.length > 0) {
     console.error(
-      "[live classes] could not create the live-class tables. Live classes will not work until this is fixed:",
-      error,
+      `[schema] ${failures.length} statement(s) failed; some pages will error until this is fixed:\n  ${failures.join("\n  ")}`,
     );
+  } else {
+    console.log("[schema] database is up to date");
   }
 }

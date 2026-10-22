@@ -7,7 +7,7 @@ import { z } from "zod";
 import { createPendingPayment, bankInstructions } from "./payments";
 import { getWorkshopBySlug, priceFor, registrationState } from "./workshops";
 import { identifyUpload, MAX_RECEIPT_BYTES } from "./uploads";
-import { acknowledgementHTML, staffAlertHTML } from "./workshopEmails";
+import { staffAlertHTML } from "./workshopEmails";
 import { siteConfig } from "@/lib/site";
 
 /**
@@ -225,22 +225,13 @@ export async function registerForWorkshopAction(
     overrideAccess: true,
   });
 
-  // Both emails are best effort. A mail server that is down must not make the
-  // registrant think their booking failed, because it did not.
-  try {
-    await payload.sendEmail({
-      to: parsed.data.email,
-      subject: `We have your registration — ${workshop.title}`,
-      html: acknowledgementHTML(workshop, {
-        name: parsed.data.name,
-        amount,
-        places: parsed.data.groupSize,
-      }),
-    });
-  } catch (error) {
-    console.error("[workshops] acknowledgement email failed:", error);
-  }
-
+  // Nothing goes to the registrant here. The only email they ever get is the
+  // letter, and that is sent when a person has confirmed their payment —
+  // never by the act of filling in this form. The screen tells them so.
+  //
+  // Staff are told straight away, best effort: a mail server that is down
+  // must not make the registrant think their booking failed, because it has
+  // not — the row is already written.
   try {
     await payload.sendEmail({
       to: workshop.contactEmail ?? siteConfig.email,

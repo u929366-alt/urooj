@@ -65,7 +65,7 @@ const THRIVE_360 = {
   audience: [
     { text: "Teachers and educators" },
     { text: "Students" },
-    { text: "HR professionals and managers" },
+    { text: "Professionals" },
     { text: "Mental health practitioners" },
     { text: "Anyone interested in wellbeing" },
   ],
@@ -111,6 +111,39 @@ async function backfill(payload: Payload, id: number | string, doc: Record<strin
   );
 }
 
+/**
+ * One line of the audience list was reworded after the record was created, so
+ * a server running an earlier release still carries the old text. Matched
+ * exactly and only replaced where it is still the old wording, so an audience
+ * list anyone has since edited is left alone.
+ */
+const REWORDED: Array<{ from: string; to: string }> = [
+  { from: "HR professionals and managers", to: "Professionals" },
+];
+
+async function reword(payload: Payload, id: number | string, doc: Record<string, unknown>) {
+  const audience = doc.audience;
+  if (!Array.isArray(audience)) return;
+
+  let changed = false;
+  const updated = audience.map((item) => {
+    const row = item as { text?: string };
+    const match = REWORDED.find((entry) => row.text === entry.from);
+    if (!match) return item;
+    changed = true;
+    return { ...row, text: match.to };
+  });
+  if (!changed) return;
+
+  await payload.update({
+    collection: "workshops",
+    id,
+    data: { audience: updated as { text: string }[] },
+    overrideAccess: true,
+  });
+  payload.logger.info("[workshops] reworded the audience list on the THRIVE 360 record");
+}
+
 export async function seedFirstWorkshop(payload: Payload): Promise<void> {
   try {
     const existing = await payload.find({
@@ -123,7 +156,9 @@ export async function seedFirstWorkshop(payload: Payload): Promise<void> {
 
     const found = existing.docs[0];
     if (found) {
-      await backfill(payload, found.id, found as unknown as Record<string, unknown>);
+      const doc = found as unknown as Record<string, unknown>;
+      await backfill(payload, found.id, doc);
+      await reword(payload, found.id, doc);
       return;
     }
 

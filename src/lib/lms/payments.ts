@@ -304,14 +304,20 @@ export async function confirmPayment(
     }
   }
 
-  try {
-    await payload.sendEmail({
-      to: updated.payerEmail,
-      subject: `Receipt ${receiptNumber} — thank you`,
-      html: paymentEmailHTML(updated, { confirmed: true }),
-    });
-  } catch (error) {
-    console.error("[payments] could not email the receipt:", error);
+  // A workshop fee is receipted by the confirmation letter the registration
+  // sends, which says the payment has been received and goes out at the same
+  // moment. Two emails a minute apart, both about the same money, read as a
+  // system talking to itself.
+  if (updated.purpose !== "workshop") {
+    try {
+      await payload.sendEmail({
+        to: updated.payerEmail,
+        subject: `Receipt ${receiptNumber} — thank you`,
+        html: paymentEmailHTML(updated, { confirmed: true }),
+      });
+    } catch (error) {
+      console.error("[payments] could not email the receipt:", error);
+    }
   }
 
   return updated;

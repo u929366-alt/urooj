@@ -982,7 +982,7 @@ export interface WorkshopRegistration {
   groupSize?: number | null;
   notes?: string | null;
   /**
-   * Approving the registration in the portal sets this, sends the confirmation email and marks the payment received. Changing it here does none of that.
+   * Setting this to Confirmed — here, or on the Workshops page, or by confirming the payment — emails the registrant their confirmation letter and marks the payment received. It happens once; setting it to Confirmed again sends nothing. Cancelling here sends nothing: use 'Something's wrong' on the Workshops page if you want them told why.
    */
   status: 'pending' | 'confirmed' | 'cancelled';
   /**

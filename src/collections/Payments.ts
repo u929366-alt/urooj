@@ -37,6 +37,79 @@ export const Payments: CollectionConfig = {
     update: staffOnly,
     delete: ({ req: { user } }) => user?.role === "admin",
   },
+  hooks: {
+    /**
+     * A payment confirmed by hand in the admin gets the same receipt number,
+     * timestamp and signature as one confirmed through the portal. Without
+     * this, editing the dropdown leaves a confirmed payment with no receipt
+     * number at all, which is the kind of gap nobody notices until audit.
+     */
+    beforeChange: [
+      ({ data, originalDoc, req }) => {
+        const becoming = data.status === "confirmed" && originalDoc?.status !== "confirmed";
+        if (!becoming || data.receiptNumber) return data;
+        data.confirmedAt ??= new Date().toISOString();
+        if (!data.confirmedBy && req.user) data.confirmedBy = req.user.id;
+        return data;
+      },
+    ],
+    afterChange: [
+      async ({ doc, previousDoc, operation, req }) => {
+        if (operation !== "update") return;
+        if (doc.status !== "confirmed" || previousDoc?.status === "confirmed") return;
+        const { payload } = req;
+
+        // Receipt numbers are allocated here rather than in beforeChange
+        // because the count has to be taken after this row is confirmed, or
+        // two payments confirmed in the same breath get the same number.
+        try {
+          if (!doc.receiptNumber) {
+            const confirmed = await payload.count({
+              collection: "payments",
+              where: { status: { equals: "confirmed" } },
+              overrideAccess: true,
+            });
+            await payload.update({
+              collection: "payments",
+              id: doc.id,
+              data: {
+                receiptNumber: `HS-R-${new Date().getFullYear()}-${String(confirmed.totalDocs).padStart(5, "0")}`,
+              },
+              overrideAccess: true,
+            });
+          }
+        } catch (error) {
+          payload.logger.error(`[payments] could not allocate a receipt number: ${error}`);
+        }
+
+        // Confirming a workshop fee confirms the place it paid for, which in
+        // turn sends the registrant their letter. Staff reasonably expect
+        // marking the money received to be the end of the matter, and before
+        // this it quietly was not.
+        if (doc.purpose !== "workshop" || !doc.reference) return;
+        try {
+          const found = await payload.find({
+            collection: "workshop-registrations",
+            where: { paymentReference: { equals: doc.reference } },
+            limit: 1,
+            depth: 0,
+            overrideAccess: true,
+          });
+          const registration = found.docs[0];
+          if (registration && registration.status !== "confirmed") {
+            await payload.update({
+              collection: "workshop-registrations",
+              id: registration.id,
+              data: { status: "confirmed" },
+              overrideAccess: true,
+            });
+          }
+        } catch (error) {
+          payload.logger.error(`[payments] could not confirm the registration: ${error}`);
+        }
+      },
+    ],
+  },
   fields: [
     {
       name: "reference",

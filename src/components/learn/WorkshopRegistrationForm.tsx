@@ -89,8 +89,7 @@ export function WorkshopRegistrationForm({
           Thank you, {success.name.split(" ")[0]}
         </h2>
         <p className="mt-2 text-sm text-gray-700">
-          We have your registration and your receipt. An acknowledgement has gone to{" "}
-          <strong>{success.email}</strong>.
+          We have your registration and your payment proof. Nothing more is needed from you.
         </p>
 
         <div className="mt-5 flex items-start gap-3 rounded-xl bg-white p-5">
@@ -98,8 +97,10 @@ export function WorkshopRegistrationForm({
           <div className="text-sm text-gray-700">
             <p className="font-semibold text-primary-900">Your place is not confirmed yet</p>
             <p className="mt-1">
-              We check every payment against our bank account by hand. Once yours is matched you
-              will get a confirmation email, and the joining link comes with it.
+              We check every payment against our bank account by hand. Once yours is matched we
+              will write to <strong>{success.email}</strong> to confirm your place, and the
+              joining details come with it. That is the only email you will get from us, so do
+              look out for it.
             </p>
           </div>
         </div>
@@ -122,11 +123,13 @@ export function WorkshopRegistrationForm({
         <p className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{state.error}</p>
       )}
 
-      {/* Step one, before any personal details: what to pay and where. */}
+      {/* The fee comes first, because the receipt for it is part of the
+          form. There is one form and one submit: nobody is registered
+          halfway. */}
       <div className="rounded-2xl border-2 border-primary-200 bg-primary-50 p-5">
-        <p className="text-xs font-bold uppercase tracking-wide text-primary-700">Step 1 — pay</p>
-        <p className="mt-2 text-sm text-gray-700">
-          Transfer the fee first, then fill in the form below and attach your receipt.
+        <p className="text-sm font-bold text-primary-900">What to pay</p>
+        <p className="mt-1 text-sm text-gray-700">
+          Transfer the fee, then fill in the rest of this form and attach your receipt to it.
         </p>
 
         <fieldset className="mt-4">
@@ -206,9 +209,7 @@ export function WorkshopRegistrationForm({
       </div>
 
       <div className="rounded-2xl border-2 border-gray-200 p-5">
-        <p className="text-xs font-bold uppercase tracking-wide text-primary-700">
-          Step 2 — your details
-        </p>
+        <p className="text-sm font-bold text-primary-900">Your details</p>
 
         <div className="mt-4 space-y-4">
           <Field
@@ -260,12 +261,13 @@ export function WorkshopRegistrationForm({
 
       {total > 0 && (
         <div className="rounded-2xl border-2 border-secondary-200 bg-secondary-50/50 p-5">
-          <p className="text-xs font-bold uppercase tracking-wide text-secondary-700">
-            Step 3 — attach your receipt
+          <p className="text-sm font-bold text-primary-900">
+            Your payment proof <span className="text-secondary-700">(required)</span>
           </p>
-          <p className="mt-2 text-sm text-gray-700">
+          <p className="mt-1 text-sm text-gray-700">
             A photo of the transfer slip, a screenshot from your banking app, or the bank&apos;s
-            PDF. Registration is not complete without it.
+            PDF. <strong>Your registration is not complete without it</strong> — this form will
+            not send until one is attached.
           </p>
 
           <label
@@ -291,7 +293,7 @@ export function WorkshopRegistrationForm({
         </div>
       )}
 
-      <Submit label={total > 0 ? `Send registration — ${money(total)} paid` : "Register"} />
+      <Submit label={total > 0 ? `Complete registration — ${money(total)} paid` : "Register"} />
       <p className="text-center text-xs text-gray-500">
         We check every payment by hand. Your place is confirmed by email once we have matched it.
       </p>
