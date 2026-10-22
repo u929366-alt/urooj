@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
-import { FileBarChart } from "lucide-react";
+import Link from "next/link";
+import { Download, FileBarChart } from "lucide-react";
 import { PageHero } from "@/components/PageHero";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Card } from "@/components/ui/Card";
 import { financialBreakdown } from "@/data/impact";
+import { reports } from "@/data/reports";
 
 export const metadata: Metadata = {
   title: "Impact & Transparency",
@@ -49,21 +51,38 @@ export default function ImpactPage() {
 
       <section id="reports" className="scroll-mt-24 py-12">
         <Container>
-          <SectionHeading eyebrow="Accountability" title="Annual Reports" />
-          <Card className="mx-auto mt-10 flex max-w-3xl items-start gap-4 p-6">
-            <FileBarChart className="mt-0.5 h-8 w-8 shrink-0 text-primary-600" />
-            <div>
-              <h3 className="font-semibold text-primary-900">
-                Our first annual report is on its way
-              </h3>
-              <p className="mt-1 text-sm leading-6 text-gray-600">
-                As a newly established organization, we will publish our first
-                annual report — covering enrollment, training outcomes, and
-                audited financials — at the close of our first operating year.
-                Reports will be available on this page.
-              </p>
-            </div>
-          </Card>
+          <SectionHeading eyebrow="Accountability" title="Reports & Accounts" />
+          {reports.map((report) => (
+            <Card key={report.href} className="mx-auto mt-10 flex max-w-3xl items-start gap-4 p-6">
+              <FileBarChart className="mt-0.5 h-8 w-8 shrink-0 text-primary-600" />
+              <div className="min-w-0">
+                <h3 className="font-semibold text-primary-900">{report.title}</h3>
+                <p className="mt-1 text-sm leading-6 text-gray-600">
+                  {report.period}
+                  {report.preparedBy ? ` · audited by ${report.preparedBy}` : ""}. {report.summary}
+                </p>
+                <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
+                  <a
+                    href={report.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 rounded-full bg-secondary-500 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-secondary-600"
+                  >
+                    <Download className="h-4 w-4" aria-hidden />
+                    Read the report
+                  </a>
+                  <span className="text-xs text-gray-500">
+                    PDF · {report.pages} pages · {report.size}
+                  </span>
+                </div>
+              </div>
+            </Card>
+          ))}
+          <p className="mx-auto mt-6 max-w-3xl text-center text-sm">
+            <Link href="/reports" className="font-semibold text-primary-600 hover:underline">
+              All reports and accounts →
+            </Link>
+          </p>
           <p className="mx-auto mt-6 max-w-3xl text-center text-sm text-gray-500">
             Questions about our finances or governance? Reach us at{" "}
             <a href="mailto:ceo@hunarsaaz.pk" className="font-medium text-primary-600 hover:underline">

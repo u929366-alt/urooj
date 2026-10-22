@@ -21,7 +21,8 @@ const quickLinks = [
   { label: "Donate", href: `${siteConfig.portalUrl}/donate` },
   { label: "Careers", href: "/careers" },
   { label: "Blog", href: "/blog" },
-  { label: "Impact & Reports", href: "/impact" },
+  { label: "Impact & Transparency", href: "/impact" },
+  { label: "Reports & Accounts", href: "/reports" },
 ];
 
 const socialLinks = [
@@ -139,8 +140,8 @@ export function Footer() {
             <Link href="/about#policies" className="hover:text-white">
               Policies
             </Link>
-            <Link href="/impact#reports" className="hover:text-white">
-              Annual Reports
+            <Link href="/reports" className="hover:text-white">
+              Reports & Accounts
             </Link>
             <Link href="/contact" className="hover:text-white">
               Contact

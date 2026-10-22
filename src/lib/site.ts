@@ -49,7 +49,26 @@ export type NavLink = {
 
 export const mainNav: NavLink[] = [
   { label: "Home", href: "/" },
-  { label: "About", href: "/about" },
+  {
+    // A tenth top-level item does not fit a 1280px window, and the three
+    // pages under here answer the same question anyway: who are you, and
+    // what have you done with the money.
+    label: "About",
+    href: "/about",
+    children: [
+      { label: "About Us", href: "/about", description: "Who we are and why we exist" },
+      {
+        label: "Impact & Transparency",
+        href: "/impact",
+        description: "How we measure results and spend",
+      },
+      {
+        label: "Reports & Accounts",
+        href: "/reports",
+        description: "Audited financial statements",
+      },
+    ],
+  },
   {
     label: "Learn Online",
     href: "https://learn.hunarsaaz.pk/learn",
