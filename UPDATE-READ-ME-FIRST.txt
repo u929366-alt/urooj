@@ -38,11 +38,25 @@ WHAT THIS CHANGES
    is attached. The old separate "upload your receipt afterwards" page
    has been removed, so there is no way to be half-registered.
 
-5. THE FLYER.
+5. A WORKSHOPS TAB ON hunarsaaz.pk.
+   New in the top menu, between Programs and Policy & Advisory. It
+   opens a Workshops page listing everything that is on, with the
+   date, the speaker, who it is for and a Register button.
+
+   That page is served by the PORTAL, not by the static website. That
+   is deliberate: the website is exported to plain HTML and uploaded,
+   so a workshop added or closed in the admin would not show up there
+   until somebody rebuilt and re-uploaded the whole site. Served by
+   the portal, the list is simply correct whenever anyone looks, and
+   you never have to touch the website again to add a workshop.
+
+   THERE ARE THEREFORE TWO ZIPS THIS TIME. See "THE WEBSITE ZIP" at
+   the end.
+
+6. THE FLYER.
    Sent separately. The Hunarsaaz logo is considerably larger, and
    "HR professionals and managers" now reads "Professionals". The
-   wording on the website changes to match by itself when the portal
-   restarts.
+   wording on the website changes to match by itself.
 
 
 WHAT YOU ARE UPLOADING
@@ -106,11 +120,12 @@ STEP 5 — Restart
 STEP 6 — Check
 
   1. https://learn.hunarsaaz.pk/learn
-  2. https://hunarsaaz.pk/workshops/thrive-360   (should be ONE form,
-     no "Step 1", and "Who can attend" should say "Professionals")
-  3. https://learn.hunarsaaz.pk/learn/workshops  (after logging in)
+  2. https://learn.hunarsaaz.pk/workshops        (the new list)
+  3. https://learn.hunarsaaz.pk/workshops/thrive-360  (should be ONE
+     form, no "Step 1", "Who can attend" says "Professionals")
+  4. https://learn.hunarsaaz.pk/learn/workshops  (after logging in)
 
-  All three good -> Step 7.
+  All four good -> Step 7.
   Anything black or broken -> see "IF A PAGE WILL NOT LOAD" below.
 
 
@@ -168,3 +183,35 @@ NOTES
   * The Zoom link: /admin -> Workshops -> THRIVE 360 -> "Join URL".
     Until you set it, the letter says the platform will be shared by
     email on 10 November, which is what it should say.
+
+
+THE WEBSITE ZIP  (hunarsaaz-website.zip)
+========================================
+
+  This is the second zip, and it is what puts the Workshops tab into
+  the menu on hunarsaaz.pk. It is the whole marketing website as plain
+  HTML — the same thing you have uploaded before.
+
+  Do the portal first (steps 1 to 7 above), then this.
+
+  1. Unzip  hunarsaaz-website.zip  on your computer.
+
+  2. In FileZilla, on the RIGHT, go to the folder the website is
+     served from — public_html (NOT hunarsaaz-portal).
+
+  3. Drag EVERYTHING from inside the unzipped folder into it.
+     Overwrite when asked, and tick "Always use this action".
+
+     Note it contains a file called  .htaccess  — if FileZilla is not
+     showing it on your side either, turn hidden files on, because
+     clean URLs and the 404 page need it.
+
+  4. Wait for the queue to empty, then open https://hunarsaaz.pk and
+     check the menu. Workshops should be there, between Programs and
+     Policy & Advisory, and clicking it should open the list on the
+     portal.
+
+  There is nothing to restart for the website — it is plain files.
+
+  You only ever need to re-upload this zip if the WEBSITE changes.
+  Adding or closing a workshop does not change the website.
