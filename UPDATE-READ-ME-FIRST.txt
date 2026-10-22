@@ -53,7 +53,27 @@ WHAT THIS CHANGES
    THERE ARE THEREFORE TWO ZIPS THIS TIME. See "THE WEBSITE ZIP" at
    the end.
 
-6. THE FLYER.
+6. THE AUDITED ACCOUNTS ARE PUBLISHED.
+   The audit report is on the website at
+
+       https://hunarsaaz.pk/reports
+
+   with a "Read the report" button that opens the PDF. It is also in
+   the top menu: hover ABOUT and you will see three entries —
+   About Us, Impact & Transparency, Reports & Accounts.
+
+   Why under About rather than its own tab: a tenth item across the
+   top does not fit a laptop screen, and it pushed Donate off the
+   edge. Say the word if you would rather have it as its own tab and
+   I will make room by moving something else.
+
+   The old "our first annual report is on its way" paragraph on the
+   Impact page is gone, replaced by the real document.
+
+   Next year's report is one line of a file plus the PDF — tell me
+   and I will add it.
+
+7. THE FLYER.
    Sent separately. The Hunarsaaz logo is considerably larger, and
    "HR professionals and managers" now reads "Professionals". The
    wording on the website changes to match by itself.
