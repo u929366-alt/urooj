@@ -76,3 +76,29 @@ export function priceFor(workshop: Workshop, category: "professional" | "student
     ? (workshop.priceStudent ?? 0)
     : (workshop.priceProfessional ?? 0);
 }
+
+/**
+ * Split a list into what is still to come and what has been and gone, with
+ * the upcoming ones soonest first — the order anyone reads them in.
+ *
+ * Here rather than in the page because it asks the clock what time it is, and
+ * a component that does that directly is a component that renders differently
+ * every time it is called.
+ */
+export function splitWorkshops(workshops: Workshop[]): {
+  upcoming: Workshop[];
+  past: Workshop[];
+} {
+  const now = Date.now();
+  const isPast = (workshop: Workshop) => {
+    const end = new Date(workshop.endsAt ?? workshop.startsAt).getTime();
+    return workshop.status === "finished" || (!Number.isNaN(end) && end < now);
+  };
+
+  return {
+    upcoming: workshops
+      .filter((workshop) => !isPast(workshop))
+      .sort((a, b) => new Date(a.startsAt).getTime() - new Date(b.startsAt).getTime()),
+    past: workshops.filter(isPast),
+  };
+}

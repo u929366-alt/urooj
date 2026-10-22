@@ -61,6 +61,14 @@ export const mainNav: NavLink[] = [
     description: "Browse all vocational training programs",
   },
   {
+    // Lives on the portal, not here, because this site is exported once and
+    // uploaded: a workshop added or closed in the admin would not show up
+    // until somebody rebuilt the whole static site.
+    label: "Workshops",
+    href: `${siteConfig.portalUrl}/workshops`,
+    description: "Short live sessions — register and pay online",
+  },
+  {
     label: "Policy & Advisory",
     href: "/advisory",
     description: "Policy, Research, and Institutional Advisory Platform",

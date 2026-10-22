@@ -76,7 +76,10 @@ export function Header() {
                   className={cn(
                     // Eight items plus the logo and two buttons is a tight fit:
                     // without nowrap the labels break onto two lines.
-                    "flex items-center gap-1 whitespace-nowrap rounded-full px-3 py-2 text-sm font-semibold text-gray-700 transition-colors hover:bg-primary-50 hover:text-primary-700",
+                    // Nine items plus two buttons only just fit a 1280px
+                    // window, so the padding tightens there and relaxes again
+                    // when there is room for it.
+                    "flex items-center gap-1 whitespace-nowrap rounded-full px-2 py-2 text-sm font-semibold text-gray-700 transition-colors hover:bg-primary-50 hover:text-primary-700 2xl:px-3",
                     pathname === item.href && "text-primary-700"
                   )}
                   aria-expanded={item.children ? openDropdown === item.label : undefined}

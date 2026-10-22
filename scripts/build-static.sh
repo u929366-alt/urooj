@@ -15,6 +15,7 @@ declare -A PARKED=(
   ["src/app/(payload)"]="$STASH/payload"             # /admin and /cms-api
   ["src/app/(frontend)/learn"]="$STASH/learn"        # the portal itself
   ["src/app/(frontend)/verify"]="$STASH/verify"      # reads certificates from the DB
+  ["src/app/(frontend)/workshops"]="$STASH/workshops" # reads workshops from the DB
 )
 
 # robots.ts and sitemap.ts read SITE_URL per request on the Node build, which
