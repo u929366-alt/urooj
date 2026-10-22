@@ -9,7 +9,6 @@ import { Badge } from "@/components/ui/Badge";
 import {
   countLessonsByCourse,
   getCategoryBySlug,
-  listCategories,
   listInstructors,
   listPublishedCourses,
 } from "@/lib/lms/queries";
@@ -19,10 +18,21 @@ import type { Category, User } from "@/payload-types";
 
 type Params = { params: Promise<{ slug: string }> };
 
-export async function generateStaticParams() {
-  const categories = await listCategories();
-  return categories.map((category) => ({ slug: category.slug ?? "" }));
-}
+/**
+ * Rendered per request, like everything else under /learn.
+ *
+ * This page used to declare generateStaticParams, which asks Next to
+ * prerender it at build time. It cannot be: the portal layout wrapping it
+ * reads the request headers to work out who is signed in, and a prerender
+ * has no request to read. Every category page therefore answered 500 with
+ * DYNAMIC_SERVER_USAGE — including slugs that were listed at build time, so
+ * it was not a case of a category being added later.
+ *
+ * There is nothing to lose by it. The courses, the lesson counts and the
+ * instructors all come out of the database anyway, so a prerendered copy
+ * would have been a photograph of the catalogue on the day of the build.
+ */
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug } = await params;
