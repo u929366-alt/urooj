@@ -12,7 +12,8 @@ export function ProgramCard({ program }: { program: Program }) {
   return (
     <Card className="flex flex-col overflow-hidden">
       <PlaceholderImage
-        label={program.title}
+        src={program.photos?.[0]?.src}
+        label={program.photos?.[0]?.caption ?? program.title}
         icon={Icon}
         seed={program.slug}
         className="aspect-[16/10] w-full"

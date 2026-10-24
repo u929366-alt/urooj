@@ -10,7 +10,8 @@ export function AboutSummary() {
       <Container>
         <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-2">
           <PlaceholderImage
-            label="Hunarsaaz campus and students"
+            src="/photos/computer-lab-class.jpg"
+            label="A class of students at the computers in the Hunarsaaz IT lab"
             icon={Users}
             seed="about"
             className="aspect-[4/3] w-full rounded-3xl"

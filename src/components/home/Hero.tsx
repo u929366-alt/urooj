@@ -60,9 +60,11 @@ export function Hero() {
         </div>
         <div className="relative">
           <PlaceholderImage
-            label="Students in a vocational training workshop"
+            src="/photos/campus-building.jpg"
+            label="The Hunarsaaz centre in Taxila, its boundary wall painted with the trades taught inside: electrical, mechanical, IT and tailoring"
             icon={GraduationCap}
             seed="hero"
+            priority
             className="aspect-[4/3] w-full rounded-3xl shadow-2xl shadow-primary-900/20"
           />
         </div>

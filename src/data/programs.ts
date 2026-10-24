@@ -20,12 +20,24 @@ export type Program = {
    * cannot be taught online and deliberately have nothing here.
    */
   onlineCourse?: { slug: string; title: string };
+  /**
+   * Photographs of this program actually running. Programs without any show
+   * the gradient stand-in, which is honest: we have not photographed them
+   * yet. `photos[0]` is the one used as the card and the header image.
+   */
+  photos?: { src: string; caption: string }[];
 };
 
 export const programs: Program[] = [
   {
     slug: "computer-it-skills",
     onlineCourse: { slug: "microsoft-excel", title: "Microsoft Excel" },
+    photos: [
+      { src: "/photos/computer-lab-class.jpg", caption: "A class in the Hunarsaaz IT lab" },
+      { src: "/photos/student-typing-application.jpg", caption: "Typing up a letter in Word" },
+      { src: "/photos/students-word-processing.jpg", caption: "Working from handwritten notes" },
+      { src: "/photos/student-practising-typing.jpg", caption: "Word processing practice" },
+    ],
     title: "Computer & IT Skills",
     category: "Technology",
     icon: "Monitor",

@@ -126,9 +126,11 @@ export default function AboutPage() {
               </ul>
             </div>
             <PlaceholderImage
-              label="Hunarsaaz trainers and students"
+              src="/photos/students-in-the-lab.jpg"
+              label="A student at a Hunarsaaz computer, working from handwritten notes beside the keyboard"
               icon={Users}
               seed="objectives"
+              position="center 35%"
               className="aspect-[4/3] w-full rounded-3xl"
             />
           </div>

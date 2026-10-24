@@ -36,6 +36,7 @@ export function GalleryFilterGrid() {
         {filtered.map((item) => (
           <PlaceholderImage
             key={item.id}
+            src={item.src}
             label={item.caption}
             icon={Images}
             seed={item.id}

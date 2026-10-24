@@ -75,9 +75,11 @@ export default async function ProgramDetailPage({
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-3">
             <div className="lg:col-span-2">
               <PlaceholderImage
-                label={program.title}
+                src={program.photos?.[0]?.src}
+                label={program.photos?.[0]?.caption ?? program.title}
                 icon={Icon}
                 seed={program.slug}
+                priority
                 className="aspect-[16/9] w-full rounded-3xl"
               />
 
@@ -117,10 +119,14 @@ export default async function ProgramDetailPage({
 
               <h2 className="mt-10 font-display text-2xl font-bold text-primary-900">Gallery</h2>
               <div className="mt-4 grid grid-cols-3 gap-3">
-                {[1, 2, 3].map((n) => (
+                {(program.photos?.length
+                  ? program.photos.slice(1, 4)
+                  : [1, 2, 3].map((n) => ({ src: undefined, caption: `${program.title} in practice`, key: n }))
+                ).map((photo, n) => (
                   <PlaceholderImage
-                    key={n}
-                    label={`${program.title} in practice`}
+                    key={photo.src ?? n}
+                    src={photo.src}
+                    label={photo.caption}
                     icon={Icon}
                     seed={`${program.slug}-${n}`}
                     className="aspect-square rounded-xl"

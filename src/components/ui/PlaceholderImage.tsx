@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { ImageIcon, type LucideIcon } from "lucide-react";
 
@@ -18,20 +19,50 @@ function hashString(value: string) {
 }
 
 /**
- * Sample-content stand-in for real photography. Swap for actual images
- * before launch — see README "Placeholder content" section.
+ * A photograph where there is one, and a gradient stand-in where there is not.
+ *
+ * Giving this component the `src` rather than replacing it at each call site
+ * means a photograph arriving later is one prop, in the shape the layout
+ * already expects — and the pages still waiting for one keep working rather
+ * than showing a broken image. `label` becomes the alt text when there is a
+ * photo, so it is worth writing as a description either way.
  */
 export function PlaceholderImage({
   label,
   icon: Icon = ImageIcon,
   seed,
   className,
+  src,
+  priority,
+  position,
 }: {
   label?: string;
   icon?: LucideIcon;
   seed?: string;
   className?: string;
+  /** A real photograph, from /public. */
+  src?: string;
+  /** Set on the one photo above the fold, so it is not lazy-loaded. */
+  priority?: boolean;
+  /** object-position, for a crop that would otherwise cut off the subject. */
+  position?: string;
 }) {
+  if (src) {
+    return (
+      <div className={cn("relative overflow-hidden bg-gray-100", className)}>
+        <Image
+          src={src}
+          alt={label ?? ""}
+          fill
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 600px"
+          priority={priority}
+          className="object-cover"
+          style={position ? { objectPosition: position } : undefined}
+        />
+      </div>
+    );
+  }
+
   const gradient = gradients[hashString(seed ?? label ?? "hunarsaaz") % gradients.length];
 
   return (

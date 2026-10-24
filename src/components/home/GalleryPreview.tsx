@@ -16,6 +16,7 @@ export function GalleryPreview() {
           {items.map((item, i) => (
             <PlaceholderImage
               key={item.id}
+              src={item.src}
               label={item.caption}
               icon={Images}
               seed={item.id}
