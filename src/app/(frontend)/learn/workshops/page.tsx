@@ -10,6 +10,8 @@ import { formatRupees } from "@/lib/lms/payments";
 import { mediaPath } from "@/lib/lms/media";
 import { ReviewActions } from "@/components/learn/ReviewActions";
 import { JoiningLinkPanel } from "@/components/learn/JoiningLinkPanel";
+import { CertificatePanel } from "@/components/learn/CertificatePanel";
+import { certificateStandings } from "@/lib/lms/workshopCertificates";
 import type { PaymentReceipt, Workshop, WorkshopRegistration } from "@/payload-types";
 
 export const metadata: Metadata = {
@@ -55,10 +57,14 @@ export default async function WorkshopReviewPage({
     error?: string;
     joining?: string;
     failed?: string;
+    certificates?: string;
+    emailed?: string;
+    already?: string;
   }>;
 }) {
   await requireStaff("/learn/workshops");
-  const { approved, declined, error, joining, failed } = await searchParams;
+  const { approved, declined, error, joining, failed, certificates, emailed, already } =
+    await searchParams;
 
   const payload = await getPayloadClient();
   const result = await payload.find({
@@ -108,6 +114,16 @@ export default async function WorkshopReviewPage({
     joiningByWorkshop.set(key, entry);
   }
 
+  // How many certificates each workshop owes, worked out the same way the
+  // issuing does so the number on the button is the number issued.
+  const standings = new Map<
+    string,
+    { eligible: number; issued: number; unnamed: number; ended: boolean }
+  >();
+  for (const key of joiningByWorkshop.keys()) {
+    standings.set(key, await certificateStandings(key));
+  }
+
   return (
     <Container className="py-12">
       <h1 className="font-display text-3xl font-bold text-primary-900">
@@ -154,6 +170,28 @@ export default async function WorkshopReviewPage({
         </p>
       )}
 
+      {certificates && (
+        <p className="mt-4 rounded-xl bg-accent-50 px-4 py-3 text-sm text-accent-800">
+          {certificates} {certificates === "1" ? "certificate" : "certificates"} issued
+          {emailed && <>, {emailed} emailed</>}
+          {already && <> ({already} already had one)</>}.
+          {failed && (
+            <>
+              {" "}
+              <strong className="text-red-700">
+                {failed} email(s) could not be delivered — the certificates exist, send those
+                by hand.
+              </strong>
+            </>
+          )}
+        </p>
+      )}
+      {error === "certificates" && (
+        <p className="mt-4 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">
+          The certificates could not be issued. Nothing was sent — check the log.
+        </p>
+      )}
+
       {[...joiningByWorkshop.values()].map((entry) => (
         <JoiningLinkPanel
           key={entry.workshop.id}
@@ -166,6 +204,22 @@ export default async function WorkshopReviewPage({
           alreadySent={entry.alreadySent}
         />
       ))}
+
+      {[...joiningByWorkshop.entries()].map(([key, entry]) => {
+        const standing = standings.get(key);
+        if (!standing) return null;
+        return (
+          <CertificatePanel
+            key={`cert-${entry.workshop.id}`}
+            workshopId={String(entry.workshop.id)}
+            title={entry.workshop.title}
+            eligible={standing.eligible}
+            issued={standing.issued}
+            unnamed={standing.unnamed}
+            ended={standing.ended}
+          />
+        );
+      })}
 
       <section className="mt-10">
         <h2 className="flex items-center gap-2 font-display text-xl font-semibold text-primary-900">

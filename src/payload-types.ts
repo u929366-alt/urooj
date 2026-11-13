@@ -88,6 +88,7 @@ export interface Config {
     'live-attendance': LiveAttendance;
     workshops: Workshop;
     'workshop-registrations': WorkshopRegistration;
+    'workshop-certificates': WorkshopCertificate;
     'payment-receipts': PaymentReceipt;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
@@ -117,6 +118,7 @@ export interface Config {
     'live-attendance': LiveAttendanceSelect<false> | LiveAttendanceSelect<true>;
     workshops: WorkshopsSelect<false> | WorkshopsSelect<true>;
     'workshop-registrations': WorkshopRegistrationsSelect<false> | WorkshopRegistrationsSelect<true>;
+    'workshop-certificates': WorkshopCertificatesSelect<false> | WorkshopCertificatesSelect<true>;
     'payment-receipts': PaymentReceiptsSelect<false> | PaymentReceiptsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -1058,6 +1060,36 @@ export interface PaymentReceipt {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "workshop-certificates".
+ */
+export interface WorkshopCertificate {
+  id: number;
+  serial: string;
+  workshop: number | Workshop;
+  /**
+   * The booking this person came in on.
+   */
+  registration?: (number | null) | WorkshopRegistration;
+  /**
+   * The seat this certificate was issued against.
+   */
+  seat?: string | null;
+  holderName: string;
+  /**
+   * Where their copy was sent.
+   */
+  holderEmail?: string | null;
+  workshopTitle: string;
+  /**
+   * The presenter as they were at the time, kept so a later edit cannot rewrite history.
+   */
+  presenterLine?: string | null;
+  issuedAt: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -1163,6 +1195,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'workshop-registrations';
         value: number | WorkshopRegistration;
+      } | null)
+    | ({
+        relationTo: 'workshop-certificates';
+        value: number | WorkshopCertificate;
       } | null)
     | ({
         relationTo: 'payment-receipts';
@@ -1700,6 +1736,23 @@ export interface WorkshopRegistrationsSelect<T extends boolean = true> {
   verifiedBy?: T;
   amountDue?: T;
   joiningSentAt?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "workshop-certificates_select".
+ */
+export interface WorkshopCertificatesSelect<T extends boolean = true> {
+  serial?: T;
+  workshop?: T;
+  registration?: T;
+  seat?: T;
+  holderName?: T;
+  holderEmail?: T;
+  workshopTitle?: T;
+  presenterLine?: T;
+  issuedAt?: T;
   updatedAt?: T;
   createdAt?: T;
 }

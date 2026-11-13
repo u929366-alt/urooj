@@ -242,6 +242,61 @@ export function joiningHTML(
 </div>`;
 }
 
+/**
+ * "Here is your certificate."
+ *
+ * A link rather than an attachment. The portal has no PDF renderer — shared
+ * hosting will not run one — and more to the point a link keeps working: the
+ * certificate is a page that can be printed or saved as PDF whenever they
+ * need it, and the serial on it can be checked by anyone they show it to.
+ */
+export function certificateHTML(
+  workshop: Workshop,
+  holderName: string,
+  serial: string,
+  url: string,
+): string {
+  const topic = workshop.tagline ? `${workshop.title}: ${workshop.tagline}` : workshop.title;
+  const first = holderName.trim().split(/\s+/)[0] || holderName;
+
+  return `
+<div style="font-family:Arial,Helvetica,sans-serif;max-width:580px;margin:0 auto;padding:24px;color:#1f2937;line-height:1.55">
+  <h1 style="font-size:20px;color:#0b2c49;margin:0 0 14px">Your certificate</h1>
+
+  <p style="margin:0 0 14px">Dear ${esc(first)},</p>
+  <p style="margin:0 0 18px">
+    Thank you for attending <strong>${esc(topic)}</strong>. Your certificate of
+    completion is ready.
+  </p>
+
+  <p style="margin:0 0 18px">
+    <a href="${esc(url)}"
+       style="display:inline-block;background:#0b5394;color:#ffffff;text-decoration:none;
+              padding:14px 28px;border-radius:999px;font-weight:bold;font-size:16px">
+      View your certificate
+    </a>
+  </p>
+  <p style="margin:0 0 18px;font-size:13px;color:#6b7280">
+    If the button does not work, copy this link into your browser:<br>${esc(url)}
+  </p>
+
+  <p style="margin:0 0 14px;padding:12px 16px;background:#f3f4f6;border-radius:8px;font-size:14px">
+    To keep a copy, open the link and press <strong>Ctrl + P</strong> (or <strong>Cmd + P</strong>
+    on a Mac), then choose "Save as PDF". The link does not expire.
+  </p>
+
+  <p style="margin:0 0 14px;font-size:14px">
+    Your certificate number is <strong>${esc(serial)}</strong>. Anyone you show the
+    certificate to — an employer, a university — can confirm it is genuine using that
+    number, and they will see only your name, the workshop and the date.
+  </p>
+
+  <p style="margin:24px 0 0;font-size:13px;color:#6b7280">
+    Questions? ${esc(workshop.contactName ? `${workshop.contactName} — ` : "")}${esc(workshop.contactEmail ?? siteConfig.email)}
+  </p>
+</div>`;
+}
+
 export function declineHTML(workshop: Workshop, registration: WorkshopRegistration, reason: string) {
   return `
 <div style="font-family:Arial,Helvetica,sans-serif;max-width:560px;margin:0 auto;padding:24px;color:#1f2937">

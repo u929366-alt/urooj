@@ -29,6 +29,7 @@ import { LiveSessions } from "./src/collections/LiveSessions.ts";
 import { Workshops } from "./src/collections/Workshops.ts";
 import { WorkshopRegistrations } from "./src/collections/WorkshopRegistrations.ts";
 import { PaymentReceipts } from "./src/collections/PaymentReceipts.ts";
+import { WorkshopCertificates } from "./src/collections/WorkshopCertificates.ts";
 import { LiveAttendance } from "./src/collections/LiveAttendance.ts";
 import { Payments } from "./src/collections/Payments.ts";
 
@@ -141,6 +142,7 @@ export default buildConfig({
     LiveAttendance,
     Workshops,
     WorkshopRegistrations,
+    WorkshopCertificates,
     PaymentReceipts,
   ],
   editor: lexicalEditor(),

@@ -5,7 +5,9 @@ import { redirect } from "next/navigation";
 import { getPayload } from "payload";
 import config from "@payload-config";
 import { requireStaff } from "./auth";
-import { declineHTML, joiningHTML } from "./workshopEmails";
+import { certificateHTML, declineHTML, joiningHTML } from "./workshopEmails";
+import { issueWorkshopCertificates } from "./workshopCertificates";
+import { siteConfig } from "@/lib/site";
 import type { Workshop } from "@/payload-types";
 
 /**
@@ -204,4 +206,71 @@ export async function sendJoiningLinksAction(formData: FormData) {
 
   revalidatePath("/learn/workshops");
   redirect(`/learn/workshops?joining=${sent}${failed > 0 ? `&failed=${failed}` : ""}`);
+}
+
+/**
+ * Issue certificates to everyone on the register, and email them out.
+ *
+ * Issuing and sending are deliberately separate: a certificate is created
+ * first and emailed second, so a mail server having a bad morning leaves
+ * people holding certificates that can be sent again rather than leaving
+ * them with nothing. Pressing the button a second time issues nothing new —
+ * one per seat — and writes only to whoever has not been told yet.
+ */
+export async function issueCertificatesAction(formData: FormData) {
+  await requireStaff("/learn/workshops");
+  const workshopId = String(formData.get("workshopId") || "");
+  if (!workshopId) redirect("/learn/workshops?error=missing");
+
+  const payload = await getPayload({ config });
+
+  const workshop = (await payload.findByID({
+    collection: "workshops",
+    id: workshopId,
+    depth: 0,
+    overrideAccess: true,
+  })) as Workshop | null;
+  if (!workshop) redirect("/learn/workshops?error=missing");
+
+  let issued: Awaited<ReturnType<typeof issueWorkshopCertificates>>;
+  try {
+    issued = await issueWorkshopCertificates(workshopId);
+  } catch (error) {
+    console.error("[workshops] could not issue certificates:", error);
+    redirect("/learn/workshops?error=certificates");
+  }
+
+  // The portal is on learn.; the certificate page lives there too.
+  const base = (process.env.SITE_URL?.trim() || siteConfig.url).replace(/\/+$/, "");
+
+  let sent = 0;
+  let failed = 0;
+  for (const certificate of issued.issued) {
+    if (!certificate.holderEmail) continue;
+    try {
+      await payload.sendEmail({
+        to: certificate.holderEmail,
+        subject: `Your certificate — ${workshop.title}`,
+        html: certificateHTML(
+          workshop,
+          certificate.holderName,
+          certificate.serial,
+          `${base}/certificates/${certificate.serial}`,
+        ),
+      });
+      sent += 1;
+    } catch (error) {
+      failed += 1;
+      console.error(`[workshops] certificate email to ${certificate.holderEmail} failed:`, error);
+    }
+  }
+
+  revalidatePath("/learn/workshops");
+  const query = new URLSearchParams({
+    certificates: String(issued.issued.length),
+    emailed: String(sent),
+  });
+  if (failed > 0) query.set("failed", String(failed));
+  if (issued.skipped > 0) query.set("already", String(issued.skipped));
+  redirect(`/learn/workshops?${query.toString()}`);
 }

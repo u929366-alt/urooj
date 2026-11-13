@@ -3,6 +3,7 @@ import { BadgeCheck, XCircle } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { Card } from "@/components/ui/Card";
 import { getCertificateBySerial } from "@/lib/lms/completion";
+import { getWorkshopCertificateBySerial } from "@/lib/lms/workshopCertificates";
 import { siteConfig } from "@/lib/site";
 
 /**
@@ -31,7 +32,33 @@ export default async function VerifyPage({
   params: Promise<{ serial: string }>;
 }) {
   const { serial } = await params;
-  const certificate = await getCertificateBySerial(serial);
+
+  /**
+   * Two kinds of certificate, two tables: a course one belongs to a student
+   * who has an account, a workshop one to somebody who never made one. A
+   * serial is unique across both, so whoever is holding the printout does
+   * not need to know or care which they have.
+   */
+  const course = await getCertificateBySerial(serial);
+  const workshop = course ? null : await getWorkshopCertificateBySerial(serial);
+
+  const certificate = course
+    ? {
+        holder: course.studentName,
+        what: course.courseTitle,
+        label: "Course",
+        issuedAt: course.issuedAt,
+        serial: course.serial,
+      }
+    : workshop
+      ? {
+          holder: workshop.holderName,
+          what: workshop.workshopTitle,
+          label: "Workshop",
+          issuedAt: workshop.issuedAt,
+          serial: workshop.serial,
+        }
+      : null;
 
   return (
     <Container className="py-16">
@@ -53,13 +80,13 @@ export default async function VerifyPage({
               <div className="flex justify-between gap-4">
                 <dt className="text-gray-500">Awarded to</dt>
                 <dd className="text-right font-semibold text-gray-900">
-                  {certificate.studentName}
+                  {certificate.holder}
                 </dd>
               </div>
               <div className="flex justify-between gap-4">
-                <dt className="text-gray-500">Course</dt>
+                <dt className="text-gray-500">{certificate.label}</dt>
                 <dd className="text-right font-semibold text-gray-900">
-                  {certificate.courseTitle}
+                  {certificate.what}
                 </dd>
               </div>
               <div className="flex justify-between gap-4">

@@ -173,6 +173,30 @@ const WORKSHOP_STATEMENTS = [
 	\`email\` text,
 	FOREIGN KEY (\`_parent_id\`) REFERENCES \`workshop_registrations\`(\`id\`) ON UPDATE no action ON DELETE cascade
 )`,
+  `CREATE TABLE IF NOT EXISTS \`workshop_certificates\` (
+	\`id\` integer PRIMARY KEY NOT NULL,
+	\`serial\` text NOT NULL,
+	\`workshop_id\` integer NOT NULL,
+	\`registration_id\` integer,
+	\`seat\` text,
+	\`holder_name\` text NOT NULL,
+	\`holder_email\` text,
+	\`workshop_title\` text NOT NULL,
+	\`presenter_line\` text,
+	\`issued_at\` text NOT NULL,
+	\`updated_at\` text DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) NOT NULL,
+	\`created_at\` text DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) NOT NULL,
+	FOREIGN KEY (\`workshop_id\`) REFERENCES \`workshops\`(\`id\`) ON UPDATE no action ON DELETE set null,
+	FOREIGN KEY (\`registration_id\`) REFERENCES \`workshop_registrations\`(\`id\`) ON UPDATE no action ON DELETE set null
+)`,
+
+  `CREATE UNIQUE INDEX IF NOT EXISTS \`workshop_certificates_serial_idx\` ON \`workshop_certificates\` (\`serial\`)`,
+  `CREATE INDEX IF NOT EXISTS \`workshop_certificates_workshop_idx\` ON \`workshop_certificates\` (\`workshop_id\`)`,
+  `CREATE INDEX IF NOT EXISTS \`workshop_certificates_registration_idx\` ON \`workshop_certificates\` (\`registration_id\`)`,
+  `CREATE INDEX IF NOT EXISTS \`workshop_certificates_seat_idx\` ON \`workshop_certificates\` (\`seat\`)`,
+  `CREATE INDEX IF NOT EXISTS \`workshop_certificates_created_at_idx\` ON \`workshop_certificates\` (\`created_at\`)`,
+  `CREATE INDEX IF NOT EXISTS \`workshop_certificates_updated_at_idx\` ON \`workshop_certificates\` (\`updated_at\`)`,
+
   `CREATE INDEX IF NOT EXISTS \`payment_receipts_created_at_idx\` ON \`payment_receipts\` (\`created_at\`)`,
   `CREATE UNIQUE INDEX IF NOT EXISTS \`payment_receipts_filename_idx\` ON \`payment_receipts\` (\`filename\`)`,
   `CREATE INDEX IF NOT EXISTS \`payment_receipts_reference_idx\` ON \`payment_receipts\` (\`reference\`)`,
@@ -294,6 +318,15 @@ const ADDED_COLUMNS: Array<{ table: string; column: string; definition: string; 
     table: "workshop_registrations",
     column: "joining_sent_at",
     definition: "text",
+  },
+  // The locking table's column for the workshop certificates collection.
+  // Without it every issue fails with "no such column" after the certificate
+  // row has already been written.
+  {
+    table: "payload_locked_documents_rels",
+    column: "workshop_certificates_id",
+    definition: "integer REFERENCES workshop_certificates(id) ON DELETE cascade",
+    index: "payload_locked_documents_rels_workshop_certificates_id_idx",
   },
 ];
 

@@ -179,6 +179,45 @@ h1, h2, h3, h4, h5, h6 {
     size: A4 landscape;
     margin: 12mm;
   }
+
+  /* The workshop certificate wants the whole sheet.
+     Sized from the page HEIGHT rather than the width: at A4 landscape less
+     the margins the width is the generous dimension and the height is the
+     tight one, so sizing by width made the box a little taller than the
+     printable area and pushed the signatures onto a second page. */
+  .certificate-print {
+    padding: 0 !important;
+    max-width: none !important;
+  }
+
+  .certificate-frame {
+    width: auto;
+    /* A4 landscape is 210mm tall; the page margin takes 12mm top and bottom,
+       so 180mm leaves a little room rather than spilling onto a second sheet.
+       vh is no good here: Chrome measures it against the whole page, margins
+       included, which is exactly the 24mm that caused the overflow. */
+    height: 180mm;
+    max-width: 100%;
+    margin: 0 auto;
+    border-radius: 0;
+    box-shadow: none;
+  }
+}
+
+/* The workshop certificate, drawn at its artwork size and scaled to whatever
+   it is shown in. Fixed pixels inside mean the printed sheet is the one that
+   was on screen, and a phone gets the whole certificate shrunk rather than a
+   reflowed and broken one. */
+.certificate-frame {
+  container-type: inline-size;
+  width: 100%;
+  aspect-ratio: 1754 / 1240;
+  overflow: hidden;
+}
+
+.certificate-scale {
+  width: 100%;
+  height: 100%;
 }
 
 /* Lesson and assignment bodies.
