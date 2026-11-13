@@ -236,12 +236,9 @@ export async function registerForWorkshopAction(
     }
   }
 
-  await payload.update({
-    collection: "workshops",
-    id: workshop.id,
-    data: { registrationCount: (workshop.registrationCount ?? 0) + parsed.data.groupSize },
-    overrideAccess: true,
-  });
+  // The places are counted against the workshop by the collection's own
+  // afterChange hook, not here — otherwise a booking staff add in the admin
+  // would not count and the workshop could quietly oversell.
 
   // Nothing goes to the registrant here. The only email they ever get is the
   // letter, and that is sent when a person has confirmed their payment —

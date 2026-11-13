@@ -1003,7 +1003,7 @@ export interface WorkshopRegistration {
    */
   status: 'pending' | 'confirmed' | 'cancelled';
   /**
-   * The reference the registrant was given to quote on their bank transfer.
+   * The reference the registrant was given to quote on their bank transfer. Left blank on a registration you add by hand, one is issued automatically when you save.
    */
   paymentReference?: string | null;
   /**
@@ -1023,7 +1023,7 @@ export interface WorkshopRegistration {
    */
   verifiedBy?: (number | null) | User;
   /**
-   * Rupees, at the time of booking.
+   * Rupees. Filled in by the booking form at the price of the day; type it in yourself for a registration you are adding by hand.
    */
   amountDue?: number | null;
   /**

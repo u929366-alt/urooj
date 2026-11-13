@@ -7,11 +7,36 @@ import type { Workshop } from "../payload-types.ts";
  *
  * Holds a name, an email address, a phone number and where they work, for a
  * person who may have no account here at all. That is personal data belonging
- * to a member of the public, so only staff can read it and nobody can create
- * a row through the API: registrations arrive through the portal's own form,
- * which writes them with overrideAccess after validating. Leaving `create`
- * open would hand the internet a way to fill the table with rubbish.
+ * to a member of the public, so only staff can read it.
+ *
+ * Staff can add a registration by hand, and need to: people pay in cash, ring
+ * up, or send the slip on WhatsApp, and a register that can only be written
+ * to by a web form is a register that does not match the room. What stays
+ * shut is creation by anyone else — an open `create` would hand the internet
+ * a way to fill the table with rubbish. The public form is not affected
+ * either way; it writes with overrideAccess after validating.
  */
+/**
+ * A booking reference, in the same shape the payments module issues:
+ * HS-W-ABC123. Needed here because a registration staff type in by hand has
+ * no payment record behind it and so arrives without one, and the seat
+ * numbers are built from it.
+ *
+ * Written out rather than imported because ./lib/lms/payments is server-only
+ * and this file is pulled into the Payload config. Duplicating it is safe:
+ * the reference is random, not a sequence, so there is nothing to keep in
+ * step — and Web Crypto rather than node:crypto so the config stays loadable
+ * wherever it is read.
+ */
+function makeWorkshopReference(): string {
+  const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  const bytes = new Uint8Array(6);
+  globalThis.crypto.getRandomValues(bytes);
+  let body = "";
+  for (const byte of bytes) body += alphabet[byte % alphabet.length];
+  return `HS-W-${body}`;
+}
+
 export const WorkshopRegistrations: CollectionConfig = {
   slug: "workshop-registrations",
   admin: {
@@ -21,7 +46,7 @@ export const WorkshopRegistrations: CollectionConfig = {
   },
   access: {
     read: ({ req: { user } }) => user?.role === "admin" || user?.role === "instructor",
-    create: () => false,
+    create: ({ req: { user } }) => user?.role === "admin" || user?.role === "instructor",
     update: ({ req: { user } }) => user?.role === "admin" || user?.role === "instructor",
     delete: ({ req: { user } }) => user?.role === "admin",
   },
@@ -33,7 +58,14 @@ export const WorkshopRegistrations: CollectionConfig = {
      * the same write and cannot set off a second one.
      */
     beforeChange: [
-      ({ data, originalDoc, req }) => {
+      ({ data, originalDoc, req, operation }) => {
+        // A booking made by hand has no payment record and so no reference.
+        // Give it one: staff have something to quote, and the seat numbers
+        // below have something to be built from.
+        if (operation === "create" && !data.paymentReference) {
+          data.paymentReference = makeWorkshopReference();
+        }
+
         const becoming = data.status === "confirmed" && originalDoc?.status !== "confirmed";
         if (becoming && !data.verifiedAt) {
           data.verifiedAt = new Date().toISOString();
@@ -94,10 +126,50 @@ export const WorkshopRegistrations: CollectionConfig = {
      */
     afterChange: [
       async ({ doc, previousDoc, operation, req }) => {
-        if (operation !== "update") return;
-        if (doc.status !== "confirmed" || previousDoc?.status === "confirmed") return;
-
         const { payload } = req;
+
+        /**
+         * Count the places against the workshop, once, as the booking is
+         * made — whether it came from the public form or from a member of
+         * staff typing it in. It used to be done by the form's own action,
+         * which meant a booking added in the admin did not count towards
+         * capacity and the workshop could quietly oversell.
+         */
+        if (operation === "create") {
+          try {
+            const workshopId =
+              typeof doc.workshop === "object" && doc.workshop ? doc.workshop.id : doc.workshop;
+            const workshop = await payload.findByID({
+              collection: "workshops",
+              id: workshopId,
+              depth: 0,
+              overrideAccess: true,
+            });
+            if (workshop) {
+              await payload.update({
+                collection: "workshops",
+                id: workshopId,
+                data: {
+                  registrationCount: (workshop.registrationCount ?? 0) + (doc.groupSize ?? 1),
+                },
+                overrideAccess: true,
+              });
+            }
+          } catch (error) {
+            payload.logger.error(`[workshops] could not count the places: ${error}`);
+          }
+        }
+
+        /**
+         * The letter goes when a place becomes confirmed — including when
+         * staff add somebody who has already paid and mark them confirmed in
+         * the same breath. A booking created as pending, which is what the
+         * public form makes, sends nothing.
+         */
+        const becameConfirmed =
+          doc.status === "confirmed" &&
+          (operation === "create" || previousDoc?.status !== "confirmed");
+        if (!becameConfirmed) return;
 
         // Mark the money received too, so Payments agrees with the register.
         // Only the status: the receipt number, the timestamp and the
@@ -255,7 +327,8 @@ export const WorkshopRegistrations: CollectionConfig = {
       index: true,
       admin: {
         position: "sidebar",
-        description: "The reference the registrant was given to quote on their bank transfer.",
+        description:
+          "The reference the registrant was given to quote on their bank transfer. Left blank on a registration you add by hand, one is issued automatically when you save.",
       },
     },
     {
@@ -286,7 +359,11 @@ export const WorkshopRegistrations: CollectionConfig = {
     {
       name: "amountDue",
       type: "number",
-      admin: { position: "sidebar", readOnly: true, description: "Rupees, at the time of booking." },
+      admin: {
+        position: "sidebar",
+        description:
+          "Rupees. Filled in by the booking form at the price of the day; type it in yourself for a registration you are adding by hand.",
+      },
     },
     {
       name: "joiningSentAt",
