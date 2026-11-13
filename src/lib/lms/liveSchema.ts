@@ -106,6 +106,7 @@ const WORKSHOP_STATEMENTS = [
 	\`verified_at\` text,
 	\`verified_by_id\` integer,
 	\`amount_due\` numeric,
+	\`joining_sent_at\` text,
 	\`updated_at\` text DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) NOT NULL,
 	\`created_at\` text DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) NOT NULL,
 	FOREIGN KEY (\`workshop_id\`) REFERENCES \`workshops\`(\`id\`) ON UPDATE no action ON DELETE set null,
@@ -286,6 +287,12 @@ const ADDED_COLUMNS: Array<{ table: string; column: string; definition: string; 
   {
     table: "workshops",
     column: "confirmation_closing",
+    definition: "text",
+  },
+  // When this party was sent the joining link, so a second send skips them.
+  {
+    table: "workshop_registrations",
+    column: "joining_sent_at",
     definition: "text",
   },
 ];

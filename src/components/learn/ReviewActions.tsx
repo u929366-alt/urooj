@@ -62,8 +62,8 @@ export function ReviewActions({ id, name }: { id: string; name: string }) {
       <form action={approveRegistrationAction} className="rounded-xl bg-accent-50 p-4">
         <input type="hidden" name="id" value={id} />
         <p className="text-sm text-gray-800">
-          Approve <strong>{name}</strong>? This emails them a confirmation with the joining link,
-          and marks the payment received.
+          Approve <strong>{name}</strong>? This emails them their confirmation letter and marks
+          the payment received.
         </p>
         <div className="mt-3 flex gap-2">
           <Pending className="inline-flex items-center gap-1.5 rounded-full bg-accent-600 px-5 py-2 text-sm font-semibold text-white hover:bg-accent-700 disabled:opacity-60">

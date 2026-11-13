@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { getPayload } from "payload";
 import config from "@payload-config";
 import { requireStaff } from "./auth";
-import { declineHTML } from "./workshopEmails";
+import { declineHTML, joiningHTML } from "./workshopEmails";
 import type { Workshop } from "@/payload-types";
 
 /**
@@ -87,4 +87,121 @@ export async function declineRegistrationAction(formData: FormData) {
 
   revalidatePath("/learn/workshops");
   redirect("/learn/workshops?declined=1");
+}
+
+/**
+ * Send the joining link to everybody who holds a place.
+ *
+ * The confirmation letter carries the link, but only if the link existed
+ * when the letter went out — and it rarely does. Places are confirmed as the
+ * money comes in, over weeks; the Zoom link is made a day or two before. So
+ * most confirmed registrants have been told the link will follow, and this
+ * is what follows.
+ *
+ * It goes per person, not per booking: a party of five gets five emails,
+ * each addressed to that person and carrying their seat, so the person who
+ * paid is not left forwarding anything. An attendee with no email of their
+ * own is covered by the booker's copy, as they are everywhere else.
+ *
+ * Each booking is stamped when its emails go, so pressing the button again
+ * after three more people are confirmed writes only to those three. "Send
+ * to everyone again" is there because people do lose emails.
+ */
+export async function sendJoiningLinksAction(formData: FormData) {
+  await requireStaff("/learn/workshops");
+  const workshopId = String(formData.get("workshopId") || "");
+  const resendAll = String(formData.get("mode") || "") === "all";
+  if (!workshopId) redirect("/learn/workshops?error=missing");
+
+  const payload = await getPayload({ config });
+
+  const workshop = (await payload.findByID({
+    collection: "workshops",
+    id: workshopId,
+    depth: 0,
+    overrideAccess: true,
+  })) as Workshop | null;
+
+  // Refusing is the whole point of the check: an email whose button goes
+  // nowhere is worse than no email, and it cannot be unsent.
+  if (!workshop?.joinUrl?.trim()) {
+    redirect("/learn/workshops?error=nolink");
+  }
+
+  const confirmed = await payload.find({
+    collection: "workshop-registrations",
+    where: {
+      and: [{ workshop: { equals: workshopId } }, { status: { equals: "confirmed" } }],
+    },
+    limit: 1000,
+    depth: 0,
+    overrideAccess: true,
+  });
+
+  const targets = resendAll
+    ? confirmed.docs
+    : confirmed.docs.filter((row) => !row.joiningSentAt);
+
+  // One address, one email, however many bookings or places it appears on.
+  const already = new Set<string>();
+  let sent = 0;
+  let failed = 0;
+
+  for (const registration of targets) {
+    const people: { name: string; email: string; seat?: string | null }[] = [];
+
+    for (const attendee of registration.attendees ?? []) {
+      const email = attendee.email?.trim().toLowerCase();
+      if (!email) continue;
+      people.push({ name: attendee.name, email, seat: attendee.seat });
+    }
+
+    // The booker always gets one, even when they are not attending: they
+    // paid, and they are the one the others will ask.
+    const bookerEmail = registration.email.trim().toLowerCase();
+    if (!people.some((person) => person.email === bookerEmail)) {
+      const self = registration.attendees?.find((row) => !row.email?.trim());
+      people.push({
+        name: registration.name,
+        email: bookerEmail,
+        seat: self?.seat ?? registration.paymentReference,
+      });
+    }
+
+    let delivered = 0;
+    for (const person of people) {
+      if (already.has(person.email)) continue;
+      already.add(person.email);
+      try {
+        await payload.sendEmail({
+          to: person.email,
+          subject: `Your joining link — ${workshop.title}`,
+          html: joiningHTML(workshop, person.name, person.seat),
+        });
+        delivered += 1;
+        sent += 1;
+      } catch (error) {
+        failed += 1;
+        console.error(`[workshops] joining link to ${person.email} failed:`, error);
+      }
+    }
+
+    // Stamped only if something actually went, so a mail server that was
+    // down leaves the booking in the queue rather than silently dropping it.
+    if (delivered > 0) {
+      try {
+        await payload.update({
+          collection: "workshop-registrations",
+          id: registration.id,
+          data: { joiningSentAt: new Date().toISOString() },
+          overrideAccess: true,
+        });
+      } catch (error) {
+        console.error(`[workshops] could not stamp registration ${registration.id}:`, error);
+      }
+    }
+  }
+
+  revalidatePath("/learn/workshops");
+  redirect(`/learn/workshops?joining=${sent}${failed > 0 ? `&failed=${failed}` : ""}`);
 }

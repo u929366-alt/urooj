@@ -177,6 +177,71 @@ export function confirmationHTML(workshop: Workshop, registration: WorkshopRegis
 </div>`;
 }
 
+/**
+ * The joining link, on its own.
+ *
+ * The confirmation letter carries the link, but only if there was one to
+ * carry when it was sent — and there usually is not. A place is confirmed as
+ * soon as the money is matched, which can be weeks out, while the Zoom link
+ * is made a day or two before. Those registrants were told the link would
+ * follow by email, and this is that email.
+ *
+ * It goes to each person attending, not to each booking, so somebody who
+ * booked five places does not have to forward anything.
+ */
+export function joiningHTML(
+  workshop: Workshop,
+  recipientName: string,
+  seat?: string | null,
+): string {
+  const topic = workshop.tagline ? `${workshop.title}: ${workshop.tagline}` : workshop.title;
+
+  const time = workshop.endsAt
+    ? `${formatClock(workshop.startsAt)} – ${formatClock(workshop.endsAt)} (Pakistan time)`
+    : `${formatClock(workshop.startsAt)} (Pakistan time)`;
+
+  const first = recipientName.trim().split(/\s+/)[0] || recipientName;
+
+  return `
+<div style="font-family:Arial,Helvetica,sans-serif;max-width:580px;margin:0 auto;padding:24px;color:#1f2937;line-height:1.55">
+  <h1 style="font-size:20px;color:#0b2c49;margin:0 0 14px">Your joining link</h1>
+
+  <p style="margin:0 0 14px">Dear ${esc(first)},</p>
+  <p style="margin:0 0 18px">
+    Here is the link to join <strong>${esc(topic)}</strong>. Keep this email — it is
+    the only place the link is sent.
+  </p>
+
+  <table style="border-collapse:collapse;font-size:14px;margin:0 0 20px">
+    ${detailRow("Date", esc(formatDay(workshop.startsAt)))}
+    ${detailRow("Time", esc(time))}
+    ${detailRow("Platform", esc(workshop.platform ?? "Online"))}
+    ${seat ? detailRow("Your reference", esc(seat)) : ""}
+  </table>
+
+  <p style="margin:0 0 18px">
+    <a href="${esc(workshop.joinUrl ?? "")}"
+       style="display:inline-block;background:#0b5394;color:#ffffff;text-decoration:none;
+              padding:14px 28px;border-radius:999px;font-weight:bold;font-size:16px">
+      Join on ${esc(workshop.platform ?? "the day")}
+    </a>
+  </p>
+  <p style="margin:0 0 18px;font-size:13px;color:#6b7280">
+    If the button does not work, copy this link into your browser:<br>
+    ${esc(workshop.joinUrl ?? "")}
+  </p>
+
+  <p style="margin:0 0 14px;padding:12px 16px;background:#f3f4f6;border-radius:8px;font-size:14px">
+    Please join a few minutes early so we can start on time. Joining from a laptop,
+    with headphones, makes the interactive parts much easier.
+  </p>
+
+  <p style="margin:24px 0 0;font-size:13px;color:#6b7280">
+    Any trouble joining? ${esc(workshop.contactName ? `${workshop.contactName} — ` : "")}${esc(workshop.contactEmail ?? siteConfig.email)}
+  </p>
+</div>`;
+}
+
 export function declineHTML(workshop: Workshop, registration: WorkshopRegistration, reason: string) {
   return `
 <div style="font-family:Arial,Helvetica,sans-serif;max-width:560px;margin:0 auto;padding:24px;color:#1f2937">

@@ -9,7 +9,8 @@ import { getPayloadClient } from "@/lib/lms/auth";
 import { formatRupees } from "@/lib/lms/payments";
 import { mediaPath } from "@/lib/lms/media";
 import { ReviewActions } from "@/components/learn/ReviewActions";
-import type { PaymentReceipt, Workshop } from "@/payload-types";
+import { JoiningLinkPanel } from "@/components/learn/JoiningLinkPanel";
+import type { PaymentReceipt, Workshop, WorkshopRegistration } from "@/payload-types";
 
 export const metadata: Metadata = {
   title: "Workshop registrations",
@@ -30,13 +31,34 @@ function when(value?: string | null): string {
   }).format(new Date(value));
 }
 
+/**
+ * Every address one booking's joining link goes to: each named attendee who
+ * gave an email, plus the person who paid. Mirrors the send exactly, so the
+ * count on the button is not a guess.
+ */
+function recipientsOf(registration: WorkshopRegistration): string[] {
+  const out = new Set<string>();
+  for (const attendee of registration.attendees ?? []) {
+    const email = attendee.email?.trim().toLowerCase();
+    if (email) out.add(email);
+  }
+  out.add(registration.email.trim().toLowerCase());
+  return [...out];
+}
+
 export default async function WorkshopReviewPage({
   searchParams,
 }: {
-  searchParams: Promise<{ approved?: string; declined?: string; error?: string }>;
+  searchParams: Promise<{
+    approved?: string;
+    declined?: string;
+    error?: string;
+    joining?: string;
+    failed?: string;
+  }>;
 }) {
   await requireStaff("/learn/workshops");
-  const { approved, declined, error } = await searchParams;
+  const { approved, declined, error, joining, failed } = await searchParams;
 
   const payload = await getPayloadClient();
   const result = await payload.find({
@@ -51,6 +73,41 @@ export default async function WorkshopReviewPage({
   const waiting = rows.filter((row) => row.status === "pending");
   const settled = rows.filter((row) => row.status !== "pending");
 
+  /**
+   * Who still needs the joining link, by workshop.
+   *
+   * Counted in people rather than bookings, because that is what gets sent:
+   * every named attendee with an email of their own is written to directly,
+   * and the booker always gets one. Deduplicated the same way the send is,
+   * so the number on the button is the number of emails.
+   */
+  const joiningByWorkshop = new Map<
+    string,
+    { workshop: Workshop; waiting: number; recipients: Set<string>; alreadySent: number }
+  >();
+
+  for (const row of rows) {
+    if (row.status !== "confirmed") continue;
+    const workshop = typeof row.workshop === "object" ? (row.workshop as Workshop) : null;
+    if (!workshop) continue;
+
+    const key = String(workshop.id);
+    const entry = joiningByWorkshop.get(key) ?? {
+      workshop,
+      waiting: 0,
+      recipients: new Set<string>(),
+      alreadySent: 0,
+    };
+
+    if (row.joiningSentAt) {
+      entry.alreadySent += 1;
+    } else {
+      entry.waiting += 1;
+      for (const email of recipientsOf(row)) entry.recipients.add(email);
+    }
+    joiningByWorkshop.set(key, entry);
+  }
+
   return (
     <Container className="py-12">
       <h1 className="font-display text-3xl font-bold text-primary-900">
@@ -58,7 +115,8 @@ export default async function WorkshopReviewPage({
       </h1>
       <p className="mt-2 max-w-2xl text-gray-600">
         Check each receipt against the bank, then approve it. Approving is what sends the
-        registrant their confirmation and the joining link — nothing else does.
+        registrant their confirmation letter — nothing else does. The joining link goes out
+        separately, from the panel below, once there is one to give.
       </p>
 
       {approved && (
@@ -77,6 +135,37 @@ export default async function WorkshopReviewPage({
           the mail settings.
         </p>
       )}
+      {error === "nolink" && (
+        <p className="mt-4 rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-900">
+          Nothing was sent: that workshop has no joining link yet. Put it in the admin first.
+        </p>
+      )}
+      {joining && (
+        <p className="mt-4 rounded-xl bg-accent-50 px-4 py-3 text-sm text-accent-800">
+          Joining link sent to {joining} {joining === "1" ? "person" : "people"}.
+          {failed && (
+            <>
+              {" "}
+              <strong className="text-red-700">
+                {failed} could not be delivered — check the log and write to those by hand.
+              </strong>
+            </>
+          )}
+        </p>
+      )}
+
+      {[...joiningByWorkshop.values()].map((entry) => (
+        <JoiningLinkPanel
+          key={entry.workshop.id}
+          workshopId={String(entry.workshop.id)}
+          title={entry.workshop.title}
+          hasLink={Boolean(entry.workshop.joinUrl?.trim())}
+          platform={entry.workshop.platform ?? "the session"}
+          waiting={entry.waiting}
+          people={entry.recipients.size}
+          alreadySent={entry.alreadySent}
+        />
+      ))}
 
       <section className="mt-10">
         <h2 className="flex items-center gap-2 font-display text-xl font-semibold text-primary-900">

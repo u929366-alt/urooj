@@ -1026,6 +1026,10 @@ export interface WorkshopRegistration {
    * Rupees, at the time of booking.
    */
   amountDue?: number | null;
+  /**
+   * When the joining link was emailed out. Blank means this party has not had it — the Workshops page sends to exactly those.
+   */
+  joiningSentAt?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1695,6 +1699,7 @@ export interface WorkshopRegistrationsSelect<T extends boolean = true> {
   verifiedAt?: T;
   verifiedBy?: T;
   amountDue?: T;
+  joiningSentAt?: T;
   updatedAt?: T;
   createdAt?: T;
 }

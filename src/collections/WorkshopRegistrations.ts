@@ -288,5 +288,15 @@ export const WorkshopRegistrations: CollectionConfig = {
       type: "number",
       admin: { position: "sidebar", readOnly: true, description: "Rupees, at the time of booking." },
     },
+    {
+      name: "joiningSentAt",
+      type: "date",
+      admin: {
+        position: "sidebar",
+        readOnly: true,
+        description:
+          "When the joining link was emailed out. Blank means this party has not had it — the Workshops page sends to exactly those.",
+      },
+    },
   ],
 };
