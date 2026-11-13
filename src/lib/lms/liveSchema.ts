@@ -314,6 +314,24 @@ export async function ensureLiveTables(sqlitePath: string): Promise<void> {
 
   const failures: string[] = [];
   const added: string[] = [];
+  const created: string[] = [];
+
+  /**
+   * What the database held before we started, so we can say afterwards what
+   * this run actually did. `CREATE TABLE IF NOT EXISTS` succeeds silently
+   * whether it created anything or not, so without this the log said
+   * "database is up to date" on the very deployment that added a table —
+   * exactly the moment somebody is reading the log to check it worked.
+   */
+  const before = new Set<string>();
+  try {
+    const existing = await client.execute(
+      "SELECT name FROM sqlite_master WHERE type IN ('table', 'index')",
+    );
+    for (const row of existing.rows) before.add(String(row.name));
+  } catch {
+    // Not worth a failure of its own: it only costs us the summary below.
+  }
 
   try {
     for (const statement of [...STATEMENTS, ...WORKSHOP_STATEMENTS]) {
@@ -351,10 +369,26 @@ export async function ensureLiveTables(sqlitePath: string): Promise<void> {
         failures.push(`${where} — ${error}`);
       }
     }
+
+    if (before.size > 0) {
+      const after = await client.execute(
+        "SELECT name FROM sqlite_master WHERE type IN ('table', 'index')",
+      );
+      for (const row of after.rows) {
+        const name = String(row.name);
+        // sqlite_autoindex_* are SQLite's own, made for us by a UNIQUE or
+        // PRIMARY KEY. Nothing here asked for them, so they are noise.
+        if (name.startsWith("sqlite_")) continue;
+        if (!before.has(name)) created.push(name);
+      }
+    }
   } finally {
     client.close();
   }
 
+  if (created.length > 0) {
+    console.log(`[schema] created ${created.length}: ${created.join(", ")}`);
+  }
   if (added.length > 0) {
     console.log(`[schema] added ${added.length} column(s): ${added.join(", ")}`);
   }
@@ -362,7 +396,9 @@ export async function ensureLiveTables(sqlitePath: string): Promise<void> {
     console.error(
       `[schema] ${failures.length} statement(s) failed; some pages will error until this is fixed:\n  ${failures.join("\n  ")}`,
     );
-  } else {
+  } else if (created.length === 0 && added.length === 0) {
     console.log("[schema] database is up to date");
+  } else {
+    console.log("[schema] done, no failures");
   }
 }
