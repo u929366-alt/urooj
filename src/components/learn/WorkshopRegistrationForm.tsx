@@ -80,6 +80,50 @@ export function WorkshopRegistrationForm({
   const total = unit * places;
   const money = (n: number) => `Rs ${n.toLocaleString("en-PK")}`;
 
+  /**
+   * They are already on the list. Said plainly, because the alternative —
+   * which is what this used to do — was to thank them for a booking that was
+   * never written down.
+   */
+  if (state?.alreadyRegistered) {
+    const { alreadyRegistered: already } = state;
+    return (
+      <div className="rounded-2xl border border-amber-200 bg-amber-50 p-6">
+        <Clock className="h-8 w-8 text-amber-600" aria-hidden />
+        <h2 className="mt-3 font-display text-xl font-bold text-primary-900">
+          You are already registered
+        </h2>
+        <p className="mt-2 text-sm text-gray-700">
+          We already have a registration for <strong>{already.email}</strong> on this workshop,
+          so we have not created a second one.
+          {already.reference && (
+            <>
+              {" "}
+              Your reference is{" "}
+              <strong className="font-mono">{already.reference}</strong>.
+            </>
+          )}
+        </p>
+
+        {already.receiptAttached && (
+          <p className="mt-3 rounded-xl bg-white px-4 py-3 text-sm text-gray-700">
+            We have kept the receipt you just attached and added it to your registration.
+          </p>
+        )}
+
+        <p className="mt-3 rounded-xl bg-white px-4 py-3 text-sm text-gray-700">
+          <strong>Booking for more people?</strong> Places for colleagues cannot be added
+          through this form once you are registered. Write to{" "}
+          <a href={`mailto:${contactEmail}`} className="font-semibold text-primary-600">
+            {contactEmail}
+          </a>{" "}
+          with their names and we will add them — we have already been told you tried, so you
+          may hear from us first.
+        </p>
+      </div>
+    );
+  }
+
   if (state?.success) {
     const { success } = state;
     return (

@@ -7,7 +7,7 @@ import { z } from "zod";
 import { createPendingPayment, bankInstructions } from "./payments";
 import { getWorkshopBySlug, priceFor, registrationState } from "./workshops";
 import { identifyUpload, MAX_RECEIPT_BYTES } from "./uploads";
-import { staffAlertHTML } from "./workshopEmails";
+import { repeatAttemptHTML, staffAlertHTML } from "./workshopEmails";
 import { siteConfig } from "@/lib/site";
 
 /**
@@ -31,6 +31,19 @@ export type RegistrationState = {
   error?: string;
   fieldErrors?: Record<string, string>;
   success?: { name: string; email: string; amount: number };
+  /**
+   * They already had a registration for this workshop. Deliberately not
+   * reported as a success: it used to be, and a second booking — somebody who
+   * registered alone and came back for a group — was answered with "thank
+   * you, we have your registration" while nothing at all was written down.
+   */
+  alreadyRegistered?: {
+    name: string;
+    email: string;
+    reference?: string | null;
+    places: number;
+    receiptAttached: boolean;
+  };
 } | null;
 
 const schema = z.object({
@@ -159,11 +172,69 @@ export async function registerForWorkshopAction(
     overrideAccess: true,
   });
   if (existing.docs[0]) {
+    const already = existing.docs[0];
+
+    /**
+     * Pressing the button twice must not register anyone twice — but neither
+     * may it throw the second attempt away in silence, which is what it did.
+     * Somebody who registered alone and came back to book for a group was
+     * told "thank you, we have your registration" and nothing was written
+     * down: no row, no receipt, nobody told.
+     *
+     * So: still one registration, but the receipt is kept if we had none,
+     * staff are told, and the person is given the truth rather than a thank
+     * you for something that did not happen.
+     */
+    let receiptAttached = false;
+    if (receiptFile && !already.receipt) {
+      try {
+        const receipt = await payload.create({
+          collection: "payment-receipts",
+          data: {
+            registration: already.id,
+            reference: already.paymentReference ?? undefined,
+          },
+          file: {
+            ...receiptFile,
+            name: `${already.paymentReference ?? already.id}-${receiptFile.name}`,
+          },
+          overrideAccess: true,
+        });
+        await payload.update({
+          collection: "workshop-registrations",
+          id: already.id,
+          data: { receipt: receipt.id, receiptUploadedAt: new Date().toISOString() },
+          overrideAccess: true,
+        });
+        receiptAttached = true;
+      } catch (error) {
+        console.error("[workshops] could not store the repeat receipt:", error);
+      }
+    }
+
+    try {
+      await payload.sendEmail({
+        to: workshop.contactEmail ?? siteConfig.email,
+        subject: `Repeat registration — ${parsed.data.name}`,
+        html: repeatAttemptHTML(workshop, already, {
+          places: parsed.data.groupSize,
+          amount,
+          receiptAttached,
+          hadReceiptAlready: Boolean(already.receipt),
+        }),
+      });
+    } catch (error) {
+      console.error("[workshops] repeat-attempt alert failed:", error);
+    }
+
+    revalidatePath("/learn/workshops");
     return {
-      success: {
-        name: existing.docs[0].name,
-        email: existing.docs[0].email,
-        amount: existing.docs[0].amountDue ?? 0,
+      alreadyRegistered: {
+        name: already.name,
+        email: already.email,
+        reference: already.paymentReference,
+        places: parsed.data.groupSize,
+        receiptAttached,
       },
     };
   }

@@ -297,6 +297,72 @@ export function certificateHTML(
 </div>`;
 }
 
+/**
+ * Somebody tried to register who is already on the list.
+ *
+ * Usually a double-click, in which case this is noise and you ignore it. But
+ * it is also what happens when somebody who registered alone comes back to
+ * book places for colleagues, and that one is a booking you would otherwise
+ * never hear about — the form can only hold one registration per address per
+ * workshop, so the second attempt has to reach a person instead.
+ */
+export function repeatAttemptHTML(
+  workshop: Workshop,
+  existing: WorkshopRegistration,
+  attempt: {
+    places: number;
+    amount: number;
+    receiptAttached: boolean;
+    hadReceiptAlready: boolean;
+  },
+): string {
+  const interesting =
+    attempt.places > (existing.groupSize ?? 1) || attempt.receiptAttached;
+
+  return `
+<div style="font-family:Arial,Helvetica,sans-serif;max-width:580px;margin:0 auto;padding:24px;color:#1f2937;line-height:1.55">
+  <h1 style="font-size:19px;color:#0b2c49;margin:0 0 14px">
+    ${interesting ? "Someone has tried to book again — worth a look" : "Repeat registration (probably a double-click)"}
+  </h1>
+
+  <p style="margin:0 0 14px">
+    <strong>${esc(existing.name)}</strong> (${esc(existing.email)}) filled in the form for
+    <strong>${esc(workshop.title)}</strong> again. They are already registered, so nothing new
+    was created — there can only be one registration per email address per workshop.
+  </p>
+
+  <table style="border-collapse:collapse;font-size:14px;margin:0 0 18px">
+    ${detailRow("Already registered for", `${existing.groupSize ?? 1} place(s)`)}
+    ${detailRow("This time they asked for", `<strong>${attempt.places} place(s)</strong>`)}
+    ${detailRow("Amount they were quoted", formatRupees(attempt.amount))}
+    ${existing.paymentReference ? detailRow("Their reference", esc(existing.paymentReference)) : ""}
+    ${detailRow(
+      "Receipt",
+      attempt.receiptAttached
+        ? "<strong>A new receipt was attached to their registration</strong>"
+        : attempt.hadReceiptAlready
+          ? "They already had one on file; the new one was not kept"
+          : "None attached",
+    )}
+  </table>
+
+  ${
+    attempt.places > (existing.groupSize ?? 1)
+      ? `<p style="margin:0 0 14px;padding:12px 16px;background:#fffbeb;border-radius:8px;font-size:14px">
+    They have asked for <strong>more places than they are registered for</strong>. That is
+    very likely a group booking they could not make through the form. Open their registration,
+    put the extra places and names under Attendees, and check the money against the bank.
+  </p>`
+      : ""
+  }
+
+  <p style="margin:0 0 14px;font-size:14px">
+    Their registration: open <strong>Workshop Registrations</strong> in the admin and search
+    for ${esc(existing.email)}.
+  </p>
+</div>`;
+}
+
 export function declineHTML(workshop: Workshop, registration: WorkshopRegistration, reason: string) {
   return `
 <div style="font-family:Arial,Helvetica,sans-serif;max-width:560px;margin:0 auto;padding:24px;color:#1f2937">
