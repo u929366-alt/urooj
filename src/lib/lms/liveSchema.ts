@@ -163,11 +163,22 @@ const WORKSHOP_STATEMENTS = [
 	\`text\` text NOT NULL,
 	FOREIGN KEY (\`_parent_id\`) REFERENCES \`workshops\`(\`id\`) ON UPDATE no action ON DELETE cascade
 )`,
+  `CREATE TABLE IF NOT EXISTS \`workshop_registrations_attendees\` (
+	\`_order\` integer NOT NULL,
+	\`_parent_id\` integer NOT NULL,
+	\`id\` text PRIMARY KEY NOT NULL,
+	\`seat\` text,
+	\`name\` text NOT NULL,
+	\`email\` text,
+	FOREIGN KEY (\`_parent_id\`) REFERENCES \`workshop_registrations\`(\`id\`) ON UPDATE no action ON DELETE cascade
+)`,
   `CREATE INDEX IF NOT EXISTS \`payment_receipts_created_at_idx\` ON \`payment_receipts\` (\`created_at\`)`,
   `CREATE UNIQUE INDEX IF NOT EXISTS \`payment_receipts_filename_idx\` ON \`payment_receipts\` (\`filename\`)`,
   `CREATE INDEX IF NOT EXISTS \`payment_receipts_reference_idx\` ON \`payment_receipts\` (\`reference\`)`,
   `CREATE INDEX IF NOT EXISTS \`payment_receipts_registration_idx\` ON \`payment_receipts\` (\`registration_id\`)`,
   `CREATE INDEX IF NOT EXISTS \`payment_receipts_updated_at_idx\` ON \`payment_receipts\` (\`updated_at\`)`,
+  `CREATE INDEX IF NOT EXISTS \`workshop_registrations_attendees_order_idx\` ON \`workshop_registrations_attendees\` (\`_order\`)`,
+  `CREATE INDEX IF NOT EXISTS \`workshop_registrations_attendees_parent_id_idx\` ON \`workshop_registrations_attendees\` (\`_parent_id\`)`,
   `CREATE INDEX IF NOT EXISTS \`workshop_registrations_created_at_idx\` ON \`workshop_registrations\` (\`created_at\`)`,
   `CREATE INDEX IF NOT EXISTS \`workshop_registrations_email_idx\` ON \`workshop_registrations\` (\`email\`)`,
   `CREATE INDEX IF NOT EXISTS \`workshop_registrations_payment_reference_idx\` ON \`workshop_registrations\` (\`payment_reference\`)`,

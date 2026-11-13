@@ -150,6 +150,35 @@ export default async function WorkshopReviewPage({
                         </div>
                       </dl>
 
+                      {/* Who is coming. For a booking of one this is the
+                          registrant; for a group it is the whole party, and a
+                          place with no name against it gets no joining link
+                          and no certificate, so it is worth seeing. */}
+                      {(row.attendees?.length ?? 0) > 0 && (
+                        <div className="mt-4">
+                          <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                            Attending
+                          </p>
+                          <ul className="mt-1.5 space-y-1 text-sm">
+                            {row.attendees?.map((person) => (
+                              <li key={person.id ?? person.seat} className="flex flex-wrap gap-x-3">
+                                <span className="font-mono text-xs text-gray-400">
+                                  {person.seat ?? "—"}
+                                </span>
+                                <span className="font-medium text-gray-800">{person.name}</span>
+                                <span className="text-gray-500">{person.email ?? row.email}</span>
+                              </li>
+                            ))}
+                          </ul>
+                          {(row.groupSize ?? 1) > (row.attendees?.length ?? 0) && (
+                            <p className="mt-1.5 text-sm text-amber-700">
+                              {(row.groupSize ?? 1) - (row.attendees?.length ?? 0)} place(s) still
+                              without a name — ask before the session, or they get no certificate.
+                            </p>
+                          )}
+                        </div>
+                      )}
+
                       {row.notes && (
                         <p className="mt-3 rounded-xl bg-gray-50 px-4 py-2.5 text-sm text-gray-700">
                           {row.notes}

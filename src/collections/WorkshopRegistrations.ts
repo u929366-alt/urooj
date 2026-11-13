@@ -39,6 +39,42 @@ export const WorkshopRegistrations: CollectionConfig = {
           data.verifiedAt = new Date().toISOString();
           if (!data.verifiedBy && req.user) data.verifiedBy = req.user.id;
         }
+
+        /**
+         * Seat numbers, from the booking's own reference: HS-W-ABC123-01,
+         * -02, and so on. Two numbers do different jobs here — this one says
+         * a person holds a place, and the certificate serial issued later
+         * says they attended. Keeping them apart means a no-show never ends
+         * up holding a certificate number.
+         *
+         * Assigned here rather than in the form so that a name typed into
+         * the admin months later gets one too.
+         */
+        const reference = data.paymentReference ?? originalDoc?.paymentReference;
+        if (Array.isArray(data.attendees) && reference) {
+          const taken = new Set(
+            data.attendees
+              .map((row: { seat?: string | null }) => row?.seat)
+              .filter((seat: unknown): seat is string => typeof seat === "string" && seat !== ""),
+          );
+          let next = 1;
+          data.attendees = data.attendees.map((row: { seat?: string | null }) => {
+            if (row?.seat) return row;
+            let seat = "";
+            do {
+              seat = `${reference}-${String(next).padStart(2, "0")}`;
+              next += 1;
+            } while (taken.has(seat));
+            taken.add(seat);
+            return { ...row, seat };
+          });
+        }
+
+        // The number of places and the list of people should not disagree.
+        if (Array.isArray(data.attendees) && data.attendees.length > 0) {
+          data.groupSize = Math.max(data.groupSize ?? 1, data.attendees.length);
+        }
+
         return data;
       },
     ],
@@ -153,6 +189,48 @@ export const WorkshopRegistrations: CollectionConfig = {
         description:
           "How many places this registration is for. More than one means they are booking for a group.",
       },
+    },
+    {
+      /**
+       * Who is actually coming.
+       *
+       * A group booking used to be one person and a number, which meant the
+       * other places belonged to nobody: no joining link, no certificate, no
+       * name on the register. The booking above is still the money — one
+       * payer, one reference, one receipt — and this is the people.
+       *
+       * For a single place this holds one entry, the registrant themselves,
+       * so everything downstream can read the same list whatever the size of
+       * the booking.
+       */
+      name: "attendees",
+      type: "array",
+      labels: { singular: "Attendee", plural: "Attendees" },
+      admin: {
+        description:
+          "One row per person attending. Add the names as they come in — the joining link and the certificate both go to each person here, so a place with no name gets neither.",
+        initCollapsed: false,
+      },
+      fields: [
+        {
+          name: "seat",
+          type: "text",
+          admin: {
+            readOnly: true,
+            width: "30%",
+            description: "Set automatically.",
+          },
+        },
+        { name: "name", type: "text", required: true, admin: { width: "35%" } },
+        {
+          name: "email",
+          type: "email",
+          admin: {
+            width: "35%",
+            description: "Where their joining link and certificate go. Leave blank to use the booker's.",
+          },
+        },
+      ],
     },
     { name: "notes", type: "textarea" },
     {

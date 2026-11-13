@@ -259,6 +259,48 @@ export function WorkshopRegistrationForm({
         </div>
       </div>
 
+      {/* Who is coming, when it is more than the person paying. Without this
+          a group booking is one name and a number, and the other places
+          belong to nobody — no joining link, no certificate. */}
+      {places > 1 && (
+        <div className="rounded-2xl border-2 border-gray-200 p-5">
+          <p className="text-sm font-bold text-primary-900">
+            Who is attending <span className="font-normal text-gray-500">({places} places)</span>
+          </p>
+          <p className="mt-1 text-sm text-gray-700">
+            Each person gets their own joining link and their own certificate, so we need their
+            names. Don&apos;t know them all yet? Leave the rest blank and email them to us before
+            the session.
+          </p>
+
+          <div className="mt-4 space-y-3">
+            {Array.from({ length: places }, (_, index) => (
+              <div key={index} className="grid grid-cols-1 gap-3 sm:grid-cols-[2rem_1fr_1fr]">
+                <span className="hidden items-center text-sm font-semibold text-gray-400 sm:flex">
+                  {index + 1}.
+                </span>
+                <input
+                  name={`attendeeName${index}`}
+                  type="text"
+                  required={index === 0}
+                  placeholder={index === 0 ? "Full name (you, if you are attending)" : "Full name"}
+                  className="w-full rounded-xl border border-gray-200 px-4 py-2.5 outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100"
+                />
+                <input
+                  name={`attendeeEmail${index}`}
+                  type="email"
+                  placeholder="Email (optional)"
+                  className="w-full rounded-xl border border-gray-200 px-4 py-2.5 outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100"
+                />
+              </div>
+            ))}
+          </div>
+          {state?.fieldErrors?.attendees && (
+            <p className="mt-2 text-sm text-red-600">{state.fieldErrors.attendees}</p>
+          )}
+        </div>
+      )}
+
       {total > 0 && (
         <div className="rounded-2xl border-2 border-secondary-200 bg-secondary-50/50 p-5">
           <p className="text-sm font-bold text-primary-900">

@@ -980,6 +980,23 @@ export interface WorkshopRegistration {
    * How many places this registration is for. More than one means they are booking for a group.
    */
   groupSize?: number | null;
+  /**
+   * One row per person attending. Add the names as they come in — the joining link and the certificate both go to each person here, so a place with no name gets neither.
+   */
+  attendees?:
+    | {
+        /**
+         * Set automatically.
+         */
+        seat?: string | null;
+        name: string;
+        /**
+         * Where their joining link and certificate go. Leave blank to use the booker's.
+         */
+        email?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   notes?: string | null;
   /**
    * Setting this to Confirmed — here, or on the Workshops page, or by confirming the payment — emails the registrant their confirmation letter and marks the payment received. It happens once; setting it to Confirmed again sends nothing. Cancelling here sends nothing: use 'Something's wrong' on the Workshops page if you want them told why.
@@ -1662,6 +1679,14 @@ export interface WorkshopRegistrationsSelect<T extends boolean = true> {
   category?: T;
   organisation?: T;
   groupSize?: T;
+  attendees?:
+    | T
+    | {
+        seat?: T;
+        name?: T;
+        email?: T;
+        id?: T;
+      };
   notes?: T;
   status?: T;
   paymentReference?: T;

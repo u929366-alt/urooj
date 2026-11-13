@@ -71,6 +71,23 @@ export async function registerForWorkshopAction(
   });
   if (!parsed.success) return { fieldErrors: flatten(parsed.error) };
 
+  /**
+   * Who is coming. The form sends one name/email pair per place; blanks are
+   * allowed, because a group leader often books before knowing everybody.
+   * A booking for one is still recorded as one attendee — the registrant —
+   * so nothing downstream has to special-case a group.
+   */
+  const attendees: { name: string; email?: string }[] = [];
+  for (let index = 0; index < parsed.data.groupSize; index += 1) {
+    const name = String(formData.get(`attendeeName${index}`) ?? "").trim();
+    const email = String(formData.get(`attendeeEmail${index}`) ?? "").trim().toLowerCase();
+    if (!name) continue;
+    attendees.push(email ? { name, email } : { name });
+  }
+  if (attendees.length === 0) {
+    attendees.push({ name: parsed.data.name, email: parsed.data.email.toLowerCase() });
+  }
+
   const workshop = await getWorkshopBySlug(parsed.data.slug);
   if (!workshop) return { error: "That workshop could not be found." };
 
@@ -186,6 +203,7 @@ export async function registerForWorkshopAction(
       category: parsed.data.category,
       organisation: parsed.data.organisation,
       groupSize: parsed.data.groupSize,
+      attendees,
       notes: parsed.data.notes,
       // Never "confirmed" here, whatever the amount. A place is granted by a
       // person who has looked at the money, not by this form.
