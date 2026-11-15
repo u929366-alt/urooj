@@ -363,6 +363,68 @@ export function repeatAttemptHTML(
 </div>`;
 }
 
+/**
+ * A follow-up to everyone who attended: the feedback form, the handout,
+ * whatever else comes after a session.
+ *
+ * The body is written by staff at the time rather than fixed here, because
+ * what follows a workshop is never the same twice — slides one week, a
+ * reading list the next, a reminder about certificates the week after. What
+ * is fixed is the shape: who it is from, who it is to, and that the links
+ * are buttons rather than something to squint at.
+ */
+export function followUpHTML(
+  workshop: Workshop,
+  recipientName: string,
+  content: {
+    heading: string;
+    body: string;
+    feedbackUrl?: string;
+    feedbackLabel?: string;
+    handoutUrl?: string;
+    handoutLabel?: string;
+  },
+): string {
+  const first = recipientName.trim().split(/\s+/)[0] || recipientName;
+
+  const button = (href: string, label: string, primary: boolean) => `
+  <p style="margin:0 0 12px">
+    <a href="${esc(href)}"
+       style="display:inline-block;${
+         primary
+           ? "background:#0b5394;color:#ffffff;"
+           : "background:#ffffff;color:#0b5394;border:2px solid #0b5394;"
+       }text-decoration:none;padding:13px 26px;border-radius:999px;font-weight:bold;font-size:15px">
+      ${esc(label)}
+    </a>
+  </p>`;
+
+  return `
+<div style="font-family:Arial,Helvetica,sans-serif;max-width:580px;margin:0 auto;padding:24px;color:#1f2937;line-height:1.55">
+  <h1 style="font-size:20px;color:#0b2c49;margin:0 0 14px">${esc(content.heading)}</h1>
+
+  <p style="margin:0 0 14px">Dear ${esc(first)},</p>
+  ${paragraphs(content.body)}
+
+  ${content.feedbackUrl ? button(content.feedbackUrl, content.feedbackLabel?.trim() || "Fill in the feedback form", true) : ""}
+  ${content.handoutUrl ? button(content.handoutUrl, content.handoutLabel?.trim() || "Download the handout", false) : ""}
+
+  ${
+    content.feedbackUrl || content.handoutUrl
+      ? `<p style="margin:14px 0 0;font-size:13px;color:#6b7280">
+    If the buttons do not work, these are the links:<br>
+    ${content.feedbackUrl ? `${esc(content.feedbackUrl)}<br>` : ""}
+    ${content.handoutUrl ? esc(content.handoutUrl) : ""}
+  </p>`
+      : ""
+  }
+
+  <p style="margin:24px 0 0;font-size:13px;color:#6b7280">
+    ${esc(workshop.title)} · ${esc(workshop.contactName ? `${workshop.contactName} — ` : "")}${esc(workshop.contactEmail ?? siteConfig.email)}
+  </p>
+</div>`;
+}
+
 export function declineHTML(workshop: Workshop, registration: WorkshopRegistration, reason: string) {
   return `
 <div style="font-family:Arial,Helvetica,sans-serif;max-width:560px;margin:0 auto;padding:24px;color:#1f2937">

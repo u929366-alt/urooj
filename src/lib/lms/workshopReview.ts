@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { getPayload } from "payload";
 import config from "@payload-config";
 import { requireStaff } from "./auth";
-import { certificateHTML, declineHTML, joiningHTML } from "./workshopEmails";
+import { certificateHTML, declineHTML, followUpHTML, joiningHTML } from "./workshopEmails";
 import { issueWorkshopCertificates } from "./workshopCertificates";
 import { siteConfig } from "@/lib/site";
 import type { Workshop } from "@/payload-types";
@@ -272,5 +272,108 @@ export async function issueCertificatesAction(formData: FormData) {
   });
   if (failed > 0) query.set("failed", String(failed));
   if (issued.skipped > 0) query.set("already", String(issued.skipped));
+  redirect(`/learn/workshops?${query.toString()}`);
+}
+
+/**
+ * Write to everyone who attended: the feedback form, the handout, whatever
+ * follows the session.
+ *
+ * Addressed per person, like the joining link, so each attendee in a group
+ * gets their own — the whole reason their names were collected. An attendee
+ * with no address of their own is covered by the booker's copy, and one
+ * address appearing on several bookings still gets one email.
+ *
+ * Nothing is stamped on the registration: unlike the joining link this is
+ * not a thing you send once, and whether a second round is wanted is the
+ * sender's judgement, not ours. The screen says how many it will go to and
+ * asks before sending, which is the guard that matters.
+ */
+export async function sendFollowUpAction(formData: FormData) {
+  await requireStaff("/learn/workshops");
+
+  const workshopId = String(formData.get("workshopId") || "");
+  const heading = String(formData.get("heading") || "").trim();
+  const body = String(formData.get("body") || "").trim();
+  const feedbackUrl = String(formData.get("feedbackUrl") || "").trim();
+  const feedbackLabel = String(formData.get("feedbackLabel") || "").trim();
+  const handoutUrl = String(formData.get("handoutUrl") || "").trim();
+  const handoutLabel = String(formData.get("handoutLabel") || "").trim();
+  const subject = String(formData.get("subject") || "").trim();
+
+  if (!workshopId) redirect("/learn/workshops?error=missing");
+  if (!body || !subject) redirect("/learn/workshops?error=followupempty");
+
+  // A link that is not a link would render as a dead button.
+  for (const url of [feedbackUrl, handoutUrl]) {
+    if (url && !/^https?:\/\//i.test(url)) {
+      redirect("/learn/workshops?error=followupurl");
+    }
+  }
+
+  const payload = await getPayload({ config });
+
+  const workshop = (await payload.findByID({
+    collection: "workshops",
+    id: workshopId,
+    depth: 0,
+    overrideAccess: true,
+  })) as Workshop | null;
+  if (!workshop) redirect("/learn/workshops?error=missing");
+
+  const confirmed = await payload.find({
+    collection: "workshop-registrations",
+    where: {
+      and: [{ workshop: { equals: workshopId } }, { status: { equals: "confirmed" } }],
+    },
+    limit: 1000,
+    depth: 0,
+    overrideAccess: true,
+  });
+
+  const already = new Set<string>();
+  let sent = 0;
+  let failed = 0;
+
+  for (const registration of confirmed.docs) {
+    const people: { name: string; email: string }[] = [];
+
+    for (const attendee of registration.attendees ?? []) {
+      const email = attendee.email?.trim().toLowerCase();
+      if (!email || !attendee.name?.trim()) continue;
+      people.push({ name: attendee.name, email });
+    }
+
+    const bookerEmail = registration.email.trim().toLowerCase();
+    if (!people.some((person) => person.email === bookerEmail)) {
+      people.push({ name: registration.name, email: bookerEmail });
+    }
+
+    for (const person of people) {
+      if (already.has(person.email)) continue;
+      already.add(person.email);
+      try {
+        await payload.sendEmail({
+          to: person.email,
+          subject,
+          html: followUpHTML(workshop, person.name, {
+            heading: heading || subject,
+            body,
+            feedbackUrl: feedbackUrl || undefined,
+            feedbackLabel: feedbackLabel || undefined,
+            handoutUrl: handoutUrl || undefined,
+            handoutLabel: handoutLabel || undefined,
+          }),
+        });
+        sent += 1;
+      } catch (error) {
+        failed += 1;
+        console.error(`[workshops] follow-up to ${person.email} failed:`, error);
+      }
+    }
+  }
+
+  const query = new URLSearchParams({ followup: String(sent) });
+  if (failed > 0) query.set("failed", String(failed));
   redirect(`/learn/workshops?${query.toString()}`);
 }

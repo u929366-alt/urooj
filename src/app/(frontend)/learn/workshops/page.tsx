@@ -11,6 +11,7 @@ import { mediaPath } from "@/lib/lms/media";
 import { ReviewActions } from "@/components/learn/ReviewActions";
 import { JoiningLinkPanel } from "@/components/learn/JoiningLinkPanel";
 import { CertificatePanel } from "@/components/learn/CertificatePanel";
+import { FollowUpPanel } from "@/components/learn/FollowUpPanel";
 import { certificateStandings } from "@/lib/lms/workshopCertificates";
 import type { PaymentReceipt, Workshop, WorkshopRegistration } from "@/payload-types";
 
@@ -60,10 +61,11 @@ export default async function WorkshopReviewPage({
     certificates?: string;
     emailed?: string;
     already?: string;
+    followup?: string;
   }>;
 }) {
   await requireStaff("/learn/workshops");
-  const { approved, declined, error, joining, failed, certificates, emailed, already } =
+  const { approved, declined, error, joining, failed, certificates, emailed, already, followup } =
     await searchParams;
 
   const payload = await getPayloadClient();
@@ -112,6 +114,22 @@ export default async function WorkshopReviewPage({
       for (const email of recipientsOf(row)) entry.recipients.add(email);
     }
     joiningByWorkshop.set(key, entry);
+  }
+
+  /**
+   * Everyone on the register, for the follow-up. Different from the joining
+   * count above, which is only those who have not had their link yet: a
+   * follow-up goes to the whole room.
+   */
+  const followUpRecipients = new Map<string, Set<string>>();
+  for (const row of rows) {
+    if (row.status !== "confirmed") continue;
+    const workshop = typeof row.workshop === "object" ? (row.workshop as Workshop) : null;
+    if (!workshop) continue;
+    const key = String(workshop.id);
+    const set = followUpRecipients.get(key) ?? new Set<string>();
+    for (const email of recipientsOf(row)) set.add(email);
+    followUpRecipients.set(key, set);
   }
 
   // How many certificates each workshop owes, worked out the same way the
@@ -186,6 +204,27 @@ export default async function WorkshopReviewPage({
           )}
         </p>
       )}
+      {followup && (
+        <p className="mt-4 rounded-xl bg-accent-50 px-4 py-3 text-sm text-accent-800">
+          Sent to {followup} {followup === "1" ? "person" : "people"}.
+          {failed && (
+            <>
+              {" "}
+              <strong className="text-red-700">{failed} could not be delivered.</strong>
+            </>
+          )}
+        </p>
+      )}
+      {error === "followupempty" && (
+        <p className="mt-4 rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-900">
+          Nothing was sent: the email needs a subject and a message.
+        </p>
+      )}
+      {error === "followupurl" && (
+        <p className="mt-4 rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-900">
+          Nothing was sent: a link must start with http:// or https://.
+        </p>
+      )}
       {error === "certificates" && (
         <p className="mt-4 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">
           The certificates could not be issued. Nothing was sent — check the log.
@@ -202,6 +241,16 @@ export default async function WorkshopReviewPage({
           waiting={entry.waiting}
           people={entry.recipients.size}
           alreadySent={entry.alreadySent}
+        />
+      ))}
+
+      {[...joiningByWorkshop.entries()].map(([key, entry]) => (
+        <FollowUpPanel
+          key={`follow-${entry.workshop.id}`}
+          workshopId={String(entry.workshop.id)}
+          workshopSlug={entry.workshop.slug ?? ""}
+          title={entry.workshop.title}
+          people={followUpRecipients.get(key)?.size ?? 0}
         />
       ))}
 
