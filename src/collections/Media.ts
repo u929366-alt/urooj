@@ -21,7 +21,25 @@ export const Media: CollectionConfig = {
   },
   upload: {
     staticDir: "public/uploads",
-    mimeTypes: ["image/*", "application/pdf", "video/*", "audio/*"],
+    /**
+     * Documents as well as pictures: a workshop handout or a feedback form
+     * is a Word file more often than not, and emailing people a link to one
+     * on our own domain beats a shared Drive folder that can be moved,
+     * revoked or made private by somebody tidying up.
+     *
+     * Word only in its modern, macro-free form — .docm carries executable
+     * macros and has no business being handed out from our own domain.
+     */
+    mimeTypes: [
+      "image/*",
+      "application/pdf",
+      "video/*",
+      "audio/*",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    ],
   },
   fields: [
     {
