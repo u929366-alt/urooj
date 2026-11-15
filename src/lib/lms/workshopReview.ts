@@ -290,7 +290,7 @@ export async function issueCertificatesAction(formData: FormData) {
  * asks before sending, which is the guard that matters.
  */
 export async function sendFollowUpAction(formData: FormData) {
-  await requireStaff("/learn/workshops");
+  const staff = await requireStaff("/learn/workshops");
 
   const workshopId = String(formData.get("workshopId") || "");
   const heading = String(formData.get("heading") || "").trim();
@@ -332,6 +332,7 @@ export async function sendFollowUpAction(formData: FormData) {
   });
 
   const already = new Set<string>();
+  const recipients: string[] = [];
   let sent = 0;
   let failed = 0;
 
@@ -356,6 +357,9 @@ export async function sendFollowUpAction(formData: FormData) {
         await payload.sendEmail({
           to: person.email,
           subject,
+          // Replies go to a person who reads email, not to the mailbox the
+          // server authenticates as.
+          replyTo: workshop.contactEmail ?? staff.email,
           html: followUpHTML(workshop, person.name, {
             heading: heading || subject,
             body,
@@ -365,11 +369,54 @@ export async function sendFollowUpAction(formData: FormData) {
             handoutLabel: handoutLabel || undefined,
           }),
         });
+        recipients.push(`${person.name} <${person.email}>`);
         sent += 1;
       } catch (error) {
         failed += 1;
         console.error(`[workshops] follow-up to ${person.email} failed:`, error);
       }
+    }
+  }
+
+  /**
+   * A copy for whoever sent it.
+   *
+   * Mail sent over SMTP does not appear in anybody's Sent Items — that
+   * folder is written by the mail client that composed the message, and here
+   * there isn't one. So the portal sends the record itself: the email
+   * exactly as it went out, with every address it went to listed at the top.
+   * File it wherever you keep sent mail.
+   */
+  if (sent > 0) {
+    try {
+      await payload.sendEmail({
+        to: staff.email,
+        subject: `[Copy] ${subject}`,
+        replyTo: workshop.contactEmail ?? staff.email,
+        html: `
+<div style="font-family:Arial,Helvetica,sans-serif;max-width:580px;margin:0 auto;padding:16px 24px 0;color:#1f2937;line-height:1.5">
+  <p style="margin:0 0 8px;padding:12px 16px;background:#f3f4f6;border-radius:8px;font-size:13px">
+    <strong>Your copy.</strong> Sent ${sent} ${sent === 1 ? "email" : "emails"} for
+    ${workshop.title}${failed > 0 ? `, ${failed} failed` : ""}. Below is the message exactly as
+    each person received it, addressed to them by name.
+  </p>
+  <details style="margin:0 0 4px;font-size:13px;color:#374151">
+    <summary style="cursor:pointer;padding:6px 0"><strong>Who it went to (${recipients.length})</strong></summary>
+    <div style="padding:6px 0 0;white-space:pre-line">${recipients.map((line) => line.replace(/</g, "&lt;").replace(/>/g, "&gt;")).join("\n")}</div>
+  </details>
+</div>
+<hr style="max-width:580px;margin:12px auto;border:0;border-top:1px solid #e5e7eb">
+${followUpHTML(workshop, staff.name ?? "there", {
+  heading: heading || subject,
+  body,
+  feedbackUrl: feedbackUrl || undefined,
+  feedbackLabel: feedbackLabel || undefined,
+  handoutUrl: handoutUrl || undefined,
+  handoutLabel: handoutLabel || undefined,
+})}`,
+      });
+    } catch (error) {
+      console.error("[workshops] sender's copy failed:", error);
     }
   }
 
