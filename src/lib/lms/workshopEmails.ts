@@ -264,16 +264,19 @@ export function certificateHTML(
   <h1 style="font-size:20px;color:#0b2c49;margin:0 0 14px">Your certificate</h1>
 
   <p style="margin:0 0 14px">Dear ${esc(first)},</p>
+  <p style="margin:0 0 14px">
+    Thank you for attending <strong>${esc(topic)}</strong>, and for taking the time to send
+    us your feedback — it genuinely shapes how we run the next one.
+  </p>
   <p style="margin:0 0 18px">
-    Thank you for attending <strong>${esc(topic)}</strong>. Your certificate of
-    completion is ready.
+    Please find your certificate of completion attached to this email.
   </p>
 
   <p style="margin:0 0 18px">
     <a href="${esc(url)}"
        style="display:inline-block;background:#0b5394;color:#ffffff;text-decoration:none;
               padding:14px 28px;border-radius:999px;font-weight:bold;font-size:16px">
-      View your certificate
+      View it online
     </a>
   </p>
   <p style="margin:0 0 18px;font-size:13px;color:#6b7280">
@@ -281,14 +284,10 @@ export function certificateHTML(
   </p>
 
   <p style="margin:0 0 14px;padding:12px 16px;background:#f3f4f6;border-radius:8px;font-size:14px">
-    To keep a copy, open the link and press <strong>Ctrl + P</strong> (or <strong>Cmd + P</strong>
-    on a Mac), then choose "Save as PDF". The link does not expire.
-  </p>
-
-  <p style="margin:0 0 14px;font-size:14px">
-    Your certificate number is <strong>${esc(serial)}</strong>. Anyone you show the
-    certificate to — an employer, a university — can confirm it is genuine using that
-    number, and they will see only your name, the workshop and the date.
+    Your certificate number is <strong>${esc(serial)}</strong>. Anyone you show it to — an
+    employer, a university — can confirm it is genuine by scanning the QR square on the
+    certificate, or by entering that number on our website. They will see only your name, the
+    workshop and the date.
   </p>
 
   <p style="margin:24px 0 0;font-size:13px;color:#6b7280">
@@ -363,6 +362,16 @@ export function repeatAttemptHTML(
 </div>`;
 }
 
+/**
+ * A follow-up to everyone who attended: the feedback form, the handout,
+ * whatever else comes after a session.
+ *
+ * The body is written by staff at the time rather than fixed here, because
+ * what follows a workshop is never the same twice — slides one week, a
+ * reading list the next, a reminder about certificates the week after. What
+ * is fixed is the shape: who it is from, who it is to, and that the links
+ * are buttons rather than something to squint at.
+ */
 /**
  * A follow-up to everyone who attended: the feedback form, the handout,
  * whatever else comes after a session.

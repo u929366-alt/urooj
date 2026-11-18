@@ -14,6 +14,13 @@ export const siteConfig = {
    */
   portalUrl: "https://learn.hunarsaaz.pk",
   email: "ceo@hunarsaaz.pk",
+  /**
+   * Blind-copied on every certificate that goes out, so the office keeps a
+   * record of what was awarded to whom without anyone having to remember.
+   * Override with CERTIFICATE_BCC — a comma-separated list — to change it
+   * without a deployment.
+   */
+  certificateBcc: ["ahsan@hunarsaaz.pk", "ceo@hunarsaaz.pk"],
   admissionsEmail: "ceo@hunarsaaz.pk",
   phone: "+92 300 8154597",
   whatsapp: "+923008154597",

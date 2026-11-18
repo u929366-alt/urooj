@@ -335,6 +335,19 @@ export function WorkshopCertificate({
               </div>
 
               <div style={{ textAlign: "center", paddingBottom: u(6) }}>
+                {/* The proof: scanning it opens the verification page.
+                    eslint-disable-next-line @next/next/no-img-element */}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={`/certificates/${certificate.serial}/qr`}
+                  alt=""
+                  style={{
+                    width: u(128),
+                    height: u(128),
+                    display: "block",
+                    margin: `0 auto ${u(9)}`,
+                  }}
+                />
                 <p
                   style={{
                     fontFamily: "ui-monospace, monospace",
@@ -347,7 +360,7 @@ export function WorkshopCertificate({
                   {certificate.serial}
                 </p>
                 <p style={{ marginTop: u(2), fontSize: u(12.5), color: MUTED }}>
-                  Verify at {siteConfig.url.replace(/^https?:\/\//, "")}/verify
+                  Scan to verify at {siteConfig.portalUrl.replace(/^https?:\/\//, "")}
                 </p>
               </div>
 
@@ -372,17 +385,20 @@ export function WorkshopCertificate({
             </div>
           </div>
 
-          {/* The seal, off to one side so it never sits on a signature. */}
+          {/* The seal, on the right shoulder beside the workshop block —
+              balancing the dotted motif opposite, and clear of both
+              signatures. Kept in step with the PDF so the printed copy and
+              the emailed one are the same certificate. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/certificates/stamp.png"
             alt=""
             style={{
               position: "absolute",
-              left: u(253),
-              bottom: u(426),
-              width: u(176),
-              transform: "rotate(-9deg)",
+              left: u(1269),
+              bottom: u(420),
+              width: u(185),
+              transform: "rotate(9deg)",
               mixBlendMode: "multiply",
               opacity: 0.85,
               pointerEvents: "none",

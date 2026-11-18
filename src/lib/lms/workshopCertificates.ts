@@ -119,6 +119,64 @@ export function holdersOf(
   return out;
 }
 
+export type Eligible = {
+  seat: string;
+  name: string;
+  email?: string;
+  /** The serial they already hold, if any. */
+  serial?: string;
+  /** The booking they came in on, for grouping in the list. */
+  reference?: string | null;
+  bookedBy: string;
+};
+
+/**
+ * Everyone on the register who could hold a certificate, each marked with
+ * whether they already does. This is what the staff page shows as a list of
+ * tick-boxes: issuing is irreversible, and "everybody, all at once" is the
+ * wrong default when somebody did not turn up.
+ */
+export async function eligibleHolders(workshopId: string): Promise<Eligible[]> {
+  const payload = await getPayloadClient();
+
+  const confirmed = await payload.find({
+    collection: "workshop-registrations",
+    where: {
+      and: [{ workshop: { equals: workshopId } }, { status: { equals: "confirmed" } }],
+    },
+    sort: "createdAt",
+    limit: 1000,
+    depth: 0,
+    overrideAccess: true,
+  });
+
+  const existing = await payload.find({
+    collection: "workshop-certificates",
+    where: { workshop: { equals: workshopId } },
+    limit: 2000,
+    depth: 0,
+    overrideAccess: true,
+  });
+  const bySeat = new Map<string, string>();
+  for (const row of existing.docs) {
+    const seat = row.seat?.trim();
+    if (seat) bySeat.set(seat, row.serial);
+  }
+
+  const out: Eligible[] = [];
+  for (const registration of confirmed.docs) {
+    for (const holder of holdersOf(registration)) {
+      out.push({
+        ...holder,
+        serial: bySeat.get(holder.seat),
+        reference: registration.paymentReference,
+        bookedBy: registration.name,
+      });
+    }
+  }
+  return out;
+}
+
 export type IssueResult = {
   issued: WorkshopCertificate[];
   skipped: number;
@@ -133,7 +191,11 @@ export type IssueResult = {
  * that exists but has not been sent can be sent again; one that was never
  * issued because the mail server hiccuped is a person left out.
  */
-export async function issueWorkshopCertificates(workshopId: string): Promise<IssueResult> {
+export async function issueWorkshopCertificates(
+  workshopId: string,
+  /** Seats to issue to. Omit for everyone who has not got one. */
+  seats?: string[],
+): Promise<IssueResult> {
   const payload = await getPayloadClient();
 
   const workshop = (await payload.findByID({
@@ -171,6 +233,7 @@ export async function issueWorkshopCertificates(workshopId: string): Promise<Iss
     .filter(Boolean)
     .join(", ");
 
+  const chosen = seats && seats.length > 0 ? new Set(seats) : null;
   const issued: WorkshopCertificate[] = [];
   let skipped = 0;
   let unnamed = 0;
@@ -183,6 +246,9 @@ export async function issueWorkshopCertificates(workshopId: string): Promise<Iss
     if (places > holders.length) unnamed += places - holders.length;
 
     for (const holder of holders) {
+      // Not chosen this time round. Not a skip — a skip means "already has
+      // one", and the two read very differently on the screen afterwards.
+      if (chosen && !chosen.has(holder.seat)) continue;
       if (taken.has(holder.seat)) {
         skipped += 1;
         continue;

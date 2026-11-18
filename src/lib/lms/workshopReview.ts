@@ -7,6 +7,7 @@ import config from "@payload-config";
 import { requireStaff } from "./auth";
 import { certificateHTML, declineHTML, followUpHTML, joiningHTML } from "./workshopEmails";
 import { issueWorkshopCertificates } from "./workshopCertificates";
+import { certificateFileName, certificatePdf } from "./certificatePdf";
 import { siteConfig } from "@/lib/site";
 import type { Workshop } from "@/payload-types";
 
@@ -222,6 +223,13 @@ export async function issueCertificatesAction(formData: FormData) {
   const workshopId = String(formData.get("workshopId") || "");
   if (!workshopId) redirect("/learn/workshops?error=missing");
 
+  // Which seats were ticked. None ticked is a mistake, not "everybody".
+  const seats = formData
+    .getAll("seat")
+    .map((value) => String(value).trim())
+    .filter(Boolean);
+  if (seats.length === 0) redirect("/learn/workshops?error=nobody");
+
   const payload = await getPayload({ config });
 
   const workshop = (await payload.findByID({
@@ -234,22 +242,57 @@ export async function issueCertificatesAction(formData: FormData) {
 
   let issued: Awaited<ReturnType<typeof issueWorkshopCertificates>>;
   try {
-    issued = await issueWorkshopCertificates(workshopId);
+    issued = await issueWorkshopCertificates(workshopId, seats);
   } catch (error) {
     console.error("[workshops] could not issue certificates:", error);
     redirect("/learn/workshops?error=certificates");
   }
 
   // The portal is on learn.; the certificate page lives there too.
-  const base = (process.env.SITE_URL?.trim() || siteConfig.url).replace(/\/+$/, "");
+  const base = (process.env.SITE_URL?.trim() || siteConfig.portalUrl).replace(/\/+$/, "");
+
+  /**
+   * The office keeps a copy of every award. Configurable without a
+   * deployment, because who should be copied is not a code decision.
+   */
+  const bcc = (process.env.CERTIFICATE_BCC?.trim()
+    ? process.env.CERTIFICATE_BCC.split(",")
+    : siteConfig.certificateBcc
+  )
+    .map((address) => address.trim())
+    .filter(Boolean);
 
   let sent = 0;
   let failed = 0;
   for (const certificate of issued.issued) {
     if (!certificate.holderEmail) continue;
     try {
+      /**
+       * The certificate goes as an attachment, because that is what the
+       * email promises and because a PDF in an inbox outlives any link.
+       * Drawn here rather than printed from the page: shared hosting has no
+       * browser to print with. A certificate whose PDF will not draw is
+       * still sent, with the link alone — it exists either way, and the
+       * person should hear about it.
+       */
+      let attachments: { filename: string; content: Buffer; contentType: string }[] | undefined;
+      try {
+        const pdf = await certificatePdf(certificate, workshop);
+        attachments = [
+          {
+            filename: certificateFileName(certificate),
+            content: Buffer.from(pdf),
+            contentType: "application/pdf",
+          },
+        ];
+      } catch (error) {
+        console.error(`[workshops] could not draw the PDF for ${certificate.serial}:`, error);
+      }
+
       await payload.sendEmail({
         to: certificate.holderEmail,
+        bcc: bcc.length > 0 ? bcc : undefined,
+        replyTo: workshop.contactEmail ?? siteConfig.email,
         subject: `Your certificate — ${workshop.title}`,
         html: certificateHTML(
           workshop,
@@ -257,6 +300,7 @@ export async function issueCertificatesAction(formData: FormData) {
           certificate.serial,
           `${base}/certificates/${certificate.serial}`,
         ),
+        attachments,
       });
       sent += 1;
     } catch (error) {

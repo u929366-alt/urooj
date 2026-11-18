@@ -12,7 +12,7 @@ import { ReviewActions } from "@/components/learn/ReviewActions";
 import { JoiningLinkPanel } from "@/components/learn/JoiningLinkPanel";
 import { CertificatePanel } from "@/components/learn/CertificatePanel";
 import { FollowUpPanel } from "@/components/learn/FollowUpPanel";
-import { certificateStandings } from "@/lib/lms/workshopCertificates";
+import { certificateStandings, eligibleHolders } from "@/lib/lms/workshopCertificates";
 import type { PaymentReceipt, Workshop, WorkshopRegistration } from "@/payload-types";
 
 export const metadata: Metadata = {
@@ -138,8 +138,10 @@ export default async function WorkshopReviewPage({
     string,
     { eligible: number; issued: number; unnamed: number; ended: boolean }
   >();
+  const holders = new Map<string, Awaited<ReturnType<typeof eligibleHolders>>>();
   for (const key of joiningByWorkshop.keys()) {
     standings.set(key, await certificateStandings(key));
+    holders.set(key, await eligibleHolders(key));
   }
 
   return (
@@ -225,6 +227,11 @@ export default async function WorkshopReviewPage({
           Nothing was sent: a link must start with http:// or https://.
         </p>
       )}
+      {error === "nobody" && (
+        <p className="mt-4 rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-900">
+          Nothing was issued: nobody was ticked.
+        </p>
+      )}
       {error === "certificates" && (
         <p className="mt-4 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">
           The certificates could not be issued. Nothing was sent — check the log.
@@ -262,8 +269,7 @@ export default async function WorkshopReviewPage({
             key={`cert-${entry.workshop.id}`}
             workshopId={String(entry.workshop.id)}
             title={entry.workshop.title}
-            eligible={standing.eligible}
-            issued={standing.issued}
+            people={holders.get(key) ?? []}
             unnamed={standing.unnamed}
             ended={standing.ended}
           />
