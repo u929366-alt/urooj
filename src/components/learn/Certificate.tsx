@@ -49,7 +49,7 @@ export function Certificate({ certificate }: { certificate: CertificateDoc }) {
       </div>
 
       <p className="mt-8 text-xs text-gray-500">
-        Verify this certificate at {siteConfig.url.replace(/^https?:\/\//, "")}/verify/
+        Verify this certificate at {siteConfig.portalUrl.replace(/^https?:\/\//, "")}/verify/
         {certificate.serial}
       </p>
     </div>

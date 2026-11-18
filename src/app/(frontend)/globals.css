@@ -215,6 +215,23 @@ h1, h2, h3, h4, h5, h6 {
   overflow: hidden;
 }
 
+/* On a phone, shrinking the whole sheet to the width of the screen puts the
+   holder's name at about 17px and the details line below legibility — a
+   postage stamp of a certificate. Below this width it stops shrinking and
+   the frame scrolls sideways instead, so the thing can actually be read.
+   The download button above it is the better answer on a phone, and this is
+   for anyone who would rather look than download. */
+.certificate-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 700px) {
+  .certificate-frame {
+    width: 660px;
+  }
+}
+
 .certificate-scale {
   width: 100%;
   height: 100%;

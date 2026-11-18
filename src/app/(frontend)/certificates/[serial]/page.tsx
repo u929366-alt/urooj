@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { Printer, ShieldCheck } from "lucide-react";
+import { Download, Printer, ShieldCheck } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { WorkshopCertificate } from "@/components/learn/WorkshopCertificate";
 import { getWorkshopCertificateBySerial } from "@/lib/lms/workshopCertificates";
@@ -58,15 +58,29 @@ export default async function WorkshopCertificatePage({
             {certificate.holderName} — {certificate.workshopTitle}
           </p>
         </div>
-        <p className="inline-flex items-center gap-2 rounded-full bg-primary-50 px-4 py-2 text-sm font-semibold text-primary-800">
-          <Printer className="h-4 w-4" aria-hidden />
-          Ctrl/Cmd + P to print or save as PDF
-        </p>
+        <div className="flex flex-wrap items-center gap-2">
+          <a
+            href={`/certificates/${certificate.serial}/pdf`}
+            className="inline-flex items-center gap-2 rounded-full bg-primary-600 px-6 py-3 text-sm font-semibold text-white hover:bg-primary-700"
+          >
+            <Download className="h-4 w-4" aria-hidden />
+            Download PDF
+          </a>
+          <p className="hidden items-center gap-2 rounded-full bg-primary-50 px-4 py-2 text-sm font-semibold text-primary-800 sm:inline-flex">
+            <Printer className="h-4 w-4" aria-hidden />
+            or Ctrl/Cmd + P to print
+          </p>
+        </div>
       </div>
 
-      <div className="certificate-frame rounded-xl shadow-sm">
-        <WorkshopCertificate certificate={certificate} workshop={workshop} />
+      <div className="certificate-scroll">
+        <div className="certificate-frame rounded-xl shadow-sm">
+          <WorkshopCertificate certificate={certificate} workshop={workshop} />
+        </div>
       </div>
+      <p className="no-print mt-2 text-xs text-gray-500 sm:hidden">
+        Scroll sideways to see the whole certificate, or download the PDF above.
+      </p>
 
       <p className="no-print mt-6 flex items-start gap-2 text-sm text-gray-600">
         <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-accent-600" aria-hidden />
@@ -74,7 +88,7 @@ export default async function WorkshopCertificatePage({
           Certificate number <strong className="font-mono">{certificate.serial}</strong>. Anyone
           can confirm it is genuine at{" "}
           <span className="font-semibold">
-            {siteConfig.url.replace(/^https?:\/\//, "")}/verify/{certificate.serial}
+            {siteConfig.portalUrl.replace(/^https?:\/\//, "")}/verify/{certificate.serial}
           </span> —
           that page shows only the name, the workshop and the date.
         </span>
