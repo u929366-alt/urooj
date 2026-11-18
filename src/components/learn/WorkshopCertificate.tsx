@@ -365,16 +365,16 @@ export function WorkshopCertificate({
               </div>
 
               <div style={{ textAlign: "center" }}>
-                <div style={{ height: 92, display: "flex", alignItems: "flex-end", justifyContent: "center" }}>
+                <div style={{ height: u(92), display: "flex", alignItems: "flex-end", justifyContent: "center" }}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src="/certificates/signature-president.png"
                     alt=""
-                    style={{ maxHeight: 92, maxWidth: 330, width: "auto", display: "block" }}
+                    style={{ maxHeight: u(92), maxWidth: u(330), width: "auto", display: "block" }}
                   />
                 </div>
-                <div style={{ marginTop: 6, borderTop: `1.5px solid ${NAVY}`, paddingTop: 10 }}>
-                  <p style={{ fontSize: 21, fontWeight: 600, color: NAVY }}>Ahsan Ali Mangi</p>
+                <div style={{ marginTop: u(6), borderTop: `${u(1.5)} solid ${NAVY}`, paddingTop: u(10) }}>
+                  <p style={{ fontSize: u(21), fontWeight: 600, color: NAVY }}>Ahsan Ali Mangi</p>
                   <p style={signWhat}>
                     President
                     <br />
