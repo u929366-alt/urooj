@@ -117,12 +117,12 @@ export default async function CertificatePreviewPage({
       </div>
 
       <div className="certificate-frame rounded-xl shadow-sm">
-        <WorkshopCertificate certificate={sample} workshop={workshop} />
+        <WorkshopCertificate certificate={sample} workshop={workshop} preview />
       </div>
 
       <p className="no-print mt-6 text-sm text-gray-500">
-        The QR square is missing here because this serial does not exist. On a real
-        certificate it scans through to the verification page.
+The QR square is drawn empty here because this serial does not exist. On a real
+        certificate it carries a code that scans through to the verification page.
       </p>
     </Container>
   );

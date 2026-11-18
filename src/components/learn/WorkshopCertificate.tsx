@@ -95,9 +95,17 @@ function splitTitle(title: string): [string, string | null] {
 export function WorkshopCertificate({
   certificate,
   workshop,
+  /**
+   * A preview is drawn against a serial that does not exist, so there is no
+   * QR to fetch — asking for one gets a 404 and the browser draws a broken
+   * image, which makes a perfectly good certificate look broken. Draw the
+   * square it will occupy instead.
+   */
+  preview = false,
 }: {
   certificate: CertificateDoc;
   workshop: Workshop | null;
+  preview?: boolean;
 }) {
   const name = certificate.holderName.trim();
   // A long name shrinks rather than wrapping awkwardly.
@@ -337,17 +345,40 @@ export function WorkshopCertificate({
               <div style={{ textAlign: "center", paddingBottom: u(6) }}>
                 {/* The proof: scanning it opens the verification page.
                     eslint-disable-next-line @next/next/no-img-element */}
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={`/certificates/${certificate.serial}/qr`}
-                  alt=""
-                  style={{
-                    width: u(128),
-                    height: u(128),
-                    display: "block",
-                    margin: `0 auto ${u(9)}`,
-                  }}
-                />
+                {preview ? (
+                  <div
+                    style={{
+                      width: u(128),
+                      height: u(128),
+                      margin: `0 auto ${u(9)}`,
+                      border: `${u(2)} dashed #cbd5e1`,
+                      borderRadius: u(6),
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      color: "#94a3b8",
+                      fontSize: u(13),
+                      lineHeight: 1.3,
+                      textAlign: "center",
+                    }}
+                  >
+                    QR code
+                    <br />
+                    goes here
+                  </div>
+                ) : (
+                  /* eslint-disable-next-line @next/next/no-img-element */
+                  <img
+                    src={`/certificates/${certificate.serial}/qr`}
+                    alt=""
+                    style={{
+                      width: u(128),
+                      height: u(128),
+                      display: "block",
+                      margin: `0 auto ${u(9)}`,
+                    }}
+                  />
+                )}
                 <p
                   style={{
                     fontFamily: "ui-monospace, monospace",
