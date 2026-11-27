@@ -5,12 +5,14 @@ import {
   CalendarClock,
   Download,
   GraduationCap,
+  MapPin,
   ShieldCheck,
 } from "lucide-react";
 import { PageHero } from "@/components/PageHero";
 import { Container } from "@/components/ui/Container";
 import { Card } from "@/components/ui/Card";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "NAVTTC Training",
@@ -76,19 +78,31 @@ export default function OnlineTrainingPage() {
         breadcrumb="NAVTTC"
         eyebrow="NAVTTC-Registered Courses"
         title="E-Commerce and Web Development Training"
-        description="Three-month courses at a NAVTTC-registered institute. Register your interest to hear when the next batch opens."
+        description="Three-month courses taught in person at our Taxila campus, by a NAVTTC-registered institute. Register your interest to hear when the next batch opens."
       />
 
       <section id="courses" className="scroll-mt-24 py-14">
         <Container>
-          <SectionHeading eyebrow="What we teach" title="The Courses" />
+          <SectionHeading
+            eyebrow="What we teach"
+            title="The Courses"
+            description="Both are taught on campus in Taxila — classroom teaching with tutors, not online study."
+          />
 
           <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-2">
             {courses.map((course) => (
               <Card key={course.id} className="flex flex-col scroll-mt-24 p-7">
-                <div className="flex items-center gap-2">
-                  <CalendarClock className="h-4 w-4 text-secondary-500" aria-hidden />
-                  <span className="text-sm font-bold text-secondary-700">{course.duration}</span>
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+                  <span className="inline-flex items-center gap-2">
+                    <CalendarClock className="h-4 w-4 text-secondary-500" aria-hidden />
+                    <span className="text-sm font-bold text-secondary-700">{course.duration}</span>
+                  </span>
+                  <span className="inline-flex items-center gap-2">
+                    <MapPin className="h-4 w-4 text-primary-500" aria-hidden />
+                    <span className="text-sm font-semibold text-primary-700">
+                      On campus, Taxila
+                    </span>
+                  </span>
                 </div>
 
                 <h2 className="mt-3 font-display text-2xl font-bold text-primary-900">
@@ -157,6 +171,33 @@ export default function OnlineTrainingPage() {
                 </div>
               </div>
             ))}
+          </div>
+        </Container>
+      </section>
+
+      <section id="where" className="scroll-mt-24 py-14">
+        <Container>
+          <div className="flex flex-col gap-5 rounded-2xl border-2 border-gray-200 p-7 sm:flex-row sm:items-start sm:p-9">
+            <MapPin className="h-6 w-6 shrink-0 text-secondary-500" aria-hidden />
+            <div className="min-w-0">
+              <h2 className="font-display text-xl font-bold text-primary-900">
+                Where the classes are held
+              </h2>
+              <p className="mt-2 text-gray-700">
+                Both courses are taught in person at the Hunarsaaz campus in Taxila. Students
+                attend scheduled classes with a tutor and work on the practical exercises in our
+                computer lab — this is not a distance-learning course.
+              </p>
+              <p className="mt-3 text-sm text-gray-600">
+                {siteConfig.address} &middot; {siteConfig.hours}
+              </p>
+              <Link
+                href="/contact"
+                className="mt-4 inline-flex items-center gap-2 rounded-full border-2 border-primary-200 px-5 py-2 text-sm font-semibold text-primary-700 hover:bg-primary-50"
+              >
+                Find us on the map
+              </Link>
+            </div>
           </div>
         </Container>
       </section>

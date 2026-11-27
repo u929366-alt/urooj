@@ -36,75 +36,51 @@ export default function CertificationsPage() {
 
       <section className="py-14">
         <Container>
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {credentials.map((credential) => (
-              <Card key={credential.reference} className="overflow-hidden">
-                <div className="grid grid-cols-1 gap-6 p-6 sm:grid-cols-[180px_minmax(0,1fr)]">
-                  {credential.preview && (
-                    <a
-                      href={credential.document}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group block shrink-0"
-                    >
-                      <Image
-                        src={credential.preview}
-                        alt={`${credential.title} certificate`}
-                        width={180}
-                        height={255}
-                        className="w-full rounded-xl border border-gray-200 object-cover transition-shadow group-hover:shadow-md sm:w-[180px]"
-                      />
-                    </a>
-                  )}
+              <Card key={credential.reference} className="flex flex-col overflow-hidden p-6">
+                {credential.preview && (
+                  <a
+                    href={credential.document}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group block"
+                  >
+                    <Image
+                      src={credential.preview}
+                      alt={`${credential.title} certificate`}
+                      width={360}
+                      height={510}
+                      /* A fixed shape for all three: the scans are different
+                         proportions, and without this the titles beneath sat
+                         at three different heights. */
+                      className="aspect-[3/4] w-full rounded-xl border border-gray-200 bg-white object-cover object-top transition-shadow group-hover:shadow-md"
+                    />
+                  </a>
+                )}
 
-                  <div className="min-w-0">
-                    <div className="flex items-start gap-2">
-                      <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-accent-600" aria-hidden />
-                      <h2 className="font-display text-lg font-bold text-primary-900">
-                        {credential.title}
-                      </h2>
-                    </div>
-
-                    <dl className="mt-3 space-y-1.5 text-sm">
-                      <div className="flex gap-2">
-                        <dt className="w-24 shrink-0 text-gray-500">Issued by</dt>
-                        <dd className="min-w-0 text-gray-800">{credential.issuer}</dd>
-                      </div>
-                      <div className="flex gap-2">
-                        <dt className="w-24 shrink-0 text-gray-500">Reference</dt>
-                        <dd className="font-mono text-gray-800">{credential.reference}</dd>
-                      </div>
-                      <div className="flex gap-2">
-                        <dt className="w-24 shrink-0 text-gray-500">Dated</dt>
-                        <dd className="text-gray-800">{credential.issued}</dd>
-                      </div>
-                    </dl>
-
-                    <p className="mt-3 text-sm leading-6 text-gray-600">{credential.summary}</p>
-
-                    {credential.redacted && (
-                      <p className="mt-2 text-xs italic text-gray-500">{credential.redacted}</p>
-                    )}
-
-                    <a
-                      href={credential.document}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mt-4 inline-flex items-center gap-2 rounded-full border-2 border-primary-200 px-5 py-2 text-sm font-semibold text-primary-700 hover:bg-primary-50"
-                    >
-                      <Download className="h-4 w-4" aria-hidden />
-                      View the document
-                    </a>
-                  </div>
+                <div className="mt-5 flex items-start gap-2">
+                  <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-accent-600" aria-hidden />
+                  <h2 className="font-display text-lg font-bold text-primary-900">
+                    {credential.title}
+                  </h2>
                 </div>
+
+                <a
+                  href={credential.document}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-auto inline-flex items-center gap-2 pt-5 text-sm font-semibold text-primary-700 hover:underline"
+                >
+                  <Download className="h-4 w-4" aria-hidden />
+                  View the document
+                </a>
               </Card>
             ))}
           </div>
 
           <p className="mt-10 text-sm leading-6 text-gray-600">
-            Each issuing body will confirm these independently — we have published the
-            reference numbers for exactly that reason. For anything else about our governance,
-            see{" "}
+            For anything else about our governance, see{" "}
             <Link href="/about#policies" className="font-semibold text-primary-600 hover:underline">
               our policies
             </Link>{" "}
@@ -113,7 +89,10 @@ export default function CertificationsPage() {
               audited accounts
             </Link>
             , or write to{" "}
-            <a href={`mailto:${siteConfig.email}`} className="font-semibold text-primary-600 hover:underline">
+            <a
+              href={`mailto:${siteConfig.email}`}
+              className="font-semibold text-primary-600 hover:underline"
+            >
               {siteConfig.email}
             </a>
             .
