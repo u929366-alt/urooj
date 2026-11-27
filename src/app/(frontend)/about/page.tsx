@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { CheckCircle2, FileText } from "lucide-react";
+import { CheckCircle2, Download, FileText, Play, ShieldCheck } from "lucide-react";
 import { PageHero } from "@/components/PageHero";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -8,6 +8,8 @@ import { PlaceholderImage } from "@/components/ui/PlaceholderImage";
 import { coreValues } from "@/data/stats";
 import Image from "next/image";
 import { officeBearers, team, type Person } from "@/data/team";
+import { credentials, trainingHighlights } from "@/data/highlights";
+import { siteConfig } from "@/lib/site";
 import { Users, Target, Eye } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -148,6 +150,137 @@ export default function AboutPage() {
             <h3 className="font-display text-lg font-semibold text-primary-900">Our Team</h3>
             <PeopleGrid people={team} />
           </div>
+        </Container>
+      </section>
+
+      <section id="registration" className="scroll-mt-24 py-14">
+        <Container>
+          <SectionHeading
+            eyebrow="Credentials"
+            title="Registration & Certification"
+            description="Who we are on paper, and the documents to show for it."
+          />
+
+          <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-2">
+            {credentials.map((credential) => (
+              <Card key={credential.reference} className="overflow-hidden">
+                <div className="grid grid-cols-1 gap-6 p-6 sm:grid-cols-[180px_minmax(0,1fr)]">
+                  {credential.preview && (
+                    <a
+                      href={credential.document}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group block shrink-0"
+                    >
+                      <Image
+                        src={credential.preview}
+                        alt={`${credential.title} certificate`}
+                        width={180}
+                        height={255}
+                        className="w-full rounded-xl border border-gray-200 object-cover transition-shadow group-hover:shadow-md sm:w-[180px]"
+                      />
+                    </a>
+                  )}
+
+                  <div className="min-w-0">
+                    <div className="flex items-start gap-2">
+                      <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-accent-600" aria-hidden />
+                      <h3 className="font-display text-lg font-bold text-primary-900">
+                        {credential.title}
+                      </h3>
+                    </div>
+
+                    <dl className="mt-3 space-y-1.5 text-sm">
+                      <div className="flex gap-2">
+                        <dt className="w-24 shrink-0 text-gray-500">Issued by</dt>
+                        <dd className="min-w-0 text-gray-800">{credential.issuer}</dd>
+                      </div>
+                      <div className="flex gap-2">
+                        <dt className="w-24 shrink-0 text-gray-500">Reference</dt>
+                        <dd className="font-mono text-gray-800">{credential.reference}</dd>
+                      </div>
+                      <div className="flex gap-2">
+                        <dt className="w-24 shrink-0 text-gray-500">Dated</dt>
+                        <dd className="text-gray-800">{credential.issued}</dd>
+                      </div>
+                    </dl>
+
+                    <p className="mt-3 text-sm leading-6 text-gray-600">{credential.summary}</p>
+
+                    {credential.redacted && (
+                      <p className="mt-2 text-xs italic text-gray-500">{credential.redacted}</p>
+                    )}
+
+                    <a
+                      href={credential.document}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-4 inline-flex items-center gap-2 rounded-full border-2 border-primary-200 px-5 py-2 text-sm font-semibold text-primary-700 hover:bg-primary-50"
+                    >
+                      <Download className="h-4 w-4" aria-hidden />
+                      View the document
+                    </a>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </Container>
+      </section>
+
+      <section id="highlights" className="scroll-mt-24 bg-gray-50 py-14">
+        <Container>
+          <SectionHeading
+            eyebrow="In the room"
+            title="Training Highlights"
+            description="Short clips from THRIVE 360, our workshop on mental wellbeing across life, education and the workplace."
+          />
+
+          <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-2">
+            {trainingHighlights.map((clip) => (
+              <figure key={clip.src}>
+                {/* Plain video, no player library: these are short files on
+                    our own domain, and preload="none" means nothing is
+                    fetched until somebody presses play. */}
+                <video
+                  controls
+                  preload="none"
+                  poster={clip.poster}
+                  playsInline
+                  className="w-full rounded-2xl border border-gray-200 bg-black shadow-sm"
+                >
+                  <source src={clip.src} type="video/mp4" />
+                  Your browser cannot play this clip.{" "}
+                  <a href={clip.src}>Download it instead.</a>
+                </video>
+
+                <figcaption className="mt-3">
+                  <div className="flex items-baseline gap-2">
+                    <Play className="h-3.5 w-3.5 shrink-0 translate-y-0.5 text-secondary-500" aria-hidden />
+                    <h3 className="font-semibold text-primary-900">{clip.title}</h3>
+                    <span className="ml-auto shrink-0 text-xs text-gray-500">
+                      {clip.seconds}s
+                    </span>
+                  </div>
+                  <p className="mt-1 text-sm leading-6 text-gray-600">{clip.description}</p>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+
+          <p className="mt-8 text-sm text-gray-600">
+            THRIVE 360 is delivered by Ms. Asma Ahmed, Consultant Clinical Psychologist.{" "}
+            {/* Absolute, not a route: on the marketing site /workshops does
+                not exist — the listing is served by the portal, which is the
+                only half that can read the database. */}
+            <a
+              href={`${siteConfig.portalUrl}/workshops`}
+              className="font-semibold text-primary-600 hover:underline"
+            >
+              See upcoming workshops
+            </a>
+            .
+          </p>
         </Container>
       </section>
 
