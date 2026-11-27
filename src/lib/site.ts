@@ -87,6 +87,11 @@ export const mainNav: NavLink[] = [
         description: "How we measure results and spend",
       },
       {
+        label: "Certifications",
+        href: "/about/certifications",
+        description: "NAVTTC, PCP and society registration",
+      },
+      {
         label: "Reports & Accounts",
         href: "/reports",
         description: "Audited financial statements",
@@ -134,7 +139,12 @@ export const mainNav: NavLink[] = [
     label: "Media",
     href: "/gallery",
     children: [
-      { label: "Gallery", href: "/gallery", description: "Photos & videos" },
+      { label: "Gallery", href: "/gallery", description: "Photos from our classrooms" },
+      {
+        label: "Training Videos",
+        href: "/gallery#training-videos",
+        description: "Clips from our workshops",
+      },
       { label: "Blog & News", href: "/blog", description: "Latest stories" },
     ],
   },

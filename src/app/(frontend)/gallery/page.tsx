@@ -1,22 +1,17 @@
 import type { Metadata } from "next";
-import { PlayCircle } from "lucide-react";
+import { Play } from "lucide-react";
 import { PageHero } from "@/components/PageHero";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { PlaceholderImage } from "@/components/ui/PlaceholderImage";
 import { GalleryFilterGrid } from "@/components/GalleryFilterGrid";
+import { trainingHighlights } from "@/data/highlights";
+import { siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Gallery",
   description:
     "Browse photos and videos from Hunarsaaz classrooms, workshops, graduation ceremonies, and community outreach events in Taxila.",
 };
-
-const videoGallery = [
-  { id: "v1", title: "Hunarsaaz Campus Tour 2026" },
-  { id: "v2", title: "Cohort 8 Graduation Highlights" },
-  { id: "v3", title: "Student Success Stories" },
-];
 
 export default function GalleryPage() {
   return (
@@ -37,32 +32,69 @@ export default function GalleryPage() {
         </Container>
       </section>
 
-      <section className="bg-gray-50 py-12">
+      <section id="training-videos" className="scroll-mt-24 bg-gray-50 py-12">
         <Container>
-          <SectionHeading eyebrow="Watch" title="Video Gallery" />
-          <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-3">
-            {videoGallery.map((video) => (
-              <div key={video.id} className="group relative overflow-hidden rounded-2xl">
-                <PlaceholderImage
-                  label={video.title}
-                  icon={PlayCircle}
-                  seed={video.id}
-                  className="aspect-video w-full"
-                />
-                <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 transition-opacity group-hover:opacity-100">
-                  <PlayCircle className="h-14 w-14 text-white" />
-                </div>
-              </div>
+          <SectionHeading
+            eyebrow="Watch"
+            title="Training Highlights"
+            description="Short clips from THRIVE 360, our workshop on mental wellbeing across life, education and the workplace."
+          />
+
+          <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-2">
+            {trainingHighlights.map((clip) => (
+              <figure key={clip.src}>
+                {/* Plain video, no player library: these are short files on
+                    our own domain, and preload="none" means nothing is
+                    fetched until somebody presses play. */}
+                <video
+                  controls
+                  preload="none"
+                  poster={clip.poster}
+                  playsInline
+                  className="w-full rounded-2xl border border-gray-200 bg-black shadow-sm"
+                >
+                  <source src={clip.src} type="video/mp4" />
+                  Your browser cannot play this clip.{" "}
+                  <a href={clip.src}>Download it instead.</a>
+                </video>
+
+                <figcaption className="mt-3">
+                  <div className="flex items-baseline gap-2">
+                    <Play
+                      className="h-3.5 w-3.5 shrink-0 translate-y-0.5 text-secondary-500"
+                      aria-hidden
+                    />
+                    <h3 className="font-semibold text-primary-900">{clip.title}</h3>
+                    <span className="ml-auto shrink-0 text-xs text-gray-500">{clip.seconds}s</span>
+                  </div>
+                  <p className="mt-1 text-sm leading-6 text-gray-600">{clip.description}</p>
+                </figcaption>
+              </figure>
             ))}
           </div>
-          <p className="mt-6 text-center text-sm text-gray-500">
-            Video content is being finalized — check back soon or visit our{" "}
-            <a href="https://youtube.com/@hunarsaaz" target="_blank" rel="noopener noreferrer" className="font-medium text-primary-600 hover:underline">
+
+          <p className="mt-8 text-sm text-gray-600">
+            THRIVE 360 is delivered by Ms. Asma Ahmed, Consultant Clinical Psychologist.{" "}
+            <a
+              href={`${siteConfig.portalUrl}/workshops`}
+              className="font-semibold text-primary-600 hover:underline"
+            >
+              See upcoming workshops
+            </a>
+            , or watch more on our{" "}
+            <a
+              href={siteConfig.social.youtube}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold text-primary-600 hover:underline"
+            >
               YouTube channel
-            </a>.
+            </a>
+            .
           </p>
         </Container>
       </section>
+
     </>
   );
 }
