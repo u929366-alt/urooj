@@ -63,7 +63,7 @@ export function Header() {
             button off the edge, so the hamburger takes over — hence xl rather
             than lg on this row.
           */}
-          <nav aria-label="Main navigation" className="hidden xl:flex xl:items-center xl:gap-1">
+          <nav aria-label="Main navigation" className="hidden xl:flex xl:items-center xl:gap-0.5 2xl:gap-1">
             {mainNav.map((item) => (
               <div
                 key={item.label}
@@ -79,7 +79,7 @@ export function Header() {
                     // Nine items plus two buttons only just fit a 1280px
                     // window, so the padding tightens there and relaxes again
                     // when there is room for it.
-                    "flex items-center gap-1 whitespace-nowrap rounded-full px-2 py-2 text-sm font-semibold text-gray-700 transition-colors hover:bg-primary-50 hover:text-primary-700 2xl:px-3",
+                    "flex items-center gap-1 whitespace-nowrap rounded-full px-1.5 py-2 text-sm font-semibold text-gray-700 transition-colors hover:bg-primary-50 hover:text-primary-700 2xl:px-3",
                     pathname === item.href && "text-primary-700"
                   )}
                   aria-expanded={item.children ? openDropdown === item.label : undefined}

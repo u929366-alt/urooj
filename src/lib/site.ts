@@ -136,6 +136,15 @@ export const mainNav: NavLink[] = [
     ],
   },
   {
+    /**
+     * Top level by request. It is the page that sends people to NAVTTC's own
+     * funded batches, so it has to be found without digging.
+     */
+    label: "NAVTTC",
+    href: "/online-training",
+    description: "Registered courses and free-training batches",
+  },
+  {
     label: "Media",
     href: "/gallery",
     children: [
