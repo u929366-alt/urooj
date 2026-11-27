@@ -97,6 +97,17 @@ export const credentials: Credential[] = [
     redacted: "The owner's CNIC has been blacked out on this copy.",
   },
   {
+    title: "Certified for NPO Good Practice",
+    issuer:
+      "Pakistan Centre for Philanthropy (PCP) — the NPO certification agency authorised by the Government of Pakistan",
+    reference: "PCP/2026/1951",
+    issued: "Valid to 30 June 2028",
+    summary:
+      "Awarded the Seal of NPO Good Practice for demonstrating excellence and leadership against the NPO evaluation standards notified by the FBR. PCP assesses an organisation's governance, programmes and finances before certifying it, and will confirm the award at mail@pcp.org.pk.",
+    document: "/documents/hunarsaaz-pcp-certification.pdf",
+    preview: "/documents/hunarsaaz-pcp-certification.jpg",
+  },
+  {
     title: "Registered Society",
     issuer: "Registrar of Joint Stock Companies, Rawalpindi — Government of the Punjab",
     reference: "CSR-25/2025",

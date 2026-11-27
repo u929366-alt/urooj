@@ -5,7 +5,7 @@ import { Container } from "@/components/ui/Container";
 import { Card } from "@/components/ui/Card";
 import { ContactForm } from "@/components/forms/ContactForm";
 import { MapEmbed } from "@/components/MapEmbed";
-import { FacebookIcon, InstagramIcon, LinkedinIcon, YoutubeIcon } from "@/components/ui/SocialIcons";
+import { SocialLinks } from "@/components/ui/SocialLinks";
 import { siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -13,13 +13,6 @@ export const metadata: Metadata = {
   description:
     "Get in touch with Hunarsaaz in Taxila, Punjab. Find our address, phone, email, working hours, and send us a message directly.",
 };
-
-const socialLinks = [
-  { icon: FacebookIcon, label: "Facebook" },
-  { icon: InstagramIcon, label: "Instagram" },
-  { icon: LinkedinIcon, label: "LinkedIn" },
-  { icon: YoutubeIcon, label: "YouTube" },
-];
 
 export default function ContactPage() {
   return (
@@ -82,17 +75,11 @@ export default function ContactPage() {
                     </a>
                   </div>
                 </Card>
-                <div className="flex gap-3 pt-2">
-                  {socialLinks.map(({ icon: Icon, label }) => (
-                    <span
-                      key={label}
-                      aria-label={label}
-                      className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-50 text-primary-700"
-                    >
-                      <Icon className="h-5 w-5" />
-                    </span>
-                  ))}
-                </div>
+                <SocialLinks
+                  className="pt-2"
+                  itemClassName="flex h-10 w-10 items-center justify-center rounded-full bg-primary-50 text-primary-700 transition-colors hover:bg-primary-100"
+                  iconClassName="h-5 w-5"
+                />
               </div>
               <MapEmbed className="mt-6 aspect-[4/3] w-full" />
             </div>

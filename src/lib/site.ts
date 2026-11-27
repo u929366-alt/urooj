@@ -15,6 +15,22 @@ export const siteConfig = {
   portalUrl: "https://learn.hunarsaaz.pk",
   email: "ceo@hunarsaaz.pk",
   /**
+   * Social accounts, as full URLs.
+   *
+   * An empty string means we are not on that platform, and the icon is not
+   * shown at all — better than an icon that goes nowhere, which is what the
+   * footer and the contact page used to have. Add a URL here and the link
+   * appears in both places at once.
+   */
+  social: {
+    facebook: "",
+    instagram: "",
+    linkedin: "",
+    youtube: "",
+    x: "",
+    tiktok: "",
+  } as Record<string, string>,
+  /**
    * Blind-copied on every certificate that goes out, so the office keeps a
    * record of what was awarded to whom without anyone having to remember.
    * Override with CERTIFICATE_BCC — a comma-separated list — to change it

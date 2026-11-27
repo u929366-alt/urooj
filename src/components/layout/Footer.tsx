@@ -2,13 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Mail, Phone, MapPin } from "lucide-react";
 import { Container } from "@/components/ui/Container";
-import {
-  FacebookIcon,
-  InstagramIcon,
-  LinkedinIcon,
-  YoutubeIcon,
-  XIcon,
-} from "@/components/ui/SocialIcons";
+import { SocialLinks } from "@/components/ui/SocialLinks";
 import { siteConfig, footerPrograms } from "@/lib/site";
 import { NewsletterForm } from "@/components/forms/NewsletterForm";
 
@@ -23,14 +17,6 @@ const quickLinks = [
   { label: "Blog", href: "/blog" },
   { label: "Impact & Transparency", href: "/impact" },
   { label: "Reports & Accounts", href: "/reports" },
-];
-
-const socialLinks = [
-  { icon: FacebookIcon, label: "Facebook" },
-  { icon: InstagramIcon, label: "Instagram" },
-  { icon: LinkedinIcon, label: "LinkedIn" },
-  { icon: YoutubeIcon, label: "YouTube" },
-  { icon: XIcon, label: "X / Twitter" },
 ];
 
 export function Footer() {
@@ -63,15 +49,9 @@ export function Footer() {
             vocational education, entrepreneurship, and digital skills.
           </p>
           <div className="mt-6 flex gap-3">
-            {socialLinks.map(({ icon: Icon, label }) => (
-              <span
-                key={label}
-                aria-label={label}
-                className="flex h-9 w-9 items-center justify-center rounded-full bg-primary-800 text-white"
-              >
-                <Icon className="h-4 w-4" />
-              </span>
-            ))}
+            <SocialLinks
+              itemClassName="flex h-9 w-9 items-center justify-center rounded-full bg-primary-800 text-white transition-colors hover:bg-secondary-500"
+            />
           </div>
         </div>
 
