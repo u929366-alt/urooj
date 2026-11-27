@@ -23,10 +23,11 @@ export const siteConfig = {
    * appears in both places at once.
    */
   social: {
-    facebook: "",
-    instagram: "",
-    linkedin: "",
-    youtube: "",
+    facebook: "https://www.facebook.com/profile.php?id=61594206301217",
+    instagram: "https://www.instagram.com/hunarsaaz.pk/",
+    linkedin: "https://www.linkedin.com/in/hunar-saaz-b82a3b434/",
+    youtube: "https://www.youtube.com/@HunarSaazdotpk",
+    // Not on X. Left empty on purpose: the icon is not drawn without a URL.
     x: "",
     tiktok: "",
   } as Record<string, string>,
